@@ -753,6 +753,14 @@ button.small{min-height:40px}
 .deck:has(.slide.v-dark) .deck-bar{color:#EAF3FA}
 .deck:has(.slide.v-dark) .deck-bar button,.deck:has(.slide.v-dark) .deck-nav button{background:rgba(255,255,255,.9);color:#10263A}
 
+/* Portada: las cinco aves a la derecha, el texto a la izquierda */
+@media(min-width:721px){
+  .portada{display:grid;grid-template-columns:minmax(0,.62fr) minmax(0,1.38fr);align-items:center;background:linear-gradient(180deg,#C9DBE7,#D9E6EF)}
+  .portada>img{position:relative;order:2;height:100%;min-height:clamp(520px,58vw,720px);object-position:62% 50%;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 7%);mask-image:linear-gradient(90deg,transparent 0,#000 7%)}
+  .portada::after{display:none}
+  .portada .pc{order:1;max-width:none;align-self:center}
+}
+
 </style>
 <div class="wrap">
 <div class="top">
@@ -769,7 +777,7 @@ button.small{min-height:40px}
 
 <main id="v-inicio" class="view">
 <header class="portada">
-  <img src="img/hero.jpg" width="1500" height="1000" style="object-position:70% 40%" alt="Tres abejarucos posados uno junto al otro, mirando en la misma dirección">
+  <img src="img/hero.jpg" width="1500" height="1000" style="object-position:70% 40%" alt="Cinco abejarucos en una misma rama: uno mira de frente, otro se acicala, otro duerme, otro abre un ala y un joven se apoya en su compañero">
   <div class="pc">
     <p class="eyebrow">TMF Group Perú · Programa de liderazgo</p>
     <h1>Yo soy porque <em>nosotros</em> somos</h1>
@@ -994,7 +1002,7 @@ button.small{min-height:40px}
 <main id="v-t2" class="view" hidden style="--c:#B77BC8">
 <section id="t2" class="chapter">
   <div class="chead"><span class="no" aria-hidden="true">02</span><div class="meta"><p class="eyebrow">Taller 2 de 4 · Líder en construcción</p><span class="tag">Realizado</span></div><h2>La construcción del líder</h2></div>
-  <div class="scene"><img src="img/t2.jpg" width="1500" height="1000" style="object-position:50% 50%" alt="Dos abejarucos llevan insectos a un mismo pichón que asoma de su nido en un barranco"><p>Dos adultos, un mismo pichón. <strong>Un poder compartido crece.</strong></p></div>
+  <div class="scene"><img src="img/t2.jpg" width="1500" height="1000" style="object-position:40% 55%" alt="Tres abejarucos con una abeja en el pico se acercan a un mismo pichón que asoma de su nido"><p>Tres adultos, un mismo pichón: en la colonia, <strong>todos cuidan de todos.</strong></p></div>
   <figure class="opening">
     <blockquote><p>Ninguna persona lidera sola. <em>¿Qué poder tuyo necesita hoy el equipo?</em></p></blockquote>
     <figcaption>Y al revés: ¿qué poder necesitas tú de los demás?</figcaption>
@@ -1155,7 +1163,7 @@ button.small{min-height:40px}
 <main id="v-t4" class="view" hidden style="--c:#C98A4B">
 <section id="t4" class="chapter">
   <div class="chead"><span class="no" aria-hidden="true">04</span><div class="meta"><p class="eyebrow">Taller 4 de 4 · Cierre</p><span class="tag">Próximo</span></div><h2>Lo que cambió</h2></div>
-  <div class="scene"><img src="img/t4.jpg" width="1500" height="1000" style="object-position:55% 45%" alt="Un abejaruco despega de una rama con las alas abiertas; otro ya vuela adelante"><p>Soltar la rama conocida. <strong>Alguien ya vuela adelante.</strong></p></div>
+  <div class="scene"><img src="img/t4.jpg" width="1500" height="1000" style="object-position:50% 50%" alt="Cuatro abejarucos vuelan juntos con las alas abiertas"><p>Soltar la rama conocida. <strong>Volamos juntos.</strong></p></div>
   <div class="locked">
     <span class="lock" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
     <p>Este taller se abre en la <strong>última sesión</strong> del programa.</p>
@@ -1771,7 +1779,7 @@ function rtxt(c,segs,x,y,o){var ws=[],line=[],lw=0,L2=[];
   return y+L2.length*o.lh+(o.gap||0)}
 function tSegs(t,sz,col,acc){var a=tparts(t),r=[{t:a[0],f:'600 '+sz+'px '+FD,c:col}];if(a[1])r.push({t:' '+a[1],f:'italic 400 '+Math.round(sz*1.12)+'px '+FS,c:acc});return r}
 function iSegs(t,sz,col,bcol){return rich(t).map(function(x){return {t:x.t,f:(x.b?'700 ':'400 ')+sz+'px '+FB,c:x.b?bcol:col}})}
-var WORD={t1:'LIDERAR',t2:'UBUNTU',t3:'RITUAL'},ART={t1:['t1','hero','t4'],t2:['t2','t3','hero'],t3:['t3','ws','t2']};
+var WORD={t1:'LIDERAR',t2:'UBUNTU',t3:'RITUAL'},ART={t1:['t1','t4','t3'],t2:['t2','t3','t1'],t3:['t3','ws','t2']},FOCUS={t1:72,t2:22,t3:62,t4:74,ws:70,hero:55};
 function hasArt(s,i){return i>0&&!(s.li&&s.li.length>4)&&!(s.l&&s.l.length>2&&s.li&&s.li.length>3)}
 function artKey(dk,i){var a=ART[dk];return a[i%a.length]}
 async function paintSlide(c,dk,s,i,n){
@@ -1798,7 +1806,7 @@ async function paintSlide(c,dk,s,i,n){
       if(s.p)y=rtxt(c,iSegs(s.p,30,'#33506A',INK),qx,y,{w:cen?1000:900,lh:44,gap:20,align:al});
       if(s.l&&s.l.length)linkBlock(c,s.l,cen?W/2-300:130,Math.max(y+10,H-70-30-s.l.length*34),600,out);
     }else{
-      if(art){var ai=await img(artKey(dk,i));rr(c,ax,96,470,640,40,dark?'rgba(255,255,255,.1)':'rgba(255,255,255,.5)');cover(c,ai,ax,96,470,640,40,[.72,.5,.6][i%3]);rr(c,ax,96,470,640,40,null,dark?'rgba(255,255,255,.35)':'rgba(255,255,255,.8)')}
+      if(art){var ai=await img(artKey(dk,i));rr(c,ax,96,470,640,40,dark?'rgba(255,255,255,.1)':'rgba(255,255,255,.5)');cover(c,ai,ax,96,470,640,40,(FOCUS[artKey(dk,i)]||50)/100);rr(c,ax,96,470,640,40,null,dark?'rgba(255,255,255,.35)':'rgba(255,255,255,.8)')}
       y=rtxt(c,[{t:s.k.toUpperCase(),f:'600 19px '+FB,c:acc}],x,y,{w:tw,lh:30,gap:14});
       y=rtxt(c,tSegs(s.t,54,bf,acc),x,y,{w:tw,lh:64,gap:18});
       if(s.p)y=rtxt(c,iSegs(s.p,29,mut,bf),x,y,{w:tw,lh:41,gap:22});
@@ -1994,7 +2002,7 @@ function renderSlide(){var D=DECKS[dk],s=D.slides[di],h,v=lay(s,di);
   if(di===0)h='<div class="slide cover"><img src="img/'+dk+'.jpg" alt=""><div class="tx"><p class="eyebrow">'+esc(s.k)+'</p><h2 class="xl">'+titleHTML(s.t)+'</h2>'+(s.p?'<p class="sp-p">'+esc(s.p)+'</p>':'')+'</div></div>';
   else{var art=hasArt(s,di)&&v!=='cols'&&v.indexOf('quote')<0;h='<div class="slide v-'+v+(art?'':' noart')+'"><p class="bgw" aria-hidden="true">'+WORD[dk]+'</p><div class="tx"><p class="eyebrow">'+esc(s.k)+'</p><h2 class="'+(s.li?'':'xl')+'">'+titleHTML(s.t)+'</h2>'+(s.p?'<p class="sp-p">'+richHTML(s.p)+'</p>':'')+
     (s.li?'<ul class="pts">'+s.li.map(function(x,k){return '<li style="--dot:'+SPCOL[k%6]+'"><span>'+richHTML(x)+'</span></li>'}).join('')+'</ul>':'')+linksHTML(s.l)+'</div>'+
-    (art?'<div class="art"><img src="img/'+artKey(dk,di)+'.jpg" alt="" style="object-position:'+[72,50,60][di%3]+'% 50%"></div>':'')+'</div>'}
+    (art?'<div class="art"><img src="img/'+artKey(dk,di)+'.jpg" alt="" style="object-position:'+(FOCUS[artKey(dk,di)]||50)+'% 50%"></div>':'')+'</div>'}
   $('deckStage').innerHTML=h;$('deckStage').scrollTop=0;
   $('deckCount').textContent=(di+1)+' / '+D.slides.length;$('deckPrev').disabled=di===0;$('deckNext').disabled=di===D.slides.length-1}
 function openDeck(k){dk=k;di=0;deckFocus=document.activeElement;deck.hidden=false;document.body.style.overflow='hidden';renderSlide();$('deckNext').focus()}
