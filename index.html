@@ -1185,6 +1185,26 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
 .vz-pyr .ax2 line,.vz-pyr .ax2 path{stroke:var(--vz-mut);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .vz-pyr .ax2 text{font:600 14px var(--body);fill:var(--vz-mut)}
 
+/* superpoderes */
+.vz-sps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.vz-sps li{display:grid;grid-template-columns:14px 1fr;gap:4px 10px;align-items:baseline;padding:14px 16px;border-radius:16px;background:var(--vz-card);border:1px solid var(--vz-line)}
+.vz-sps i{width:12px;height:12px;border-radius:50%;background:var(--dot);align-self:center}
+.vz-sps b{font:600 1.05rem var(--display);color:var(--vz-ink)}
+.vz-sps span,.vz-sps em{grid-column:2;font-size:.9rem;line-height:1.4;color:var(--vz-mut)}
+.vz-sps em{font-style:normal;font-weight:600;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--dot)}
+.vz-sps .hot.on{box-shadow:0 8px 20px rgba(16,38,58,.12);border-color:var(--dot)}
+@media(max-width:520px){.vz-sps{grid-template-columns:1fr}}
+
+.vz-fra .map2{display:grid;grid-template-columns:5fr 2fr;gap:16px}
+.vz-fra .map2 .gl{margin:0 0 8px;font:600 .72rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--vz-mut)}
+.vz-fra .map2 ul{list-style:none;margin:0;padding:0;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px}
+.vz-fra .map2 li{display:grid;gap:3px;align-content:start;padding:10px 12px;border-radius:12px;background:var(--vz-card);border:1px solid var(--vz-line);border-top:4px solid var(--dot)}
+.vz-fra .map2 span{font:600 .9rem/1.25 var(--display);color:var(--vz-ink)}
+.vz-fra .map2 b{font:400 .82rem var(--body);font-style:italic;color:var(--vz-mut)}
+@media(max-width:820px){.vz-fra .map2{grid-template-columns:1fr}.vz-fra .map2 ul{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.ej-src{display:block;margin-top:8px;font:400 .82rem/1.45 var(--body);font-style:normal;opacity:.85}.ej-src a{color:inherit}
+
 </style>
 <div class="wrap">
 <div class="top">
@@ -1958,9 +1978,9 @@ function stepsFor(key,team){
   function f(key2,q,help,ph,type,opt){return{k:'Piloto de un mes',q:q,help:help,ph:ph,type:type||'text',opt:opt,val:function(){return team[key2]},set:function(v){team[key2]=v;saveTeams()}}}
   return [
     f('equipo','¿Cómo se llama el equipo?','','Ej.: Contabilidad Lima'),
-    f('para','¿Qué necesita hoy el área?','La prioridad que el equipo eligió. El ritual existe para eso.','Ej.: que los errores del cierre se digan a tiempo','long'),
+    f('para','¿Qué necesita hoy el área?','La prioridad que el equipo eligió. El ritual existe para eso.','Ej.: que el cliente reciba un mismo mensaje claro de todo el equipo','long'),
     f('poder','¿Qué superpoder hará visible?','El superpoder común del equipo.','','sp'),
-    f('gesto','¿Qué harán exactamente?','Un gesto concreto y corto, que el líder también practica.','Ej.: abrir la reunión con cinco minutos sobre un error y lo que aprendimos','long'),
+    f('gesto','¿Qué harán exactamente?','Un gesto concreto y corto, que el líder también practica.','Ej.: abrir la reunión contando una situación en la que vimos un principio de TMF en acción','long'),
     f('disp','¿Cuándo, y cada cuánto?','El momento que lo activa y su frecuencia.','Ej.: cada lunes, al abrir la reunión del equipo'),
     f('con','¿Con quién, y quién lo conduce?','La conducción puede rotar para que otros la aprendan.','Ej.: todo el equipo; conduce una persona distinta cada semana'),
     f('senal','¿Cómo sabremos que funciona?','Algo que se pueda contar, ver u oír.','Ej.: lo hicimos 4 de 4 lunes y al menos tres personas lo condujeron'),
@@ -2352,6 +2372,7 @@ $('wipeBtn').onclick=function(){var b=$('wipeBtn');
   ans=new Array(24).fill(0);wheel={s:[0,0,0,0,0],n:['','','','',''],a:'',b:''};teams=[];nm.value='';delete b.dataset.sure;b.textContent='Borrar mis datos de este dispositivo';refresh();toast('Listo: borré tus datos de este dispositivo')};
 
 /* ---------- Taller 3: un solo contenido para la página (artículo), la presentación y el PDF ---------- */
+L.ritz=['How to Become the Ritz-Carlton of Your Industry in 7 Steps (Micah Solomon)','Entrepreneur · ene. 2024','https://www.entrepreneur.com/leadership/how-to-become-the-ritz-carlton-of-your-industry-in-7/467592'];
 L.gol2000=['Leadership That Gets Results (Daniel Goleman)','HBR · mar. 2000','https://hbr.org/2000/03/leadership-that-gets-results'];
 L.rit4=['Rituals at Work: Teams That Play Together Stay Together (Michael Norton)','HBS Working Knowledge · mar. 2022','https://www.library.hbs.edu/working-knowledge/rituals-at-work-teams-that-play-together-stay-together'];
 L.rpre=['Comparing Traditional versus Retrospective Pre-Post Assessment','UAMS · ene. 2025','https://educationaldevelopment.uams.edu/wp-content/uploads/sites/57/2025/01/5-Comparing-Traditional-versus-Retrospective-Pre-Post-assessment.pdf'];
@@ -2381,13 +2402,18 @@ var T3={
       mat:'Celular o laptop.',
       prod:'Tu rueda y su índice de 0 a 100. Las cinco dimensiones vuelven en el diseño del ritual.',link:['#perfil','Abrir Mi espacio']}
    ]},
-   {t:'Construyendo al líder',m:20,d:'Mis estilos y mi Índice Ubuntu.',blocks:[
+   {t:'Construyendo al líder',m:20,d:'Mis estilos, mis superpoderes y mi Índice Ubuntu.',blocks:[
      {type:'tema',k:'Repaso',t:'Cuatro estilos, un repertorio',
       lead:'En el Taller 1 vimos <b>cuatro estilos</b> en cuatro casos. Daniel Goleman los respalda: los líderes más efectivos <b>pasan de uno a otro según lo que pide el momento</b>.',
-      body:'Cada estilo del Taller 1 se apoya en uno o dos de los seis estilos de Goleman. A la derecha, cómo se ve en el día a día de TMF. Las <a href="#t2">fichas del Taller 2</a> detallan cada poder con su estilo.',
+      body:'Cada estilo del Taller 1 se apoya en uno o dos de los seis estilos de Goleman. A la derecha, cómo se ve en el día a día de TMF. Enseguida, los superpoderes que hacen posible cada estilo.',
       viz:'est',wide:1,cap:'Los cuatro estilos del Taller 1 y su respaldo en Goleman. Pasa el cursor por cada uno para ver cuándo ayuda.',
       take:'El estilo lo elige la situación, no la costumbre.',src:['gol2000','styles']},
-     {type:'tema',k:'Mis superpoderes',t:'Mi Índice Ubuntu, de 0 a 100',
+     {type:'tema',k:'Repaso',t:'Seis superpoderes, el cómo de cada estilo',
+      lead:'En el Taller 2, los estilos se volvieron <b>seis superpoderes</b> y 24 poderes concretos. El estilo dice <b>cómo decido liderar</b>; el superpoder, <b>qué practico para lograrlo</b>.',
+      body:'Cada superpoder se apoya en uno de los seis estilos de Goleman y, por eso, en uno de los cuatro estilos del Taller 1. Un líder directivo necesita autogestión para que la urgencia no apague al equipo; uno delegativo necesita desarrollo para acompañar sin soltar. Las <a href="#t2">fichas del Taller 2</a> detallan cada poder. El Hexágono Ubuntu mide estos seis superpoderes, y de ahí sale tu índice.',
+      viz:'sps',cap:'Los seis superpoderes del Taller 2 y el estilo que sostienen. Pasa el cursor por cada uno para ver su definición.',
+      take:'El estilo marca el camino; los superpoderes lo hacen posible.',src:['emotion','psafe']},
+     {type:'tema',k:'Mi punto de partida',t:'Mi Índice Ubuntu, de 0 a 100',
       lead:'Las 24 afirmaciones del Hexágono dan un <b>puntaje de 0 a 100</b> por poder, por superpoder y en total. Es la línea de base que volverás a medir en el Taller 4.',
       body:'Cada afirmación describe una conducta, y cada respuesta tiene un ancla de frecuencia, como «varias veces por semana». En el Taller 4 te mides de nuevo y miras también cómo te ves hoy que estabas en noviembre, porque al aprender uno se vuelve más exigente consigo mismo. Subir <b>10 puntos o más</b> en un superpoder es un avance real. Es una autoevaluación de tu práctica, no una prueba psicométrica.',
       viz:'idx',cap:'Los cuatro niveles del Índice Ubuntu. Pasa el cursor por cada nivel para ver qué significa.',
@@ -2424,14 +2450,14 @@ var T3={
       viz:'pri',cap:'Cuatro preguntas para priorizar. Pasa el cursor por cada una para ver un ejemplo.',
       take:'Un ritual que responde a una necesidad real se defiende solo.',src:['prior','psafe']},
      {type:'tema',k:'La guía',t:'Nuestro ritual en una frase',
-      lead:'Un buen ritual <b>cabe en una frase</b>. Cada parte de la frase recoge una dimensión de la rueda o del Hexágono.',
+      lead:'Un buen ritual <b>cabe en una frase</b>. Cada parte sale de una de las dos herramientas de Mi espacio: <b>las cinco dimensiones de la rueda</b> y <b>el superpoder del Hexágono</b>, con uno de sus poderes.',
       viz:'fra',wide:1,cap:'La frase del ritual. Pasa el cursor por cada parte para ver su guía.',
       take:'Si cabe en una frase, se puede practicar.',src:['rit2']},
      {type:'din',central:1,t:'Diseñamos nuestro ritual',fmt:'team',m:45,
       para:'Convertir lo que vimos en un ritual que el equipo decide en conjunto, para lo que más necesita su área, y probarlo durante un mes.',
       pasos:['Cada persona comparte su <b>superpoder</b> elegido y por qué (5 min).','Con las cuatro preguntas, el equipo elige <b>lo que más necesita el área</b> (8 min).','Eligen el <b>superpoder común</b> que mejor responde a esa necesidad (4 min).','Escriben el ritual con la <b>frase guía</b> y lo ajustan hasta que se entienda a la primera (18 min).','Lo leen en voz alta, lo <b>registran como piloto</b> en Mi espacio y agendan en Outlook el check-in de la semana 2 y el cierre del día 30 (10 min).'],
       guia:['<b>Pequeño:</b> de 2 a 10 minutos.','<b>Propio:</b> lo puede conducir cualquiera del equipo, no solo el líder.','<b>Medible:</b> un indicador de práctica (¿lo hicimos?) y uno de efecto (¿cambió algo?).'],
-      ej:'«Cada lunes, al abrir la reunión, quien conduce esa semana pregunta qué aprendimos de un error, en cinco minutos, para que los errores del cierre se digan a tiempo. Sabremos que funciona si lo hacemos 4 de 4 lunes y al menos tres personas lo conducen.»',
+      ej:'«Cada lunes, al abrir la reunión, quien conduce esa semana elige uno de los principios de TMF y cuenta, en cinco minutos, una situación reciente en la que lo vimos en acción con un cliente, para que todo el equipo le hable al cliente con una misma voz, haciendo visible la Comunicación. Sabremos que funciona si lo hacemos 4 de 4 lunes y al menos tres personas lo conducen.» <span class="ej-src">Inspirado en un caso real: el <i>line-up</i> diario de Ritz-Carlton. Desde 1983, al inicio de cada turno y en todas las áreas, el equipo dedica no más de diez minutos a uno de sus principios. Fuente: <a href="'+L.ritz[2]+'" target="_blank" rel="noopener">'+L.ritz[0]+'</a>, '+L.ritz[1]+'.</span>',
       mat:'Equipos por área. Un celular o laptop por equipo.',
       prod:'El ritual del equipo en una frase, registrado como piloto de 30 días.',link:['#piloto','Registrar el piloto']}
    ]},
@@ -2482,38 +2508,43 @@ function vizHex(){var cx=320,cy=240,R=150,h='<svg class="vz vz-hex" viewBox="0 0
   SP.forEach(function(s,i){var p=polar(cx,cy,R,i,6),l=polar(cx,cy,R+36,i,6),anc=Math.abs(l[0]-cx)<20?'middle':(l[0]<cx?'end':'start'),pw=CARDS.slice(i*4,i*4+4).map(function(c){return c.name}).join(', ');
     h+='<line class="ax" x1="'+cx+'" y1="'+cy+'" x2="'+p[0]+'" y2="'+p[1]+'"/><g class="hot"'+nAttr(s.lema+' Poderes: '+pw+'.')+'><circle class="dot" cx="'+p[0]+'" cy="'+p[1]+'" r="12" style="fill:'+SPCOL[i]+'"/><text class="lb" x="'+l[0]+'" y="'+(l[1]+(i===0?-4:i===3?18:6))+'" text-anchor="'+anc+'">'+esc(s.n)+'</text></g>'});
   return h+'</svg>'}
-function vizNiv(){var L4=[['Comunidad TMF','Lo esencial: lo que toda la organización sostiene.','Ejemplo: se reconoce en público un ritual que funcionó.'],['Círculo de líderes','El puente: lo que compartimos entre áreas.','Ejemplo: 30 minutos al mes para compartir lo que aprende cada ritual.'],['Equipo','Lo que hacemos juntos.','Ejemplo: cinco minutos sobre un error al abrir la reunión del lunes.'],['Personal','Lo que hago yo, conmigo.','Ejemplo: diez minutos el viernes para revisar cómo lideré la semana.']],
+function vizNiv(){var L4=[['Comunidad TMF','Lo esencial: lo que toda la organización sostiene.','Ejemplo: se reconoce en público un ritual que funcionó.'],['Círculo de líderes','El puente: lo que compartimos entre áreas.','Ejemplo: 30 minutos al mes para compartir lo que aprende cada ritual.'],['Equipo','Lo que hacemos juntos.','Ejemplo: cinco minutos sobre un principio de TMF al abrir la reunión del lunes.'],['Personal','Lo que hago yo, conmigo.','Ejemplo: diez minutos el viernes para revisar cómo lideré la semana.']],
   cx=250,cy=250,h='<svg class="vz vz-niv" viewBox="0 0 500 500" role="img" aria-label="Cuatro círculos concéntricos">';
   L4.forEach(function(l,i){var r=230-i*55;h+='<g class="hot"'+nAttr(l[0]+'. '+l[1]+' '+l[2])+'><circle class="lv lv'+i+'" cx="'+cx+'" cy="'+cy+'" r="'+r+'"/><text class="lb" x="'+cx+'" y="'+(cy-r+(i===3?r-4:34))+'" text-anchor="middle">'+l[0]+'</text></g>'});
   return h+'</svg>'}
-var EST=[['Directivo','Coercitivo y ejemplar','En un cierre de mes con un error crítico: decido, explico el porqué y asigno.','Ayuda cuando urge y el riesgo es alto. Cuidado: como costumbre, apaga la iniciativa.'],
+var EST=[['Directivo','Coercitivo y ejemplar','En un cierre de mes con una observación urgente del cliente: decido, explico el porqué y asigno.','Ayuda cuando urge y el riesgo es alto. Cuidado: como costumbre, apaga la iniciativa.'],
  ['Democrático','Democrático y afiliativo','Antes de cambiar un proceso de nómina, pregunto a quien lo ejecuta.','Ayuda cuando el equipo sabe cosas que yo no sé. Cuidado: es lento en una emergencia.'],
  ['Delegativo','Coaching','Entrego un cliente con el resultado, los límites y la fecha de revisión acordados.','Ayuda cuando la persona tiene la capacidad y conoce el propósito. Cuidado: delegar no es desentenderse.'],
  ['Transformacional','Orientativo','Explico cómo el trabajo del área sostiene la confianza del cliente en TMF.','Ayuda cuando el equipo necesita sentido y dirección. Cuidado: sin conductas que lo respalden, es solo discurso.']];
 function vizEst(){return '<div class="vz vz-est"><div class="eh"><span>Estilo · Taller 1</span><span>Goleman</span><span>Cómo se ve en TMF</span></div>'+EST.map(function(e,i){return '<div class="er hot"'+nAttr(e[3])+' style="--dot:'+SPCOL[i]+'"><b>'+e[0]+'</b><span class="g">'+e[1]+'</span><span>'+e[2]+'</span></div>'}).join('')+'</div>'}
 function vizIdx(){var B=[['En exploración','0 a 39','Hay intención, pero la conducta aparece poco. Buen lugar para un primer ritual.'],['En práctica','40 a 59','La conducta aparece cada semana, aunque no siempre.'],['Consolidado','60 a 79','Es parte de cómo lideras, varias veces por semana.'],['Referente','80 a 100','Lo haces casi siempre, y otros aprenden de ti.']];
   return '<div class="vz vz-idx"><div class="bands">'+B.map(function(b,i){return '<div class="hot b'+i+'"'+nAttr(b[0]+' ('+b[1]+'): '+b[2])+'><b>'+b[0]+'</b><span>'+b[1]+'</span></div>'}).join('')+'</div><div class="scale"><span>0</span><span>40</span><span>60</span><span>80</span><span>100</span></div><p class="gain"><b>+10</b> puntos en un superpoder entre el Taller 3 y el Taller 4 = un avance real.</p></div>'}
-function vizTres(){var T=[['El porqué','La rutina busca eficiencia, el cómo. El ritual renueva el sentido y la pertenencia.','Ejemplo: abrir el cierre de mes recordando a qué cliente sostiene ese trabajo.'],['Consistencia','Se repite en el mismo momento. Esa predictibilidad da estabilidad cuando hay incertidumbre.','Ejemplo: cada lunes, la misma pregunta al abrir la reunión, pase lo que pase.'],['Refuerzo cultural','Muestra con acciones lo que de verdad importa. El líder modela la cultura de forma tangible.','Ejemplo: el líder es el primero en contar un error y lo que aprendió.']];
+var ST1={'Coercitivo':'Directivo','Ejemplar':'Directivo','Afiliativo':'Democrático','Democrático':'Democrático','Coaching':'Delegativo','Orientativo':'Transformacional'};
+function vizSps(){return '<ul class="vz vz-sps">'+SP.map(function(s,i){return '<li class="hot"'+nAttr(s.n+': '+s.def+' En Goleman: estilo '+s.st.toLowerCase()+'.')+' style="--dot:'+SPCOL[i]+'"><i></i><b>'+esc(s.n)+'</b><span>'+esc(s.lema)+'</span><em>Estilo '+ST1[s.st].toLowerCase()+'</em></li>'}).join('')+'</ul>'}
+function vizTres(){var T=[['El porqué','La rutina busca eficiencia, el cómo. El ritual renueva el sentido y la pertenencia.','Ejemplo: abrir el cierre de mes recordando a qué cliente sostiene ese trabajo.'],['Consistencia','Se repite en el mismo momento. Esa predictibilidad da estabilidad cuando hay incertidumbre.','Ejemplo: cada lunes, la misma pregunta al abrir la reunión, pase lo que pase.'],['Refuerzo cultural','Muestra con acciones lo que de verdad importa. El líder modela la cultura de forma tangible.','Ejemplo: el líder es el primero en contar algo que no salió como esperaba y lo que aprendió.']];
   return '<ol class="vz vz-tres">'+T.map(function(t,i){return '<li class="hot"'+nAttr(t[2])+' style="--dot:'+SPCOL[[1,2,5][i]]+'"><span class="no">'+(i+1)+'</span><b>'+t[0]+'</b><span>'+t[1]+'</span></li>'}).join('')+'</ol>'}
 function vizDat(){var D=[['16 %','más significado','Las personas que comparten actividades de vínculo en grupo valoran su trabajo como más significativo.','Norton y colegas · HBS'],['63 %','antes de lo difícil','De los lectores de HBR encuestados, el 63 % tiene un ritual antes de una reunión o presentación que le genera tensión.','Norton · HBR, 2024'],['3 años','de estudio','Los equipos con rituales regulares mostraron más compromiso, más seguridad psicológica y más satisfacción.','Hadley · HBR, 2025']];
   return '<div class="vz vz-dat">'+D.map(function(d,i){return '<div style="--dot:'+SPCOL[[1,4,3][i]]+'"><b>'+d[0]+'</b><em>'+d[1]+'</em><span>'+d[2]+'</span><i>'+d[3]+'</i></div>'}).join('')+'</div>'}
 var TIPOS=[['Inicio y conexión','Reunión semanal',[['Check-in de una palabra','Los primeros cinco minutos de la reunión semanal: cada persona dice en una palabra cómo llega, antes de hablar de trabajo.'],['Café sin agenda','Una vez al mes, el líder conversa con el equipo sin temas de negocio, de forma horizontal.']]],
  ['Reconocimiento y celebración','Cierre de mes',[['El reconocimiento itinerante','Un objeto simbólico que el líder entrega por un logro; la semana siguiente, esa persona lo entrega a otro compañero.'],['Muro de agradecimientos','Al cerrar el mes, cada persona hace visible la ayuda que recibió de otra.']]],
- ['Reflexión y cierre','Después de un error o de una entrega',[['Revisión sin culpables','Después de un error, el líder abre el espacio: buscamos aprendizajes del sistema, no culpables, y él asume la primera responsabilidad.'],['El mejor error del trimestre','Cada trimestre, el equipo comparte el error del que más aprendió.']]],
+ ['Reflexión y cierre','Después de una entrega o de un imprevisto',[['Revisión de aprendizajes','Después de una entrega exigente, el líder abre el espacio: qué funcionó, qué ajustamos en el proceso, y asume primero su parte.'],['El mejor aprendizaje del trimestre','Cada trimestre, el equipo comparte la situación de la que más aprendió.']]],
  ['Personal del líder','Antes y después de liderar',[['Pausa antes de lo difícil','Dos minutos para respirar y elegir la intención antes de una conversación difícil.'],['Revisión del viernes','Diez minutos para mirar cómo lideré la semana y qué ajusto.']]]];
 function vizDon(){return '<div class="vz vz-tipos">'+TIPOS.map(function(t,i){return '<div style="--dot:'+SPCOL[[0,4,2,5][i]]+'"><p class="tk">'+t[0]+'</p><p class="tm">En TMF: '+t[1]+'</p><ul>'+t[2].map(function(e){return '<li class="hot"'+nAttr(e[0]+': '+e[1])+'><b>'+e[0]+'</b><span>'+e[1]+'</span></li>'}).join('')+'</ul></div>'}).join('')+'</div>'}
 function vizWhy(){var OK=[['Decidir antes','Fijar cuándo y dónde. Por eso cada ritual tiene su momento.'],['Repetir','Un hábito se forma en meses, no en semanas.'],['Sostener','El líder cree en él, lo practica y la comunidad lo respalda.']],KO=[['Imponerlo','Funciona mejor cuando lo crea el equipo.'],['Forzarlo','Copiar algo que no tiene sentido aquí.'],['Apurarlo','El significado llega con el tiempo, no el primer día.']];
   function col(a,cls,t){return '<div class="'+cls+'"><p class="hd">'+t+'</p><ol>'+a.map(function(w,i){return '<li><span class="no">'+(i+1)+'</span><b>'+w[0]+'</b><span>'+w[1]+'</span></li>'}).join('')+'</ol></div>'}
   return '<div class="vz vz-why2">'+col(OK,'ok','Funciona si…')+col(KO,'ko','Falla si…')+'</div>'}
-function vizPri(){var P=[['¿Qué le está costando hoy al área?','Ejemplo: los errores del cierre aparecen tarde.'],['¿Qué necesita el cliente de nosotros en los próximos tres meses?','Ejemplo: respuestas más rápidas en temporada de impuestos.'],['¿Qué superpoder salió más bajo en el equipo?','Ejemplo: Confianza, en varios Hexágonos.'],['¿Qué cambio pequeño tendría más impacto?','Ejemplo: cinco minutos semanales sobre errores, antes que una nueva herramienta.']];
+function vizPri(){var P=[['¿Qué le está costando hoy al área?','Ejemplo: en el cierre, el cliente recibe mensajes distintos de distintas personas.'],['¿Qué necesita el cliente de nosotros en los próximos tres meses?','Ejemplo: respuestas más rápidas en temporada de impuestos.'],['¿Qué superpoder salió más bajo en el equipo?','Ejemplo: Comunicación, en varios Hexágonos.'],['¿Qué cambio pequeño tendría más impacto?','Ejemplo: cinco minutos semanales para alinear el mensaje al cliente, antes que una nueva herramienta.']];
   return '<ol class="vz vz-pri">'+P.map(function(p,i){return '<li class="hot"'+nAttr(p[1])+' style="--dot:'+SPCOL[i+1]+'"><span class="no">'+(i+1)+'</span><b>'+p[0]+'</b></li>'}).join('')+'</ol>'}
-var FRA=[['Cada ','cuándo','El momento que lo activa y su frecuencia. Ejemplo: cada lunes, al abrir la reunión.','Decidir antes'],[', ','quién conduce','La conducción rota para que otros la aprendan. Ejemplo: quien conduce esa semana.','Capacidades'],[' con ','quiénes','Quiénes lo practican. Ejemplo: todo el equipo.','Equipo'],[' ','qué hacemos','Un gesto concreto de 2 a 10 minutos, que el líder también practica. Ejemplo: conversar cinco minutos sobre un error.','Coherencia'],[', para ','lo que necesita el área','La prioridad elegida, conectada con lo esencial de TMF. Ejemplo: que los errores del cierre se digan a tiempo.','Cultura y propósito'],[', haciendo visible ','el superpoder','El superpoder común del equipo. Ejemplo: Confianza.','Hexágono'],['. Sabremos que funciona si ','indicador','Uno de práctica y uno de efecto, que el equipo también percibe. Ejemplo: 4 de 4 lunes y tres personas lo condujeron.','Autopercepción']];
-function vizFra(){return '<div class="vz vz-fra"><p class="f">«'+FRA.map(function(f,i){return f[0]+'<span class="hot s"'+nAttr(f[2]+' Se conecta con: '+f[3]+'.')+' style="--dot:'+SPCOL[i%6]+'">'+f[1]+'</span>'}).join('')+'.»</p><ul class="map">'+FRA.map(function(f,i){return '<li style="--dot:'+SPCOL[i%6]+'"><b>'+f[1]+'</b><span>'+f[3]+'</span></li>'}).join('')+'</ul></div>'}
+var FRA=[['Cada ','cuándo','El momento que lo activa y su frecuencia, puesto en el calendario: lo que decimos, lo hacemos. Ejemplo: cada lunes, al abrir la reunión.','Rueda · Coherencia'],[', ','quién conduce','La conducción rota para que otros la aprendan. Ejemplo: quien conduce esa semana.','Rueda · Capacidades'],[' con ','quiénes','Quiénes lo practican. Ejemplo: todo el equipo.','Rueda · Equipo'],[' ','qué hacemos','Un gesto concreto de 2 a 10 minutos que pone en práctica uno de los cuatro poderes del superpoder elegido. El líder también lo practica. Ejemplo: contar en cinco minutos una situación en la que vimos un principio de TMF en acción.','Hexágono · Un poder'],[', para ','lo que necesita el área','La prioridad elegida, conectada con lo esencial de TMF. Ejemplo: que el cliente reciba un mismo mensaje claro de todo el equipo.','Rueda · Cultura y propósito'],[', haciendo visible ','el superpoder','El superpoder común del equipo. Ejemplo: Comunicación.','Hexágono · Superpoder'],['. Sabremos que funciona si ','indicador','Uno de práctica y uno de efecto, que el equipo también percibe: así contrastas cómo te ves con cómo te ven. Ejemplo: 4 de 4 lunes y tres personas lo condujeron.','Rueda · Autopercepción']];
+var FRC={'Coherencia':3,'Capacidades':2,'Equipo':1,'Cultura y propósito':4,'Autopercepción':0};
+function fraCol(f){var d=f[3].split(' · ')[1];return d in FRC?SPCOL[FRC[d]]:SPCOL[5]}
+function vizFra(){function grp(tool,lab){return '<div class="g"><p class="gl">'+lab+'</p><ul>'+FRA.filter(function(f){return f[3].indexOf(tool)===0}).map(function(f){return '<li style="--dot:'+fraCol(f)+'"><span>'+f[3].split(' · ')[1]+'</span><b>'+f[1]+'</b></li>'}).join('')+'</ul></div>'}
+  return '<div class="vz vz-fra"><p class="f">«'+FRA.map(function(f){return f[0]+'<span class="hot s"'+nAttr(f[2]+' Viene de: '+f[3]+'.')+' style="--dot:'+fraCol(f)+'">'+f[1]+'</span>'}).join('')+'.»</p><div class="map2">'+grp('Rueda','De la rueda de mi liderazgo')+grp('Hexágono','Del Hexágono Ubuntu')+'</div></div>'}
 function vizRuta(){var it=[{a:1,t:'Apertura',m:10}].concat(T3.mom.map(function(M){return M.pause?{a:1,p:1,t:'Pausa',m:M.m}:{n:M.n,t:M.t,m:M.m}})),acc=0;
   function hm(x){return Math.floor(x/60)+':'+String(x%60).padStart(2,'0')}
   return '<ol class="vz vz-ruta4">'+it.map(function(x){var t0=acc;acc+=x.m;return '<li class="'+(x.a?'aux':'')+(x.p?' pause':'')+'"><span class="hr">'+hm(t0)+'</span><i class="dot"></i><span class="no">'+(x.a?(x.p?'‖':'·'):x.n)+'</span><b>'+x.t+'</b><em>'+x.m+' min</em></li>'}).join('')+'<li class="end"><span class="hr">'+hm(acc)+'</span><i class="dot"></i><b>Fin</b></li></ol>'}
 function vizIdeas(){return '<ol class="vz vz-ideas">'+T3.ideas.map(function(t,i){return '<li class="'+(i===2?'ub':'')+'"><span class="no">'+(i+1)+'</span><p>'+t+'</p></li>'}).join('')+'</ol>'}
-var VIZ={rueda:vizRueda,hex:vizHex,niv:vizNiv,why:vizWhy,est:vizEst,idx:vizIdx,tres:vizTres,dat:vizDat,don:vizDon,pri:vizPri,fra:vizFra};
+var VIZ={sps:vizSps,rueda:vizRueda,hex:vizHex,niv:vizNiv,why:vizWhy,est:vizEst,idx:vizIdx,tres:vizTres,dat:vizDat,don:vizDon,pri:vizPri,fra:vizFra};
 
 function dinHTML(b,slide){var f=FMT[b.fmt];
   var ejH=b.ej?'<p class="lbl">Ejemplo</p><p class="din-ej">'+b.ej+'</p>':'';
