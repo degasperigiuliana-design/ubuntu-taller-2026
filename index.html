@@ -1223,6 +1223,36 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
 .vz-ejf .s{white-space:normal}
 .chart canvas#wheelCv{aspect-ratio:900/480;max-width:520px}
 
+.sub-h{margin:28px 0 10px;font:600 1.1rem var(--display)}
+.tcard.compr{border-left:6px solid #5B5BD6}
+
+.vz-ciclo{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;counter-reset:c}
+.vz-ciclo li{position:relative;display:grid;gap:6px;align-content:start;padding:16px;border-radius:16px;background:var(--vz-card);border:1px solid var(--vz-line);border-top:4px solid var(--dot)}
+.vz-ciclo .k{font:600 .72rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--dot)}
+.vz-ciclo b{font:600 1.02rem/1.25 var(--display);color:var(--vz-ink)}
+.vz-ciclo li:not(:last-child)::after{content:"→";position:absolute;right:-9px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--vz-mut);z-index:1}
+@media(max-width:820px){.vz-ciclo{grid-template-columns:1fr 1fr}.vz-ciclo li::after{display:none}}
+.sx-rama .tx{max-width:1150px;width:100%;text-align:center}
+.rama-box{display:grid;gap:18px;justify-items:center}
+.vz-rama{width:100%;height:auto}
+.vz-rama .br{fill:none;stroke:#7A5B43;stroke-width:9;stroke-linecap:round}
+.vz-rama .tw{fill:none;stroke:#7A5B43;stroke-width:4;stroke-linecap:round}
+.vz-rama .bk{fill:#10263A}.vz-rama .ey{fill:#fff}.vz-rama .mk{stroke:#10263A;stroke-width:3;stroke-linecap:round}
+.vz-rama text{font:600 15px var(--body);fill:#10263A}
+.vz-rama .rb{animation:land .6s ease-out both}
+@keyframes land{from{opacity:0;transform-box:fill-box;translate:0 -40px}to{opacity:1;translate:0 0}}
+.rama-f{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.rama-f input{font:400 1.1rem var(--body);padding:12px 18px;border-radius:999px;border:1px solid #B4C7D6;min-width:260px}
+.rama-f button{font:600 1rem var(--body);padding:12px 20px;border-radius:999px;border:0;background:#1267E0;color:#fff;cursor:pointer}
+.rama-f button.ghost{background:transparent;color:#10263A;border:1px solid #B4C7D6}
+@media print{.rama-f{display:none}}
+.slide.sx-rama{grid-template-columns:1fr}
+.vz-rama .rb{animation:land .6s ease-out}
+@keyframes land{from{opacity:0}to{opacity:1}}
+.rama-svg{width:100%;max-width:1100px}
+.sx-rama .rama-svg{width:min(1100px,88vw)}.vz-rama text{font-size:13px}
+.vz-ciclo .d{font-size:.88rem;line-height:1.45;color:var(--vz-mut)}
+
 </style>
 <div class="wrap">
 <div class="top">
@@ -1621,9 +1651,11 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
     <p class="lead">Un ritual por equipo, <strong>pequeño y que se pueda mantener</strong>. Lo registra una persona y lo comparte con el código de equipo.</p>
     <div id="teams" style="display:grid;gap:14px"></div>
     <div class="row"><button type="button" id="addTeam">Registrar un piloto</button></div>
+    <h3 class="sub-h">El compromiso del círculo de dirección</h3>
+    <div id="comprBox"></div>
     <div class="panel">
-      <h3>Tengo un código de equipo</h3>
-      <div class="joinrow"><input type="text" id="teamIn" placeholder="Pega aquí el código que te compartieron" autocomplete="off" spellcheck="false"><button type="button" class="ghost" id="teamJoin">Ver la ficha</button></div>
+      <h3>Tengo un código</h3>
+      <div class="joinrow"><input type="text" id="teamIn" placeholder="Pega aquí el código del equipo (UB1…) o del compromiso (UC1…)" autocomplete="off" spellcheck="false"><button type="button" class="ghost" id="teamJoin">Ver la ficha</button></div>
       <p class="legend">El código contiene la ficha completa, así que funciona sin cuentas ni contraseñas. Si el equipo cambia la ficha, comparte el código nuevo.</p>
     </div>
   </section>
@@ -1865,19 +1897,22 @@ var WHEEL=[
  {n:'Coherencia',q:'¿Qué pienso? ¿Qué siento? ¿Qué hago?',s:'Lo que pienso, lo que siento y lo que hago van en la misma dirección.'},
  {n:'Cultura y propósito',q:'¿Qué hago visible de la cultura TMF?',s:'Hago visible la cultura de TMF en mi día a día.'}
 ];
-var LS_ANS='ua_ans_v2',LS_NAME='ua_name_v2',LS_TEAMS='ua_teams_v2',LS_WHEEL='ua_wheel_v2';
+var LS_ANS='ua_ans_v2',LS_NAME='ua_name_v2',LS_TEAMS='ua_teams_v2',LS_WHEEL='ua_wheel_v2',LS_COMPR='ua_compr_v2';
 ['ua_ans_v1','ua_name_v1','ua_teams_v1','ua_wheel_v1'].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});
 
 /* ---------- Estado ---------- */
-var ans=new Array(24).fill(0),wheel={s:[0,0,0,0,0],n:['','','','',''],a:'',b:''},teams=[];
+var ans=new Array(24).fill(0),wheel={s:[0,0,0,0,0],n:['','','','',''],a:'',b:''},teams=[],compr=null;
 (function(){
   var sa=load(LS_ANS);if(sa&&/^[0-5]{24}$/.test(sa))ans=sa.split('').map(Number);
   try{var w=JSON.parse(load(LS_WHEEL)||'null');if(w&&w.s&&w.s.length===5)wheel=w}catch(e){}
+  try{var cm=JSON.parse(load(LS_COMPR)||'null');if(cm&&(cm.protege||cm.acompana||cm.reconoce))compr=cm}catch(e){}
   try{var t=JSON.parse(load(LS_TEAMS)||'[]');if(Array.isArray(t))teams=t.filter(function(x){return x&&(x.equipo||x.gesto||x.poder)})}catch(e){}
 })();
 function saveAns(){store(LS_ANS,ans.join(''))}
 function saveWheel(){store(LS_WHEEL,JSON.stringify(wheel))}
 function saveTeams(){store(LS_TEAMS,JSON.stringify(teams))}
+function saveCompr(){if(compr)store(LS_COMPR,JSON.stringify(compr));else try{localStorage.removeItem(LS_COMPR)}catch(e){}}
+var COBJ='Conectar los rituales de los equipos con el propósito de TMF y sostenerlos durante los 30 días del piloto.';
 var nm=$('nombre');nm.value=load(LS_NAME)||'';nm.addEventListener('input',function(){store(LS_NAME,nm.value);setShare()});
 function hexDone(){return ans.every(Boolean)}
 function wheelDone(){return wheel.s.every(Boolean)}
@@ -1973,11 +2008,12 @@ function renderTools(){
   var T=[
    {id:'hex',c:'#B77BC8',c2:'#5B5BD6',tags:['Personal','Taller 3','7 min'],h:'Hexágono Ubuntu',d:'24 afirmaciones sobre lo que haces habitualmente. Te da tu Índice Ubuntu de 0 a 100, para compararlo en el Taller 4.',n:h,of:24},
    {id:'rueda',c:'#2FB7B0',c2:'#1267E0',tags:['Personal','Taller 3','2 min'],h:'La rueda de mi liderazgo',d:'Cinco preguntas para mirarte como líder y dos para decidir qué quieres fortalecer.',n:w,of:5},
+   {id:'compr',c:'#5B5BD6',c2:'#1267E0',tags:['Círculo de dirección','Taller 3','5 pasos'],h:'Nuestro compromiso',d:'Cómo el círculo de dirección respalda los rituales de los equipos. Se comparte con un código y aparece en la ficha de cada equipo.',n:compr?1:0,of:0},
    {id:'piloto',c:'#C98A4B',c2:'#D9738F',tags:['Equipo','Taller 3','8 pasos'],h:'Nuestro piloto de un mes',d:'El ritual que tu equipo practicará durante un mes. Una persona lo registra y lo comparte con un código.',n:t,of:0}
   ];
   $('tools').innerHTML=T.map(function(x){
-    var st=x.of?(x.n===0?'Sin empezar':x.n<x.of?x.n+' de '+x.of:'Completo'):(x.n?x.n+(x.n===1?' piloto registrado':' pilotos registrados'):'Sin empezar');
-    var lb=x.of?(x.n===0?'Empezar':x.n<x.of?'Continuar':'Revisar'):(x.n?'Registrar otro':'Empezar');
+    var st=x.of?(x.n===0?'Sin empezar':x.n<x.of?x.n+' de '+x.of:'Completo'):x.id==='compr'?(x.n?'Registrado':'Sin empezar'):(x.n?x.n+(x.n===1?' piloto registrado':' pilotos registrados'):'Sin empezar');
+    var lb=x.of?(x.n===0?'Empezar':x.n<x.of?'Continuar':'Revisar'):x.id==='compr'?(x.n?'Revisar':'Empezar'):(x.n?'Registrar otro':'Empezar');
     return '<div class="tool"><i class="ic" aria-hidden="true" style="background:radial-gradient(circle at 32% 28%,#fff 0,'+x.c+' 45%,'+x.c2+' 100%)"></i><div class="tags">'+x.tags.map(function(g){return '<span>'+g+'</span>'}).join('')+'</div><h3>'+x.h+'</h3><p class="muted">'+x.d+'</p>'+
       '<p class="st">'+st+(x.of?'<i><b style="width:'+(x.n/x.of*100)+'%"></b></i>':'')+'</p><button type="button" data-flow="'+x.id+'">'+lb+'</button></div>';
   }).join('');
@@ -1996,6 +2032,14 @@ function stepsFor(key,team){
   if(key==='hex'){
     var hs=[];POWERS.forEach(function(P,pi){P.q.forEach(function(q,qi){var i=pi*4+qi;hs.push({k:P.n+' · '+P.p[qi],q:q,help:'Piensa en la última semana.',type:'scale',auto:true,val:function(){return ans[i]},set:function(v){ans[i]=v;saveAns()}})})});
     return hs;
+  }
+  if(key==='compr'){if(!compr)compr={obj:COBJ,protege:'',acompana:'',reconoce:'',rev:isoD(addDays(today(),30))};
+    function g(k,kk,q,help,ph,type){return{k:kk,q:q,help:help,ph:ph,type:type||'long',val:function(){return compr[k]},set:function(v){compr[k]=v;saveCompr()}}}
+    return [g('obj','Objetivo','¿Cuál es nuestro objetivo?','Viene propuesto. Pueden ajustarlo con sus palabras.',''),
+      g('protege','Protegemos','¿Qué protegemos para que los rituales vivan?','Lo que el círculo de dirección cuida, aun en semanas exigentes.','Ej.: el tiempo del ritual en la agenda de cada equipo, también en el cierre de mes'),
+      g('acompana','Acompañamos','¿Cómo los acompañamos?','Presencia concreta, sin convertirla en control.','Ej.: una persona del círculo de dirección participa en un check-in de cada equipo en la semana 2'),
+      g('reconoce','Reconocemos','¿Cómo los reconocemos?','Lo que el equipo vive como un reconocimiento real.','Ej.: el día 30, cada equipo cuenta en tres minutos su aprendizaje ante la comunidad TMF'),
+      g('rev','Revisamos','¿Cuándo revisamos este compromiso?','Una fecha para mirar juntos qué funcionó y qué ajustar.','','date')];
   }
   function f(key2,q,help,ph,type,opt){return{k:'Piloto de un mes',q:q,help:help,ph:ph,type:type||'text',opt:opt,val:function(){return team[key2]},set:function(v){team[key2]=v;saveTeams()}}}
   function W(i){return wheelDone()?'<b>'+WHEEL[i].n+'</b> '+pct(wheel.s[i])+'/100':''}
@@ -2016,16 +2060,17 @@ function stepsFor(key,team){
     f('inicio','¿Cuándo empieza?','El check-in será en la semana 2 y el cierre, el día 30.','','date')
   ];
 }
-var FT={rueda:'La rueda de mi liderazgo',hex:'Hexágono Ubuntu',piloto:'Nuestro piloto de un mes'};
+var FT={rueda:'La rueda de mi liderazgo',hex:'Hexágono Ubuntu',piloto:'Nuestro piloto de un mes',compr:'Nuestro compromiso'};
 function openFlow(key,ti){
   var team=null;
   if(key==='piloto'){if(ti==null){team={equipo:'',para:'',poder:'',gesto:'',freq:'',con:'',senal:'',disp:'',inicio:today()};teams.push(team);ti=teams.length-1}else team=teams[ti]}
   F={key:key,steps:stepsFor(key,team),i:0,team:team};
-  if(key!=='piloto'||ti!=null){var first=F.steps.findIndex(function(s){return !s.opt&&!s.val()});F.i=first<0?0:first}
+  if(key==='compr'){F.i=0}else if(key!=='piloto'||ti!=null){var first=F.steps.findIndex(function(s){return !s.opt&&!s.val()});F.i=first<0?0:first}
   lastFocus=document.activeElement;flow.hidden=false;document.body.style.overflow='hidden';$('flowTitle').textContent=FT[key];renderStep();
 }
 function closeFlow(){
   if(!F)return;commit();
+  if(F.key==='compr'&&compr&&!(compr.protege||compr.acompana||compr.reconoce)){compr=null;saveCompr()}
   if(F.key==='piloto'){teams=teams.filter(function(x){return x.equipo||x.gesto||x.poder});saveTeams()}
   F=null;flow.hidden=true;document.body.style.overflow='';refresh();if(lastFocus&&lastFocus.focus)lastFocus.focus();
 }
@@ -2034,8 +2079,8 @@ function renderStep(){
   var n=F.steps.length,st=$('flowStage');
   $('flowProg').style.width=(Math.min(F.i,n)/n*100)+'%';$('flowPrev').disabled=F.i===0;
   if(F.i>=n){
-    $('flowCount').textContent='';$('flowNext').textContent=F.key==='piloto'?'Ver la ficha':'Ver mi perfil';
-    var msg=F.key==='rueda'?'Tu rueda está lista. Mírala junto a tu Hexágono en tu perfil.':F.key==='hex'?'Tu Hexágono está listo. Es una fotografía de hoy: en diciembre podrás compararla.':'El piloto quedó registrado. Comparte el código con tu equipo y agenda el check-in en Outlook.';
+    $('flowCount').textContent='';$('flowNext').textContent=F.key==='piloto'||F.key==='compr'?'Ver la ficha':'Ver mi perfil';
+    var msg=F.key==='rueda'?'Tu rueda está lista. Mírala junto a tu Hexágono en tu perfil.':F.key==='hex'?'Tu Hexágono está listo. Es una fotografía de hoy: en diciembre podrás compararla.':F.key==='compr'?'El compromiso quedó registrado. Comparte su código con los equipos: aparecerá en la ficha de cada piloto.':'El piloto quedó registrado. Comparte el código con tu equipo y agenda el check-in en Outlook.';
     st.innerHTML='<div class="step done"><i class="orb" aria-hidden="true"></i><h2>Listo</h2><p class="help">'+msg+'</p></div>';$('flowNext').focus();return;
   }
   var s=F.steps[F.i],v=s.val(),h='<div class="step"><p class="k"><b>'+(F.i+1)+'</b>'+esc(s.k)+'</p><h2 id="stepQ">'+esc(s.q)+'</h2>'+(s.help?'<p class="help">'+esc(s.help)+'</p>':'')+(s.ctx?'<div class="ctx">'+s.ctx()+'</div>':'');
@@ -2050,7 +2095,7 @@ function renderStep(){
   var el=$('flowIn')||st.querySelector('.opt[aria-pressed="true"]')||st.querySelector('.opt');if(el)el.focus({preventScroll:true});
 }
 function next(){
-  if(!F)return;if(F.i>=F.steps.length){var k=F.key;closeFlow();location.hash=k==='piloto'?'#piloto':'#perfil';return}
+  if(!F)return;if(F.i>=F.steps.length){var k=F.key;closeFlow();location.hash=k==='piloto'||k==='compr'?'#piloto':'#perfil';return}
   commit();var s=F.steps[F.i];if(!s.opt&&!s.val()){toast(s.type==='scale'||s.type==='power'?'Elige una opción para continuar.':'Escribe una respuesta para continuar.');return}
   F.i++;renderStep();
 }
@@ -2078,6 +2123,15 @@ async function pack(t){
   try{if(window.CompressionStream)z=await pipe(raw,CompressionStream)}catch(e){z=null}
   return z&&z.length<raw.length?'UB1z'+b64u(z):'UB1j'+b64u(raw);
 }
+async function packC(c){var raw=new TextEncoder().encode(JSON.stringify([c.obj,c.protege,c.acompana,c.reconoce,c.rev])),z=null;
+  try{if(window.CompressionStream)z=await pipe(raw,CompressionStream)}catch(e){z=null}
+  return z&&z.length<raw.length?'UC1z'+b64u(z):'UC1j'+b64u(raw)}
+async function unpackC(text){var m=/UC1([zj])([A-Za-z0-9_-]{8,})/.exec((text||'').replace(/\s+/g,''));if(!m)return null;
+  var u=unb64u(m[2]);if(m[1]==='z'){if(!window.DecompressionStream)throw new Error('navegador');u=await pipe(u,DecompressionStream)}
+  var x=JSON.parse(new TextDecoder().decode(u));if(!Array.isArray(x)||x.length!==5)throw new Error('formato');
+  function S(v){return typeof v==='string'?v.slice(0,400):''}
+  return{obj:S(x[0]),protege:S(x[1]),acompana:S(x[2]),reconoce:S(x[3]),rev:/^\d{4}-\d{2}-\d{2}$/.test(x[4])?x[4]:'',shared:true}}
+function comprLine(){return compr?['Protegemos: '+compr.protege,'Acompañamos: '+compr.acompana,'Reconocemos: '+compr.reconoce].filter(function(s){return !/: $/.test(s)}).join(' · '):''}
 async function unpack(text){
   var m=/UB1([zj])([A-Za-z0-9_-]{8,})/.exec((text||'').replace(/\s+/g,''));if(!m)throw new Error('formato');
   var u=unb64u(m[2]);if(m[1]==='z'){if(!window.DecompressionStream)throw new Error('navegador');u=await pipe(u,DecompressionStream)}
@@ -2096,12 +2150,21 @@ function ics(t){
   [14,30].forEach(function(n){var e=evt(t,n);o+='BEGIN:VEVENT\r\nUID:ubuntu-'+n+'-'+Date.now()+'@ubuntu-en-accion\r\nDTSTAMP:'+st(new Date(),'09','00')+'\r\nDTSTART:'+st(e.d,'09','00')+'\r\nDTEND:'+st(e.d,'09','30')+'\r\nSUMMARY:'+x(e.title)+'\r\nDESCRIPTION:'+x(e.body)+'\r\nEND:VEVENT\r\n'});
   return o+'END:VCALENDAR\r\n';
 }
-function teamText(t,code){return 'Piloto de un mes · '+(t.equipo||'Equipo')+' · Ubuntu en acción\nLo que necesita el área: '+(t.para||'')+'\nSuperpoder: '+t.poder+'\nQué hacemos: '+t.gesto+'\nCuándo: '+(t.disp||t.freq)+'\nCon quién: '+t.con+'\nCómo sabremos que funciona: '+t.senal+'\nInicio: '+niceD(addDays(t.inicio,0))+'\n\nPara verlo en tu celular, abre Mi espacio y pega este código de equipo:\n'+code}
+function teamText(t,code){return 'Piloto de un mes · '+(t.equipo||'Equipo')+' · Ubuntu en acción\nLo que necesita el área: '+(t.para||'')+'\nSuperpoder: '+t.poder+'\nQué hacemos: '+t.gesto+'\nCuándo: '+(t.disp||t.freq)+'\nCon quién: '+t.con+'\nCómo sabremos que funciona: '+t.senal+'\nInicio: '+niceD(addDays(t.inicio,0))+(compr?'\nCómo nos respalda el círculo de dirección: '+comprLine():'')+'\n\nPara verlo en tu celular, abre Mi espacio y pega este código de equipo:\n'+code}
 var tdiv=$('teams');
-function renderTeams(){
+function renderCompr(){var el=$('comprBox');if(!el)return;
+  if(!compr){el.innerHTML='<div class="empty">Cuando el círculo de dirección registre su compromiso, pega aquí su código (empieza con «UC1») y aparecerá en la ficha de cada equipo.</div>';return}
+  var F3=[['Objetivo',compr.obj],['Protegemos',compr.protege],['Acompañamos',compr.acompana],['Reconocemos',compr.reconoce],['Revisamos',compr.rev?niceD(addDays(compr.rev,0)):'']];
+  el.innerHTML='<div class="tcard compr"><header><div><p class="eyebrow">'+(compr.shared?'Compartido conmigo':'Registrado aquí')+' · Círculo de dirección</p><h3>Nuestro compromiso</h3></div><div class="row"><button type="button" class="small ghost" data-flow="compr">Editar</button><button type="button" class="small ghost" id="comprDel">Quitar</button></div></header><dl>'+F3.map(function(f){return '<div><dt>'+f[0]+'</dt><dd>'+(esc(f[1])||'<span class="muted">Sin completar</span>')+'</dd></div>'}).join('')+'</dl>'+
+    '<div class="field"><label>Código del compromiso</label><div class="code" id="comprCode">Generando…</div><div class="row"><button type="button" class="small" id="comprCopy">Copiar código</button><a class="btn ghost" target="_blank" rel="noopener" id="comprWa" href="#">Enviar por WhatsApp</a></div></div></div>';
+  packC(compr).then(function(code){$('comprCode').textContent=code;$('comprWa').href='https://wa.me/?text='+encodeURIComponent('Nuestro compromiso · Círculo de dirección · Ubuntu en acción\nObjetivo: '+compr.obj+'\n'+comprLine()+'\n\nPega este código en Mi espacio para verlo en la ficha de tu equipo:\n'+code)});
+  $('comprCopy').onclick=function(){copyText($('comprCode').textContent,'Código copiado')};
+  $('comprDel').onclick=function(){var d=$('comprDel');if(d.dataset.sure){compr=null;saveCompr();refresh()}else{d.dataset.sure='1';d.textContent='Confirmar: quitar';setTimeout(function(){if(d.isConnected){delete d.dataset.sure;d.textContent='Quitar'}},4000)}};
+}
+function renderTeams(){renderCompr();
   if(!teams.length){tdiv.innerHTML='<div class="empty">Todavía no hay pilotos en este dispositivo. Registra el de tu equipo o pega el código que te compartieron.</div>';return}
   tdiv.innerHTML=teams.map(function(t,i){
-    var F2=[['Lo que necesita el área',t.para],['Superpoder',t.poder],['Qué hacemos',t.gesto],['Cuándo',t.disp||t.freq],['Con quién y quién conduce',t.con],['Cómo sabremos que funciona',t.senal],['Inicio',niceD(addDays(t.inicio,0))],['Check-in · semana 2',niceD(addDays(t.inicio,14))],['Cierre · día 30',niceD(addDays(t.inicio,30))]];
+    var F2=[['Lo que necesita el área',t.para],['Superpoder',t.poder],['Qué hacemos',t.gesto],['Cuándo',t.disp||t.freq],['Con quién y quién conduce',t.con],['Cómo sabremos que funciona',t.senal],['Inicio',niceD(addDays(t.inicio,0))],['Check-in · semana 2',niceD(addDays(t.inicio,14))],['Cierre · día 30',niceD(addDays(t.inicio,30))]];if(compr)F2.push(['Cómo nos respalda el círculo de dirección',comprLine()]);
     return '<div class="tcard" data-i="'+i+'"><header><div><p class="eyebrow">'+(t.shared?'Compartido conmigo':'Registrado aquí')+'</p><h3>'+esc(t.equipo||'Equipo '+(i+1))+'</h3></div><div class="row"><button type="button" class="small ghost" data-flow="piloto" data-ti="'+i+'">Editar</button><button type="button" class="small ghost" data-del="'+i+'">Quitar</button></div></header>'+
       '<dl>'+F2.map(function(f){return '<div><dt>'+f[0]+'</dt><dd>'+(esc(f[1])||'<span class="muted">Sin completar</span>')+'</dd></div>'}).join('')+'</dl>'+
       '<div class="row"><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t,14)+'">Agendar check-in en Outlook</a><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t,30)+'">Agendar cierre en Outlook</a><button type="button" class="small ghost" data-ics="'+i+'">Archivo de calendario (.ics)</button></div>'+
@@ -2116,10 +2179,11 @@ tdiv.addEventListener('click',function(e){
 });
 $('addTeam').onclick=function(){openFlow('piloto',null)};
 $('teamJoin').onclick=function(){
+  if(/UC1[zj]/.test($('teamIn').value.replace(/\s+/g,''))){unpackC($('teamIn').value).then(function(c){compr=c;saveCompr();$('teamIn').value='';refresh();toast('Compromiso del círculo de dirección cargado')},function(){toast('No reconozco ese código. Cópialo completo, desde «UC1».')});return}
   unpack($('teamIn').value).then(function(t){
     var dup=teams.findIndex(function(x){return x.equipo===t.equipo&&x.shared});if(dup>=0)teams[dup]=t;else teams.push(t);
     saveTeams();$('teamIn').value='';refresh();toast('Ficha del equipo cargada');tdiv.lastElementChild.scrollIntoView({behavior:'smooth',block:'center'});
-  },function(){toast('No reconozco ese código. Cópialo completo, desde «UB1».')});
+  },function(){toast('No reconozco ese código. Cópialo completo, desde «UB1» o «UC1».')});
 };
 
 /* ---------- Superpoderes y fichas ---------- */
@@ -2318,6 +2382,7 @@ function teamBody(c,y,t,go,col){
   yy+=fld(c,x+pad+8,yy,iw,'Qué hacemos',t.gesto,dry);
   var a=fld(c,x+pad+8,yy,cw,'Cuándo',t.disp||t.freq,dry),b=fld(c,x+pad+8+cw+34,yy,cw,'Con quién y quién conduce',t.con,dry);yy+=Math.max(a,b);
   yy+=fld(c,x+pad+8,yy,iw,'Cómo sabremos que funciona',t.senal,dry);
+  if(compr)yy+=fld(c,x+pad+8,yy,iw,'Cómo nos respalda el círculo de dirección',comprLine(),dry);
   var bw=(iw-48)/3;
   if(go)[['Inicio',0],['Check-in · semana 2',14],['Cierre · día 30',30]].forEach(function(d,i){var bx=x+pad+8+i*(bw+24);rr(c,bx,yy,bw-3,112,24,i?'rgba(18,103,224,.08)':col,i?'rgba(18,103,224,.18)':null);
     txt(c,d[0].toUpperCase(),bx+22,yy+20,{font:'600 15px '+FB,color:i?MUT:'#fff',lh:22});txt(c,niceD(addDays(t.inicio,d[1])),bx+22,yy+52,{font:'400 24px '+FD,color:i?INK:'#fff',lh:32,w:bw-34})});
@@ -2397,7 +2462,7 @@ $('waSend').onclick=sendWA;$('imgClose').onclick=function(){$('imgDlg').close()}
 /* Borrar mis datos de este dispositivo */
 $('wipeBtn').onclick=function(){var b=$('wipeBtn');
   if(!b.dataset.sure){b.dataset.sure='1';b.textContent='Confirmar: borrar todo';setTimeout(function(){if(b.isConnected){delete b.dataset.sure;b.textContent='Borrar mis datos de este dispositivo'}},4000);return}
-  [LS_ANS,LS_NAME,LS_TEAMS,LS_WHEEL].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});
+  [LS_ANS,LS_NAME,LS_TEAMS,LS_WHEEL,LS_COMPR].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});compr=null;
   ans=new Array(24).fill(0);wheel={s:[0,0,0,0,0],n:['','','','',''],a:'',b:''};teams=[];nm.value='';delete b.dataset.sure;b.textContent='Borrar mis datos de este dispositivo';refresh();toast('Listo: borré tus datos de este dispositivo')};
 
 /* ---------- Taller 3: un solo contenido para la página (artículo), la presentación y el PDF ---------- */
@@ -2460,9 +2525,8 @@ var T3={
       viz:'tres',cap:'Tres rasgos de un ritual de liderazgo. Pasa el cursor por cada uno para ver un ejemplo.',
       take:'La rutina ordena el trabajo; el ritual le da sentido.',src:['rit4','rit3']},
      {type:'dato',src:['rit3']},
-     {type:'dato',d:{k:'Lo que muestra la investigación · 1 de 3',n:'16 %',t:'más <b>significado en su trabajo</b> perciben las personas que comparten actividades de vínculo con su equipo.',src:'rit4'},src:['rit4']},
-     {type:'dato',d:{k:'Lo que muestra la investigación · 2 de 3',n:'63 %',t:'de los lectores de HBR encuestados tiene un ritual <b>antes de una reunión o presentación</b> que le genera tensión.',src:'rit3'},src:['rit3']},
-     {type:'dato',d:{k:'Lo que muestra la investigación · 3 de 3',n:'3 años',t:'de estudio: los equipos con rituales regulares mostraron <b>más compromiso, más seguridad psicológica y más satisfacción</b>.',src:'rit1'},src:['rit1']},
+     {type:'dato',d:{k:'Lo que muestra la investigación · 1 de 2',n:'16 %',t:'más <b>significado en su trabajo</b> perciben las personas que comparten actividades de vínculo con su equipo.',src:'rit4'},src:['rit4']},
+     {type:'dato',d:{k:'Lo que muestra la investigación · 2 de 2',n:'3 años',t:'de estudio: los equipos con rituales regulares mostraron <b>más compromiso, más seguridad psicológica y más satisfacción</b>.',src:'rit1'},src:['rit1']},
     {type:'tema',k:'Tipos y ejemplos',t:'Cuatro tipos de rituales',
       lead:'Los líderes usan rituales en <b>momentos clave</b>: al empezar, al reconocer, al cerrar y consigo mismos. Los más conocidos nacieron de algo que el equipo ya hacía, como el «Tea Time» de IDEO o el canto de Walmart.',
       viz:'don',wide:1,cap:'Cuatro tipos de rituales, con ejemplos y el momento de TMF donde pueden vivir. Pasa el cursor por cada ejemplo para leerlo completo.',
@@ -2499,17 +2563,24 @@ var T3={
       para:'Que toda la comunidad conozca, de primera mano, lo que cada equipo va a practicar.',
       pasos:['Cada equipo comparte su ritual en <b>dos minutos</b>: lo que necesita el área, la frase y el indicador.','Todos escuchan y anotan lo que les inspira. Las preguntas van en el bloque siguiente.'],
       prod:'Todos los rituales a la vista de la comunidad.'},
-     {type:'din',t:'El círculo de dirección conecta con TMF',fmt:'gg',m:15,par:1,
-      para:'Conectar los rituales de los equipos con lo esencial de TMF y decidir cómo acompañarlos.',
-      pasos:['Para cada ritual: ¿qué parte de <b>lo esencial de TMF</b> hace visible?','¿Cómo lo acompañamos: con <b>tiempo, recursos, reconocimiento</b> o quitando un obstáculo?','Eligen <b>un compromiso</b> por ritual, concreto y con fecha.'],
-      prod:'Un compromiso de acompañamiento por cada ritual.'},
+     {type:'din',t:'El compromiso del círculo de dirección',fmt:'gg',m:15,par:1,
+      para:'Conectar los rituales de los equipos con el propósito de TMF y decidir, con hechos, cómo los respalda la dirección durante los 30 días.',
+      pasos:['Leen el <b>objetivo</b>: conectar los rituales con el propósito de TMF y sostenerlos durante el piloto.','Responden tres preguntas: ¿qué <b>protegemos</b>?, ¿cómo los <b>acompañamos</b>? y ¿cómo los <b>reconocemos</b>?','Fijan una <b>fecha de revisión</b> y registran el compromiso en Mi espacio. Su código llega a cada equipo y aparece en su ficha.'],
+      guia:['<b>Concreto:</b> algo que se pueda ver en la agenda o en un check-in.','<b>Posible:</b> que la dirección pueda cumplirlo también en semanas exigentes.','<b>Recíproco:</b> si los equipos se comprometen con su ritual, la dirección se compromete con ellos.'],
+      prod:'«Nuestro compromiso», registrado y compartido con todos los equipos.',link:['#piloto','Registrar el compromiso']},
      {type:'din',t:'El ritual del círculo de líderes',fmt:'net',m:15,par:1,
       para:'Darse un espacio propio de retroalimentación y mejora continua, y ser el puente entre los equipos y lo esencial de TMF.',
       pasos:['Eligen el <b>momento</b>: por ejemplo, 30 minutos una vez al mes.','Usan cuatro tiempos: <b>qué funcionó</b>, <b>qué aprendimos</b>, <b>qué necesitamos</b> y <b>un reconocimiento</b>.','Deciden cómo comparten con el círculo de dirección lo que muestran los <b>indicadores de los equipos</b>, y cómo devuelven lo que se decida.'],
       ej:'«El primer jueves de cada mes, en 30 minutos, cada líder trae lo que aprendió el ritual de su equipo, compartimos un aprendizaje y llevamos al círculo de dirección una necesidad y un reconocimiento.»',
       prod:'El ritual del círculo de líderes, en una frase.'},
-     {type:'nota',t:'Puesta en común',fmt:'all',m:8,
-      txt:'El círculo de dirección comparte sus compromisos y el círculo de líderes lee su ritual. Cada persona fija su <b>objetivo de mejora</b>: subir 10 puntos en su superpoder para el Taller 4.'}
+     {type:'din',t:'La rama',fmt:'all',m:8,rama:1,
+      para:'Hacer visible, con un símbolo, que cada equipo es parte de la misma comunidad: somos porque somos.',
+      pasos:['Volvemos a la frase de apertura: <b>cada tarde, la misma rama</b>.','Cada líder dice <b>en una palabra</b> qué aporta su equipo a TMF, y su abejaruco se posa en la rama.','El círculo de dirección lee su compromiso y el círculo de líderes, su ritual. Cada persona fija su <b>objetivo de mejora</b>: subir 10 puntos en su superpoder para el Taller 4.'],
+      prod:'La rama de la comunidad, con todos los equipos. Cada líder puede repetir este gesto con su equipo, a su manera.'},
+     {type:'tema',k:'Cómo seguimos',t:'Construimos, no sumamos',
+      lead:'Este mes, cada equipo trabaja <b>una dimensión y un superpoder</b>. En el Taller 4 medimos y, desde ahí, el mismo ritual <b>suma la siguiente dimensión</b>. Así crece, como la colonia, sin saturar a nadie.',
+      viz:'ciclo',wide:1,cap:'Un ritual que crece de a una dimensión. Pasa el cursor por cada etapa para ver qué ocurre.',
+      take:'Un ritual que crece de a poco se queda; uno que llega completo se olvida.',src:['rit2','rit1']},
    ]},
    {t:'Cierre',m:10,d:'Tres ideas para llevar.',close:1}
   ],
@@ -2572,11 +2643,21 @@ function vizFra(){function grp(tool,lab){return '<div class="g"><p class="gl">'+
   return '<div class="vz vz-fra"><p class="f">«'+FRA.map(function(f){return f[0]+'<span class="hot s"'+nAttr(f[2]+' Viene de: '+f[3]+'.')+' style="--dot:'+fraCol(f)+'">'+f[1]+'</span>'}).join('')+'.»</p><div class="map2">'+grp('Rueda','De la rueda de mi liderazgo')+grp('Hexágono','Del Hexágono Ubuntu')+'</div></div>'}
 var EJF=['Cada lunes, al abrir la reunión','quien conduce esa semana','todo el equipo','elige un principio de TMF y cuenta en cinco minutos una situación reciente en la que lo vimos en acción con un cliente','que todo el equipo le hable al cliente con una misma voz','la Comunicación','lo hacemos 4 de 4 lunes y al menos tres personas lo conducen'];
 function vizEjf(){return '<div class="vz vz-fra vz-ejf"><p class="f">«'+FRA.map(function(f,i){var s=f[0];if(i===0)s='';return s+'<span class="hot s"'+nAttr(f[1]+' · '+f[3])+' style="--dot:'+fraCol(f)+'">'+EJF[i]+'</span>'}).join('')+'.»</p><p class="ej-src">Inspirado en un caso real: el <i>line-up</i> diario de Ritz-Carlton. Desde 1983, al inicio de cada turno y en todas las áreas, el equipo dedica no más de diez minutos a uno de sus principios. <a href="'+L.ritz[2]+'" target="_blank" rel="noopener">'+esc(L.ritz[0])+'</a> · '+esc(L.ritz[1])+'</p></div>'}
+function vizCiclo(){var C=[['Hoy · Taller 3','Una dimensión, un superpoder','El equipo elige lo que más necesita el área y lo practica durante 30 días.'],['Taller 4','Medimos','Volvemos al Hexágono y al indicador del ritual: ¿qué cambió y para quién?'],['Después','Sumamos la siguiente','El mismo ritual suma una dimensión de la rueda. No es otra tarea: es el mismo gesto, más profundo.'],['Con el tiempo','Cultura Ubuntu','Cada equipo, a su ritmo, alinea su forma de trabajar con el propósito de TMF.']];
+  return '<ol class="vz vz-ciclo">'+C.map(function(c,i){return '<li class="hot"'+nAttr(c[2])+' style="--dot:'+SPCOL[[0,2,4,5][i]]+'"><span class="k">'+c[0]+'</span><b>'+c[1]+'</b><span class="d">'+c[2]+'</span></li>'}).join('')+'</ol>'}
+function ramaSVG(){var W=[];try{W=JSON.parse(sessionStorage.getItem('ua_rama')||'[]')}catch(e){}
+  var h='<svg class="vz-rama" viewBox="0 120 1000 165" role="img" aria-label="Una rama con '+W.length+' abejarucos"><path class="br" d="M20 214 C220 196 420 232 620 210 S900 196 985 214"/><path class="tw" d="M330 216 C350 236 372 250 402 258"/>';
+  var n=W.length;W.forEach(function(w,i){var x=n===1?500:80+i*(840/Math.max(1,n-1)),y=210-6*Math.sin(x/160),col=SPCOL[i%6],s=n>12?1.1:1.5;
+    h+='<g class="rb" transform="translate('+x.toFixed(0)+' '+(y-2).toFixed(0)+') scale('+s+')"><path d="M-6 -2 L-26 14 L-14 2Z" style="fill:'+col+'"/><ellipse cx="0" cy="-16" rx="13" ry="17" style="fill:'+col+'"/><circle cx="6" cy="-34" r="9" style="fill:'+col+'"/><path d="M13 -35 L28 -32 L13 -30Z" class="bk"/><circle cx="8" cy="-36" r="1.8" class="ey"/><path d="M-3 -26 L11 -22" class="mk"/><text x="0" y="40" text-anchor="middle">'+esc(w)+'</text></g>'});
+  return h+'</svg>'}
+function ramaHTML(){return '<div class="rama-box"><div class="rama-svg">'+ramaSVG()+'</div><form class="rama-f" data-rama><input type="text" maxlength="18" placeholder="Una palabra por equipo" aria-label="Una palabra"><button type="submit">Posar en la rama</button><button type="button" class="ghost" data-rama-reset>Empezar de nuevo</button></form></div>'}
+document.addEventListener('submit',function(e){var f=e.target.closest('[data-rama]');if(!f)return;e.preventDefault();var v=f.querySelector('input').value.trim();if(!v)return;var W=[];try{W=JSON.parse(sessionStorage.getItem('ua_rama')||'[]')}catch(x){}W.push(v);try{sessionStorage.setItem('ua_rama',JSON.stringify(W))}catch(x){}document.querySelectorAll('.rama-svg').forEach(function(b){b.innerHTML=ramaSVG()});f.querySelector('input').value='';f.querySelector('input').focus()});
+document.addEventListener('click',function(e){if(!e.target.closest('[data-rama-reset]'))return;try{sessionStorage.removeItem('ua_rama')}catch(x){}document.querySelectorAll('.rama-svg').forEach(function(b){b.innerHTML=ramaSVG()})});
 function vizRuta(){var it=[{a:1,t:'Apertura',m:10}].concat(T3.mom.map(function(M){return M.pause?{a:1,p:1,t:'Pausa',m:M.m}:{n:M.n,t:M.t,m:M.m}})),acc=0;
   function hm(x){return Math.floor(x/60)+':'+String(x%60).padStart(2,'0')}
   return '<ol class="vz vz-ruta4">'+it.map(function(x){var t0=acc;acc+=x.m;return '<li class="'+(x.a?'aux':'')+(x.p?' pause':'')+'"><span class="hr">'+hm(t0)+'</span><i class="dot"></i><span class="no">'+(x.a?(x.p?'‖':'·'):x.n)+'</span><b>'+x.t+'</b><em>'+x.m+' min</em></li>'}).join('')+'<li class="end"><span class="hr">'+hm(acc)+'</span><i class="dot"></i><b>Fin</b></li></ol>'}
 function vizIdeas(){return '<ol class="vz vz-ideas">'+T3.ideas.map(function(t,i){return '<li class="'+(i===2?'ub':'')+'"><span class="no">'+(i+1)+'</span><p>'+t+'</p></li>'}).join('')+'</ol>'}
-var VIZ={sps:vizSps,rueda:vizRueda,hex:vizHex,niv:vizNiv,why:vizWhy,est:vizEst,idx:vizIdx,tres:vizTres,dat:vizDat,don:vizDon,pri:vizPri,fra:vizFra};
+var VIZ={ciclo:vizCiclo,sps:vizSps,rueda:vizRueda,hex:vizHex,niv:vizNiv,why:vizWhy,est:vizEst,idx:vizIdx,tres:vizTres,dat:vizDat,don:vizDon,pri:vizPri,fra:vizFra};
 
 function dinHTML(b,slide){var f=FMT[b.fmt];
   var ejH=b.ej?'<p class="lbl">Ejemplo</p><p class="din-ej">'+b.ej+'</p>':'';
@@ -2631,7 +2712,7 @@ function t3Slides(){var S=[],alt=0;
     (M.blocks||[]).forEach(function(b){
       if(b.type==='dato'){add('v-quote sx-dato','<div class="tx">'+datoHTML(b.d)+'</div>');return}
       if(b.type==='ejf'){add('bg-w sx-tema sx-ejf sx-wide','<div class="tx"><p class="eyebrow">'+mk+' · Un ejemplo</p><h2>'+b.t+'</h2>'+vizEjf()+'</div>');return}
-      if(b.type==='din'){add('v-dark sx-din'+(b.ej?' sx-din-ej':''),'<div class="tx">'+'<p class="eyebrow">'+mk+' · '+M.t+'</p>'+dinHTML(b,true)+'</div>');return}
+      if(b.type==='din'){add('v-dark sx-din'+(b.ej?' sx-din-ej':''),'<div class="tx">'+'<p class="eyebrow">'+mk+' · '+M.t+'</p>'+dinHTML(b,true)+'</div>');if(b.rama)add('v-quote sx-rama','<div class="tx"><p class="eyebrow">'+mk+' · La rama</p><h2>Cada tarde, la misma rama</h2>'+ramaHTML()+'</div>');return}
       if(b.type==='nota'){add('v-quote sx-nota','<div class="tx"><p class="eyebrow">'+mk+' · '+b.t+' · '+FMT[b.fmt][0]+' · '+b.m+' min</p><h2>'+b.txt+'</h2></div>');return}
       add(bg+' sx-tema sx-'+b.viz+(b.wide?' sx-wide':''),'<div class="tx"><p class="eyebrow">'+mk+' · '+b.k+'</p><h2>'+b.t+'</h2><p class="lead">'+b.lead+'</p><p class="take">'+b.take+'</p>'+slLinks(b.src)+'</div><figure class="vz-wrap">'+VIZ[b.viz]()+'</figure>')})});
   add('bg-b sx-fuentes','<div class="tx"><p class="eyebrow">Para profundizar</p><h2>Fuentes</h2><ol>'+T3.src.map(function(k){var e=L[k];return '<li><a href="'+e[2]+'" target="_blank" rel="noopener">'+esc(e[0])+'</a> · '+esc(e[1])+'</li>'}).join('')+'</ol></div>');
@@ -2670,7 +2751,7 @@ function closeDeck(){deck.hidden=true;document.body.style.overflow='';if(deckFoc
 function go(n){var len=DECKS[dk].slides.length;di=Math.max(0,Math.min(len-1,di+n));renderSlide()}
 document.addEventListener('click',function(e){var b=e.target.closest('[data-present]');if(b)openDeck(b.dataset.present);var p=e.target.closest('[data-pdf]');if(p)deckPDF(p.dataset.pdf)});
 $('deckClose').onclick=closeDeck;$('deckPrev').onclick=function(){go(-1)};$('deckNext').onclick=function(){go(1)};$('deckPdf').onclick=function(){deckPDF(dk)};
-document.addEventListener('keydown',function(e){if(deck.hidden)return;if(e.key==='Escape')closeDeck();if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1)}if(e.key==='ArrowLeft')go(-1)});
+document.addEventListener('keydown',function(e){if(deck.hidden)return;if(/^(input|textarea)$/i.test(e.target.tagName||'')&&e.key!=='Escape')return;if(e.key==='Escape')closeDeck();if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1)}if(e.key==='ArrowLeft')go(-1)});
 var tx=null;deck.addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
 deck.addEventListener('touchend',function(e){if(tx===null)return;var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)go(dx<0?1:-1);tx=null});
 
