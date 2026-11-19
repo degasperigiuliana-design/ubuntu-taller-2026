@@ -1210,6 +1210,19 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
 .step .ctx .pw{display:inline-block;margin:2px 2px 0 0;padding:2px 10px;border-radius:999px;background:var(--card,#fff);border:1px solid color-mix(in srgb,var(--accent,#1267E0) 30%,transparent);font-size:.86rem}
 .ap-grid.one{grid-template-columns:1fr;max-width:760px;margin:8px 0 28px}
 
+.vz-ondas path{stroke:var(--vz-card,#fff);stroke-width:2;opacity:.92;transition:opacity .2s}
+.vz-ondas .hot.on path{opacity:1;filter:drop-shadow(0 6px 10px rgba(16,38,58,.25))}
+.vz-ondas .lb{font:600 16px var(--body);fill:#fff}
+.vz-ondas .yo{fill:color-mix(in srgb,var(--vz-ink) 8%,transparent)}
+.vz-ondas .yot{font:italic 400 28px var(--serif);fill:var(--vz-ink)}
+.vz-ejf .f{font-size:clamp(1.3rem,2.3vw,1.75rem);line-height:2.05}
+.vz-ejf .s{font-style:normal}
+.vz-ejf .ej-src{margin-top:18px;color:var(--vz-mut);max-width:880px}
+.sx-ejf .tx{max-width:1100px}
+.ap-dato .s,.ej-src,.ap-dato .t{overflow-wrap:anywhere}
+.vz-ejf .s{white-space:normal}
+.chart canvas#wheelCv{aspect-ratio:900/480;max-width:520px}
+
 </style>
 <div class="wrap">
 <div class="top">
@@ -1580,8 +1593,8 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
     <p class="eyebrow">Personal</p>
     <h2>Mi perfil de hoy</h2>
     <div class="charts">
-      <div class="panel chart"><h3>La rueda de mi liderazgo</h3><div id="wheelBox"></div></div>
       <div class="panel chart"><h3>Hexágono Ubuntu</h3><div id="hexBox"></div></div>
+      <div class="panel chart"><h3>La rueda de mi liderazgo</h3><div id="wheelBox"></div></div>
     </div>
     <div class="panel" id="keepBox" hidden>
       <h3>Guarda tu perfil</h3>
@@ -1907,10 +1920,13 @@ function drawHex(cv,sc,p){
 }
 function drawWheel(cv,s,p){
   var c=cv.getContext('2d'),W=cv.width,H=cv.height;c.clearRect(0,0,W,H);
-  RING.forEach(function(wi,k){var g=pyr(W,H,k),v=s[wi]||0;
-    c.beginPath();c.moveTo(g.cx-g.wb/2,g.bot);c.lineTo(g.cx+g.wb/2,g.bot);c.lineTo(g.cx+g.wt/2,g.top);c.lineTo(g.cx-g.wt/2,g.top);c.closePath();
-    c.fillStyle=hexA(SPCOL[wi],.16);c.fill();
-    if(v){c.save();c.clip();var fw=g.wb*Math.max(.04,pct(v)/100);c.fillStyle=SPCOL[wi];c.fillRect(g.cx-fw/2,g.top-1,fw,g.bot-g.top+2);c.restore()}});
+  var R=Math.min(W*.47,H*.92),cx=W/2,cy=H/2+R/2,r0=R*.18,gp=R*.012,bw=(R-r0-5*gp)/5;
+  RING.forEach(function(wi,k){var r1=r0+gp+k*(bw+gp),r2=r1+bw,v=s[wi]||0;
+    c.beginPath();c.arc(cx,cy,r2,Math.PI,0);c.arc(cx,cy,r1,0,Math.PI,true);c.closePath();
+    c.fillStyle=hexA(SPCOL[wi],v?.14+.86*pct(v)/100:.12);c.fill();
+    if(v){c.fillStyle=pct(v)>=50?'#fff':p.fg;c.font='600 '+Math.round(bw*.42)+'px Figtree,system-ui,sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(String(pct(v)),cx,cy-(r1+r2)/2)}});
+  c.beginPath();c.arc(cx,cy,r0,Math.PI,0);c.closePath();c.fillStyle=hexA(p.fg,.08);c.fill();
+  c.fillStyle=p.fg;c.font='italic 400 '+Math.round(r0*.42)+'px "Instrument Serif",Georgia,serif';c.textAlign='center';c.textBaseline='alphabetic';c.fillText('Yo',cx,cy-r0*.25);
 }
 function lectura(){
   var sc=scores(),mx=Math.max.apply(null,sc),mn=Math.min.apply(null,sc);
@@ -1921,7 +1937,7 @@ function lectura(){
 function drawCharts(){
   var wb=$('wheelBox'),hb=$('hexBox');
   if(wheelDone()){
-    var wi=wheelIdx();wb.innerHTML='<div class="idx"><b>'+wi+'</b><span>de 100 · '+lvl(wi)+'</span><p>Índice de mi rueda</p></div><canvas id="wheelCv" width="900" height="760" role="img" aria-label="Pirámide de cinco niveles, de la base a la cúspide: autopercepción, coherencia, capacidades, equipo, y cultura y propósito"></canvas><div class="bars">'+RING.slice().reverse().map(function(i){return '<div class="bar"><span>'+WHEEL[i].n+'</span><span class="track"><i style="width:'+pct(wheel.s[i])+'%;background:'+SPCOL[i]+'"></i></span><b>'+pct(wheel.s[i])+'</b></div>'}).join('')+'</div><p class="muted">De la base a la cúspide: de lo que depende de mí a lo esencial de TMF.</p>'+
+    var wi=wheelIdx();wb.innerHTML='<div class="idx"><b>'+wi+'</b><span>de 100 · '+lvl(wi)+'</span><p>Índice de mi rueda</p></div><canvas id="wheelCv" width="900" height="480" role="img" aria-label="Cinco ondas, del centro hacia afuera: autopercepción, coherencia, capacidades, equipo, y cultura y propósito"></canvas><div class="bars">'+RING.slice().reverse().map(function(i){return '<div class="bar"><span>'+WHEEL[i].n+'</span><span class="track"><i style="width:'+pct(wheel.s[i])+'%;background:'+SPCOL[i]+'"></i></span><b>'+pct(wheel.s[i])+'</b></div>'}).join('')+'</div><p class="muted">Del centro hacia afuera: de lo que depende de mí a lo esencial de TMF. Más intenso el color, más alto el puntaje.</p>'+
       (wheel.a?'<p class="muted"><b>Ya tengo:</b> '+esc(wheel.a)+'</p>':'')+(wheel.b?'<p class="muted"><b>Quiero fortalecer:</b> '+esc(wheel.b)+'</p>':'')+'<div class="row"><button type="button" class="small ghost" data-flow="rueda">Revisar mis respuestas</button></div>';
     drawWheel($('wheelCv'),wheel.s,pal());
   }else wb.innerHTML='<div class="empty"><p>Cinco preguntas para mirarte como líder. Toma unos tres minutos.</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="rueda">'+(wheel.s.some(Boolean)?'Continuar la rueda':'Empezar la rueda')+'</button></div></div>';
@@ -1955,8 +1971,8 @@ $('restoreBtn').onclick=function(){
 function renderTools(){
   var w=wheel.s.filter(Boolean).length,h=ans.filter(Boolean).length,t=teams.length;
   var T=[
-   {id:'rueda',c:'#2FB7B0',c2:'#1267E0',tags:['Personal','Taller 3','2 min'],h:'La rueda de mi liderazgo',d:'Cinco preguntas para mirarte como líder y dos para decidir qué quieres fortalecer.',n:w,of:5},
    {id:'hex',c:'#B77BC8',c2:'#5B5BD6',tags:['Personal','Taller 3','7 min'],h:'Hexágono Ubuntu',d:'24 afirmaciones sobre lo que haces habitualmente. Te da tu Índice Ubuntu de 0 a 100, para compararlo en el Taller 4.',n:h,of:24},
+   {id:'rueda',c:'#2FB7B0',c2:'#1267E0',tags:['Personal','Taller 3','2 min'],h:'La rueda de mi liderazgo',d:'Cinco preguntas para mirarte como líder y dos para decidir qué quieres fortalecer.',n:w,of:5},
    {id:'piloto',c:'#C98A4B',c2:'#D9738F',tags:['Equipo','Taller 3','8 pasos'],h:'Nuestro piloto de un mes',d:'El ritual que tu equipo practicará durante un mes. Una persona lo registra y lo comparte con un código.',n:t,of:0}
   ];
   $('tools').innerHTML=T.map(function(x){
@@ -2324,8 +2340,8 @@ async function buildProfile(){
     var hi=await img('hero');if(hi){c.save();var s=190;c.beginPath();c.arc(PW-PM-s/2,80+s/2,s/2,0,7);c.clip();c.fillStyle='#B4D1E1';c.fillRect(PW-PM-s,80,s,s);cover(c,hi,PW-PM-s,80,s,s,0,.7);c.restore()}
     y=Math.max(y,270)+22;
     var wl=[];if(wheel.a)wl.push(['Ya tengo',wheel.a]);if(wheel.b)wl.push(['Quiero fortalecer',wheel.b]);
-    y+=toolBand(c,y,wn?{eyebrow:'Personal',title:'La rueda de mi liderazgo',draw:function(t){drawWheel(t,wheel.s,LIGHT)},rows:RING.slice().reverse().map(function(i){return [WHEEL[i].n,wheel.s[i]?(wheel.s[i]-1)*1.25:0,pct(wheel.s[i])+' / 100',SPCOL[i]]}),rh:66,notes:[['Índice de mi rueda',wheelIdx()+' / 100 · '+lvl(wheelIdx())]].concat(wl)}:{empty:1,eyebrow:'Personal',title:'La rueda de mi liderazgo'})+26;
-    toolBand(c,y,hexDone()?{eyebrow:'Personal',title:'Hexágono Ubuntu',draw:function(t){drawHex(t,sc,LIGHT)},rows:POWERS.map(function(P,i){return [P.n,spIdx()[i]/20,spIdx()[i]+' / 100',SPCOL[i]]}),rh:62,notes:[['Lectura',lectura()]]}:{empty:1,eyebrow:'Personal',title:'Hexágono Ubuntu'})});
+    y+=toolBand(c,y,hexDone()?{eyebrow:'Personal',title:'Hexágono Ubuntu',draw:function(t){drawHex(t,sc,LIGHT)},rows:POWERS.map(function(P,i){return [P.n,spIdx()[i]/20,spIdx()[i]+' / 100',SPCOL[i]]}),rh:62,notes:[['Lectura',lectura()]]}:{empty:1,eyebrow:'Personal',title:'Hexágono Ubuntu'})+26;
+    toolBand(c,y,wn?{eyebrow:'Personal',title:'La rueda de mi liderazgo',draw:function(t){drawWheel(t,wheel.s,LIGHT)},rows:RING.slice().reverse().map(function(i){return [WHEEL[i].n,wheel.s[i]?(wheel.s[i]-1)*1.25:0,pct(wheel.s[i])+' / 100',SPCOL[i]]}),rh:66,notes:[['Índice de mi rueda',wheelIdx()+' / 100 · '+lvl(wheelIdx())]].concat(wl)}:{empty:1,eyebrow:'Personal',title:'La rueda de mi liderazgo'});});
   var items=[],dn=[];WHEEL.forEach(function(w,i){if(wheel.n[i])dn.push([w.n,wheel.n[i]])});
   if(dn.length)items.push({h:notesH(c,dn),draw:function(c,y){return notesBand(c,y,dn)}});
   teams.forEach(function(t){items.push({h:teamBand(c,0,t,true),draw:function(c,y){return teamBand(c,y,t)}})});
@@ -2403,20 +2419,8 @@ var T3={
       pasos:['Leemos la <b>frase</b> de la colonia en voz alta.','<b>Dilema:</b> cada persona vota a mano alzada, A o B, y dos voluntarios cuentan por qué.','Revelamos el <b>dato</b>: casi todos tenemos un ritual personal; pocos, uno de equipo.','<b>Ronda de una palabra:</b> cada persona nombra un ritual que ya tiene, en su vida o en su equipo.'],
       prod:'Una primera lista de rituales que el grupo ya practica, sin saberlo.'}},
   mom:[
-   {t:'La rueda de mi liderazgo',m:10,d:'Dónde estoy hoy, de mí hacia la organización.',blocks:[
-     {type:'tema',k:'Punto de partida',t:'Cinco dimensiones, de mí hacia TMF',
-      lead:'La rueda mira cinco dimensiones del liderazgo. En la base está lo que <b>depende de mí</b>; hacia la cúspide, lo que <b>construimos juntos</b>, hasta lo esencial de TMF.',
-      body:'La autopercepción se completa con la mirada de los demás: lo que creo que aporto no siempre es lo que mi equipo ve. Por eso, después del taller, pregúntale a alguien de tu equipo cómo te ve en tu dimensión más frágil.',
-      viz:'rueda',cap:'Las cinco dimensiones, de la base a la cúspide. Pasa el cursor por cada nivel para ver su pregunta.',
-      take:'La base depende de mí; la cúspide la construimos juntos.',src:['blind','purpose']},
-     {type:'din',t:'La rueda de mi liderazgo',fmt:'ind',m:6,
-      para:'Ver dónde estoy hoy en las cinco dimensiones que el ritual va a tocar.',
-      pasos:['Abre <b>Mi espacio</b> y responde las cinco preguntas.','Mira tu rueda: ¿cuál es tu dimensión <b>más sólida</b> y cuál la <b>más frágil</b>?','Anota en una frase por qué crees que la más frágil está así.'],
-      mat:'Celular o laptop.',
-      prod:'Tu rueda y su índice de 0 a 100. Las cinco dimensiones vuelven en el diseño del ritual.',link:['#perfil','Abrir Mi espacio']}
-   ]},
    {t:'Construyendo al líder',m:20,d:'Mis estilos, mis superpoderes y mi Índice Ubuntu.',blocks:[
-     {type:'tema',k:'Repaso',t:'Cuatro estilos, un repertorio',
+     {type:'tema',k:'Punto de partida',t:'Cuatro estilos, un repertorio',
       lead:'En el Taller 1 vimos <b>cuatro estilos</b> en cuatro casos. Daniel Goleman los respalda: los líderes más efectivos <b>pasan de uno a otro según lo que pide el momento</b>.',
       body:'Cada estilo del Taller 1 se apoya en uno o dos de los seis estilos de Goleman. A la derecha, cómo se ve en el día a día de TMF. Enseguida, los superpoderes que hacen posible cada estilo.',
       viz:'est',wide:1,cap:'Los cuatro estilos del Taller 1 y su respaldo en Goleman. Pasa el cursor por cada uno para ver cuándo ayuda.',
@@ -2437,6 +2441,18 @@ var T3={
       mat:'Celular o laptop.',
       prod:'Tu Índice Ubuntu de noviembre y el superpoder que llevas al diseño del ritual.',link:['#perfil','Abrir Mi espacio']}
    ]},
+   {t:'La rueda de mi liderazgo',m:10,d:'Cómo impacto, de mí hacia TMF.',blocks:[
+     {type:'tema',k:'Cómo impacto',t:'Cinco dimensiones, de mí hacia TMF',
+      lead:'Ya sé cómo estoy. Ahora miro <b>cómo impacto</b>. Como ondas en el agua, lo que hago <b>empieza en mí</b> y llega, onda a onda, hasta <b>lo esencial de TMF</b>.',
+      body:'La autopercepción se completa con la mirada de los demás: lo que creo que aporto no siempre es lo que mi equipo ve. Por eso, después del taller, pregúntale a alguien de tu equipo cómo te ve en tu dimensión más frágil.',
+      viz:'rueda',cap:'Las cinco dimensiones, del centro hacia afuera. Pasa el cursor por cada onda para ver su pregunta.',
+      take:'Lo que empieza en mí llega hasta TMF.',src:['blind','purpose']},
+     {type:'din',t:'La rueda de mi liderazgo',fmt:'ind',m:6,
+      para:'Ver cómo impacto hoy en las cinco dimensiones que el ritual va a tocar.',
+      pasos:['Abre <b>Mi espacio</b> y responde las cinco preguntas.','Mira tu rueda: ¿cuál es tu dimensión <b>más sólida</b> y cuál la <b>más frágil</b>?','Anota en una frase por qué crees que la más frágil está así.'],
+      mat:'Celular o laptop.',
+      prod:'Tu rueda y su índice de 0 a 100. Las cinco dimensiones vuelven en el diseño del ritual.',link:['#perfil','Abrir Mi espacio']}
+   ]},
    {t:'El ritual en el liderazgo',m:20,d:'Qué es, qué dicen los datos y dónde vive en TMF.',blocks:[
      {type:'tema',k:'El concepto',t:'Qué es un ritual de liderazgo',
       lead:'Un ritual de liderazgo es una <b>práctica estructurada y repetida</b> que refuerza los valores, la confianza, la cohesión y el propósito del equipo. A diferencia de una reunión ordinaria, tiene una <b>carga simbólica</b>: busca que las personas se sientan conectadas y seguras.',
@@ -2444,11 +2460,10 @@ var T3={
       viz:'tres',cap:'Tres rasgos de un ritual de liderazgo. Pasa el cursor por cada uno para ver un ejemplo.',
       take:'La rutina ordena el trabajo; el ritual le da sentido.',src:['rit4','rit3']},
      {type:'dato',src:['rit3']},
-     {type:'tema',k:'Los datos',t:'Lo que muestra la investigación',
-      lead:'Los rituales de equipo <b>dan más sentido al trabajo</b>, elevan la seguridad psicológica y alinean al equipo sin necesidad de control rígido. Y todavía son poco comunes.',
-      viz:'dat',wide:1,cap:'Tres resultados de investigación sobre rituales de equipo.',
-      take:'Pocos equipos tienen un ritual. El tuyo puede ser uno de ellos.',src:['rit4','rit3','rit1']},
-     {type:'tema',k:'Tipos y ejemplos',t:'Cuatro tipos de rituales',
+     {type:'dato',d:{k:'Lo que muestra la investigación · 1 de 3',n:'16 %',t:'más <b>significado en su trabajo</b> perciben las personas que comparten actividades de vínculo con su equipo.',src:'rit4'},src:['rit4']},
+     {type:'dato',d:{k:'Lo que muestra la investigación · 2 de 3',n:'63 %',t:'de los lectores de HBR encuestados tiene un ritual <b>antes de una reunión o presentación</b> que le genera tensión.',src:'rit3'},src:['rit3']},
+     {type:'dato',d:{k:'Lo que muestra la investigación · 3 de 3',n:'3 años',t:'de estudio: los equipos con rituales regulares mostraron <b>más compromiso, más seguridad psicológica y más satisfacción</b>.',src:'rit1'},src:['rit1']},
+    {type:'tema',k:'Tipos y ejemplos',t:'Cuatro tipos de rituales',
       lead:'Los líderes usan rituales en <b>momentos clave</b>: al empezar, al reconocer, al cerrar y consigo mismos. Los más conocidos nacieron de algo que el equipo ya hacía, como el «Tea Time» de IDEO o el canto de Walmart.',
       viz:'don',wide:1,cap:'Cuatro tipos de rituales, con ejemplos y el momento de TMF donde pueden vivir. Pasa el cursor por cada ejemplo para leerlo completo.',
       take:'No inventes un momento: dale sentido a uno que ya existe.',src:['rit4','rit3','rit2']},
@@ -2467,11 +2482,11 @@ var T3={
       lead:'Un buen ritual <b>cabe en una frase</b>. Cada parte sale de una de las dos herramientas de Mi espacio: <b>las cinco dimensiones de la rueda</b> y <b>el superpoder del Hexágono</b>, con uno de sus poderes.',
       viz:'fra',wide:1,cap:'La frase del ritual. Pasa el cursor por cada parte para ver su guía.',
       take:'Si cabe en una frase, se puede practicar.',src:['rit2']},
+     {type:'ejf',t:'Así se ve una frase completa'},
      {type:'din',central:1,t:'Diseñamos nuestro ritual',fmt:'team',m:45,
       para:'Convertir lo que vimos en un ritual que el equipo decide en conjunto, para lo que más necesita su área, y probarlo durante un mes.',
       pasos:['Cada persona comparte su <b>superpoder</b> elegido y por qué (5 min).','Con las cuatro preguntas, el equipo elige <b>lo que más necesita el área</b> (8 min).','Eligen el <b>superpoder común</b> que mejor responde a esa necesidad (4 min).','Escriben el ritual con la <b>frase guía</b> y lo ajustan hasta que se entienda a la primera (18 min).','Lo leen en voz alta, lo <b>registran como piloto</b> en Mi espacio y agendan en Outlook el check-in de la semana 2 y el cierre del día 30 (10 min).'],
       guia:['<b>Pequeño:</b> de 2 a 10 minutos.','<b>Propio:</b> lo puede conducir cualquiera del equipo, no solo el líder.','<b>Medible:</b> un indicador de práctica (¿lo hicimos?) y uno de efecto (¿cambió algo?).'],
-      ej:'«Cada lunes, al abrir la reunión, quien conduce esa semana elige uno de los principios de TMF y cuenta, en cinco minutos, una situación reciente en la que lo vimos en acción con un cliente, para que todo el equipo le hable al cliente con una misma voz, haciendo visible la Comunicación. Sabremos que funciona si lo hacemos 4 de 4 lunes y al menos tres personas lo conducen.» <span class="ej-src">Inspirado en un caso real: el <i>line-up</i> diario de Ritz-Carlton. Desde 1983, al inicio de cada turno y en todas las áreas, el equipo dedica no más de diez minutos a uno de sus principios. Fuente: <a href="'+L.ritz[2]+'" target="_blank" rel="noopener">'+L.ritz[0]+'</a>, '+L.ritz[1]+'.</span>',
       mat:'Equipos por área. Un celular o laptop por equipo.',
       prod:'El ritual del equipo en una frase, registrado como piloto de 30 días.',link:['#piloto','Registrar el piloto']}
    ]},
@@ -2512,10 +2527,11 @@ function momTitle(){var w=NUMW[T3.nm]||String(T3.nm);return w.charAt(0).toUpperC
 /* ---------- Gráficas compartidas (SVG/HTML): página, presentación y PDF ---------- */
 function polar(cx,cy,r,i,n,off){var a=(off==null?-Math.PI/2:off)+i*2*Math.PI/n;return [cx+Math.cos(a)*r,cy+Math.sin(a)*r]}
 function arcP(cx,cy,r,a0,a1){function p(a){return [cx+r*Math.sin(a),cy-r*Math.cos(a)]}var s=p(a0),e=p(a1);return 'M'+s[0].toFixed(1)+' '+s[1].toFixed(1)+' A'+r+' '+r+' 0 '+(a1-a0>Math.PI?1:0)+' 1 '+e[0].toFixed(1)+' '+e[1].toFixed(1)}
-function vizRueda(){var W=500,H=430,ox=120,oy=12,h='<svg class="vz vz-pyr" viewBox="0 0 640 456" role="img" aria-label="Pirámide de cinco niveles, de la base a la cúspide"><g transform="translate('+ox+','+oy+')">';
-  RING.forEach(function(wi,k){var g=pyr(W,H,k),w=WHEEL[wi],pts=[[g.cx-g.wb/2,g.bot],[g.cx+g.wb/2,g.bot],[g.cx+g.wt/2,g.top],[g.cx-g.wt/2,g.top]].map(function(q){return q[0].toFixed(1)+','+q[1].toFixed(1)}).join(' ');
-    h+='<g class="hot"'+nAttr(w.n+': '+w.q+' '+w.s)+'><polygon points="'+pts+'" style="fill:'+SPCOL[wi]+'"/><text class="lb" x="'+g.cx+'" y="'+((g.top+g.bot)/2+6).toFixed(1)+'" text-anchor="middle">'+esc(w.n)+'</text></g>'});
-  h+='</g><g class="ax2"><line x1="62" y1="420" x2="62" y2="44"/><path d="M52 56 L62 42 L72 56"/><text x="62" y="446" text-anchor="middle">Yo</text><text x="62" y="28" text-anchor="middle">TMF</text></g>';
+function vizRueda(){var cx=320,cy=392,r0=62,bw=50,gp=4,h='<svg class="vz vz-ondas" viewBox="0 0 640 404" role="img" aria-label="Cinco ondas, del centro hacia afuera">';
+  function arcB(r1,r2){return 'M'+(cx-r2)+' '+cy+' A'+r2+' '+r2+' 0 0 1 '+(cx+r2)+' '+cy+' L'+(cx+r1)+' '+cy+' A'+r1+' '+r1+' 0 0 0 '+(cx-r1)+' '+cy+'Z'}
+  RING.slice().reverse().forEach(function(wi){var k=RING.indexOf(wi),r1=r0+gp+k*(bw+gp),r2=r1+bw,w=WHEEL[wi];
+    h+='<g class="hot"'+nAttr(w.n+': '+w.q+' '+w.s)+'><path d="'+arcB(r1,r2)+'" style="fill:'+SPCOL[wi]+'"/><text class="lb" x="'+cx+'" y="'+(cy-(r1+r2)/2+6)+'" text-anchor="middle">'+esc(w.n)+'</text></g>'});
+  h+='<path class="yo" d="M'+(cx-r0)+' '+cy+' A'+r0+' '+r0+' 0 0 1 '+(cx+r0)+' '+cy+'Z"/><text class="yot" x="'+cx+'" y="'+(cy-18)+'" text-anchor="middle">Yo</text>';
   return h+'</svg>'}
 function vizHex(){var cx=320,cy=240,R=150,h='<svg class="vz vz-hex" viewBox="0 0 640 480" role="img" aria-label="Hexágono de seis superpoderes">';
   for(var r=1;r<=5;r++){h+='<polygon class="ring'+(r===5?' out':'')+'" points="'+[0,1,2,3,4,5].map(function(i){return polar(cx,cy,R*r/5,i,6).join(',')}).join(' ')+'"/>'}
@@ -2554,6 +2570,8 @@ var FRC={'Coherencia':3,'Capacidades':2,'Equipo':1,'Cultura y propósito':4,'Aut
 function fraCol(f){var d=f[3].split(' · ')[1];return d in FRC?SPCOL[FRC[d]]:SPCOL[5]}
 function vizFra(){function grp(tool,lab){return '<div class="g"><p class="gl">'+lab+'</p><ul>'+FRA.filter(function(f){return f[3].indexOf(tool)===0}).map(function(f){return '<li style="--dot:'+fraCol(f)+'"><span>'+f[3].split(' · ')[1]+'</span><b>'+f[1]+'</b></li>'}).join('')+'</ul></div>'}
   return '<div class="vz vz-fra"><p class="f">«'+FRA.map(function(f){return f[0]+'<span class="hot s"'+nAttr(f[2]+' Viene de: '+f[3]+'.')+' style="--dot:'+fraCol(f)+'">'+f[1]+'</span>'}).join('')+'.»</p><div class="map2">'+grp('Rueda','De la rueda de mi liderazgo')+grp('Hexágono','Del Hexágono Ubuntu')+'</div></div>'}
+var EJF=['Cada lunes, al abrir la reunión','quien conduce esa semana','todo el equipo','elige un principio de TMF y cuenta en cinco minutos una situación reciente en la que lo vimos en acción con un cliente','que todo el equipo le hable al cliente con una misma voz','la Comunicación','lo hacemos 4 de 4 lunes y al menos tres personas lo conducen'];
+function vizEjf(){return '<div class="vz vz-fra vz-ejf"><p class="f">«'+FRA.map(function(f,i){var s=f[0];if(i===0)s='';return s+'<span class="hot s"'+nAttr(f[1]+' · '+f[3])+' style="--dot:'+fraCol(f)+'">'+EJF[i]+'</span>'}).join('')+'.»</p><p class="ej-src">Inspirado en un caso real: el <i>line-up</i> diario de Ritz-Carlton. Desde 1983, al inicio de cada turno y en todas las áreas, el equipo dedica no más de diez minutos a uno de sus principios. <a href="'+L.ritz[2]+'" target="_blank" rel="noopener">'+esc(L.ritz[0])+'</a> · '+esc(L.ritz[1])+'</p></div>'}
 function vizRuta(){var it=[{a:1,t:'Apertura',m:10}].concat(T3.mom.map(function(M){return M.pause?{a:1,p:1,t:'Pausa',m:M.m}:{n:M.n,t:M.t,m:M.m}})),acc=0;
   function hm(x){return Math.floor(x/60)+':'+String(x%60).padStart(2,'0')}
   return '<ol class="vz vz-ruta4">'+it.map(function(x){var t0=acc;acc+=x.m;return '<li class="'+(x.a?'aux':'')+(x.p?' pause':'')+'"><span class="hr">'+hm(t0)+'</span><i class="dot"></i><span class="no">'+(x.a?(x.p?'‖':'·'):x.n)+'</span><b>'+x.t+'</b><em>'+x.m+' min</em></li>'}).join('')+'<li class="end"><span class="hr">'+hm(acc)+'</span><i class="dot"></i><b>Fin</b></li></ol>'}
@@ -2569,7 +2587,7 @@ function dinHTML(b,slide){var f=FMT[b.fmt];
   return '<article class="din'+(b.central?' central':'')+(b.kick?' ap':'')+(b.ej&&slide?' has-ej':'')+'"><header><p class="din-k">'+(b.kick||'Dinámica '+b.n)+(b.central?' · Actividad central':'')+'</p><h3>'+b.t+'</h3><ul class="din-meta"><li class="fmt '+f[1]+'">'+f[0]+'</li><li class="tm">'+b.m+' min</li>'+(b.par?'<li class="par">En paralelo</li>':'')+'</ul></header>'+
    '<div class="din-b"><div class="din-a">'+a+'</div><div class="din-c">'+c+'</div></div></article>'}
 function dilHTML(){var d=T3.ap.dil;return '<div class="ap-dil"><p class="ap-k">El dilema</p><p class="q">'+d.q+'</p><div class="ab"><p><b>A</b>'+d.a+'</p><p><b>B</b>'+d.b+'</p></div></div>'}
-function datoHTML(){var d=T3.ap.dato,e=L[d.src];return '<div class="ap-dato"><p class="ap-k">El dato</p><p class="n">'+d.n+'</p><p class="t">'+d.t+'</p><p class="s"><a href="'+e[2]+'" target="_blank" rel="noopener">'+esc(e[0])+'</a> · '+esc(e[1])+'</p></div>'}
+function datoHTML(d){d=d||T3.ap.dato;var e=L[d.src];return '<div class="ap-dato"><p class="ap-k">'+(d.k||'El dato')+'</p><p class="n">'+d.n+'</p><p class="t">'+d.t+'</p><p class="s"><a href="'+e[2]+'" target="_blank" rel="noopener">'+esc(e[0])+'</a> · '+esc(e[1])+'</p></div>'}
 function notaHTML(b){var f=FMT[b.fmt];return '<aside class="ed-nota"><p class="din-k">'+b.t+' · '+f[0]+' · '+b.m+' min</p><p>'+b.txt+'</p></aside>'}
 function supHTML(src){if(!src||!src.length)return '';return '<sup>'+src.map(function(k){var n=srcN(k);return '<a href="#t3-f'+n+'" aria-label="Fuente '+n+'">'+n+'</a>'}).join(', ')+'</sup>'}
 function slLinks(src){if(!src||!src.length)return '';return '<p class="sx-src">'+src.map(function(k){var e=L[k];return '<a href="'+e[2]+'" target="_blank" rel="noopener">'+esc(e[0])+'</a> · '+esc(e[1])}).join('<br>')+'</p>'}
@@ -2588,7 +2606,8 @@ function t3Page(){var h='';
     h+='<section class="'+cls+'" id="t3-m'+M.n+'"><p class="mom-k">Momento '+M.n+' de '+T3.nm+' · '+M.m+' min</p><h2>'+M.t+'</h2>';
     if(M.close)h+=vizIdeas()+'<div class="note"><b>El trabajo de hoy queda en Mi espacio.</b> Ahí están tu rueda, tu Índice Ubuntu y el piloto de tu equipo, y desde ahí te envías tu PDF. <a href="#mi-espacio">Abrir Mi espacio</a></div>';
     (M.blocks||[]).forEach(function(b){
-      if(b.type==='dato'){h+='<div class="ap-grid one">'+datoHTML()+'</div>';return}
+      if(b.type==='ejf'){h+='<div class="tema"><p class="tema-k">Un ejemplo</p><h3>'+b.t+'</h3>'+vizEjf()+'</div>';return}
+      if(b.type==='dato'){h+='<div class="ap-grid one">'+datoHTML(b.d)+'</div>';return}
       if(b.type==='din'){h+=dinHTML(b,false);return}
       if(b.type==='nota'){h+=notaHTML(b);return}
       h+='<div class="tema"><p class="tema-k">'+b.k+'</p><h3>'+b.t+'</h3><p class="ed-lead">'+b.lead+supHTML(b.src)+'</p>'+(b.body?'<p>'+b.body+'</p>':'')+
@@ -2610,7 +2629,8 @@ function t3Slides(){var S=[],alt=0;
     var bg=(alt++)%2===0?'bg-w':'bg-b',mk='Momento '+M.n+' de '+T3.nm;
     if(M.close){add(bg+' sx-ideas','<div class="tx"><p class="eyebrow">'+mk+' · Cierre</p><h2>Tres ideas para llevar</h2>'+vizIdeas()+'</div>');return}
     (M.blocks||[]).forEach(function(b){
-      if(b.type==='dato'){add('v-quote sx-dato','<div class="tx">'+datoHTML()+'</div>');return}
+      if(b.type==='dato'){add('v-quote sx-dato','<div class="tx">'+datoHTML(b.d)+'</div>');return}
+      if(b.type==='ejf'){add('bg-w sx-tema sx-ejf sx-wide','<div class="tx"><p class="eyebrow">'+mk+' · Un ejemplo</p><h2>'+b.t+'</h2>'+vizEjf()+'</div>');return}
       if(b.type==='din'){add('v-dark sx-din'+(b.ej?' sx-din-ej':''),'<div class="tx">'+'<p class="eyebrow">'+mk+' · '+M.t+'</p>'+dinHTML(b,true)+'</div>');return}
       if(b.type==='nota'){add('v-quote sx-nota','<div class="tx"><p class="eyebrow">'+mk+' · '+b.t+' · '+FMT[b.fmt][0]+' · '+b.m+' min</p><h2>'+b.txt+'</h2></div>');return}
       add(bg+' sx-tema sx-'+b.viz+(b.wide?' sx-wide':''),'<div class="tx"><p class="eyebrow">'+mk+' · '+b.k+'</p><h2>'+b.t+'</h2><p class="lead">'+b.lead+'</p><p class="take">'+b.take+'</p>'+slLinks(b.src)+'</div><figure class="vz-wrap">'+VIZ[b.viz]()+'</figure>')})});
