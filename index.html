@@ -1104,6 +1104,26 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
 .sx-din-ej .din-a .din-ej{font-size:.9rem;line-height:1.35;padding:10px 12px}
 .sx-din-ej .din-c .din-g{gap:3px;margin-bottom:0}
 .slide.sx-din .din-c .din-g li{font-size:.92rem;line-height:1.4}
+/* cuatro tipos de rituales */
+.vz-tipos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.vz-tipos>div{display:grid;align-content:start;gap:8px;padding:16px;border-radius:16px;background:var(--vz-card);border:1px solid var(--vz-line);border-top:4px solid var(--dot)}
+.vz-tipos .tk{margin:0;font:600 1.05rem/1.25 var(--display);color:var(--vz-ink)}
+.vz-tipos .tm{margin:0;font:600 .72rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--dot)}
+.vz-tipos ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.vz-tipos li{display:grid;gap:2px;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--dot) 8%,transparent)}
+.vz-tipos li b{font:600 .92rem var(--display);color:var(--vz-ink)}
+.vz-tipos li span{font-size:.85rem;line-height:1.4;color:var(--vz-mut)}
+.vz-tipos li.on{background:color-mix(in srgb,var(--dot) 18%,transparent)}
+@media(max-width:900px){.vz-tipos{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.vz-tipos{grid-template-columns:1fr}}
+.sx .vz-tipos li span{font-size:.8rem}
+.sx-wide .tx{gap:10px}
+.sx-wide .tx .take{display:none}
+.sx-wide h2{font-size:clamp(1.7rem,3vw,2.7rem)}
+.sx-wide .lead{font-size:clamp(1rem,1.5vw,1.3rem)}
+.sx .vz-tipos>div{padding:12px;gap:6px}
+.sx .vz-tipos li{padding:8px 10px}
+.sx .vz-tipos li span{font-size:.76rem;line-height:1.35}
 
 </style>
 <div class="wrap">
@@ -2278,7 +2298,7 @@ var T3={
   photo:'t3',
   open:{q:'Cada tarde, la misma rama. <em>Un gesto pequeño, repetido,</em> sostiene a la colonia.',p:'Ya sabes lo que haría un buen líder. ¿Qué harán distinto el lunes, y con quién?'},
   title:'Rituales que nos sostienen',
-  stand:'Un ritual es una acción que <b>se repite, se hace en grupo y tiene significado</b> para quienes la practican. Hoy pasamos de saber qué es liderar a decidir <b>qué haremos, con quién y cada cuánto</b>.',
+  stand:'Un ritual de liderazgo es una <b>práctica repetida y con significado</b> que refuerza el propósito, la confianza y la cohesión del equipo. Hoy pasamos de saber qué es liderar a decidir <b>qué haremos, con quién y cada cuánto</b>.',
   goal:'Que cada equipo convierta lo que comprendió en un <b>ritual de 30 días</b> que responda a lo que más necesita su área, con un indicador que diga si funciona, y que los gerentes y la gerencia general lo <b>conecten con lo esencial de TMF</b>.',
   mom:[
    {t:'La rueda de mi liderazgo',m:10,d:'Dónde estoy hoy, de mí hacia la organización.',blocks:[
@@ -2311,19 +2331,19 @@ var T3={
       prod:'Tu Índice Ubuntu de noviembre y el superpoder que llevas al diseño del ritual.',link:['#perfil','Abrir Mi espacio']}
    ]},
    {t:'El ritual en el liderazgo',m:20,d:'Qué es, qué dicen los datos y dónde vive en TMF.',blocks:[
-     {type:'tema',k:'El concepto',t:'Qué es un ritual',
-      lead:'Un ritual es una acción que <b>se repite</b>, <b>se hace en grupo</b> y <b>tiene significado</b> para quienes la practican. La investigación de Michael Norton, en Harvard, lo resume en tres elementos.',
-      body:'Una rutina es solo lo que se hace. Un hábito es individual y automático. Un <b>ritual de liderazgo</b> es el que el líder sostiene con su presencia y su coherencia, y que el equipo reconoce como «así lo hacemos aquí».',
-      viz:'tres',cap:'Los tres elementos de un ritual. Pasa el cursor por cada uno para ver un ejemplo.',
-      take:'Si no tiene significado para el equipo, es una tarea más.',src:['rit4','rit3']},
+     {type:'tema',k:'El concepto',t:'Qué es un ritual de liderazgo',
+      lead:'Un ritual de liderazgo es una <b>práctica estructurada y repetida</b> que refuerza los valores, la confianza, la cohesión y el propósito del equipo. A diferencia de una reunión ordinaria, tiene una <b>carga simbólica</b>: busca que las personas se sientan conectadas y seguras.',
+      body:'La rutina responde al <b>cómo</b>; el ritual, al <b>porqué</b>. Puede ser <b>personal</b>, como la pausa que un líder se da antes de una conversación difícil, o <b>de equipo</b>. La investigación de Michael Norton, en Harvard, encuentra en los rituales de grupo tres elementos: acciones concretas, hacerlo juntos y un sentido compartido de «así lo hacemos aquí».',
+      viz:'tres',cap:'Tres rasgos de un ritual de liderazgo. Pasa el cursor por cada uno para ver un ejemplo.',
+      take:'La rutina ordena el trabajo; el ritual le da sentido.',src:['rit4','rit3']},
      {type:'tema',k:'Los datos',t:'Lo que muestra la investigación',
-      lead:'Los rituales de equipo <b>dan más sentido al trabajo</b>, y todavía son poco comunes.',
+      lead:'Los rituales de equipo <b>dan más sentido al trabajo</b>, elevan la seguridad psicológica y alinean al equipo sin necesidad de control rígido. Y todavía son poco comunes.',
       viz:'dat',wide:1,cap:'Tres resultados de investigación sobre rituales de equipo.',
       take:'Pocos equipos tienen un ritual. El tuyo puede ser uno de ellos.',src:['rit4','rit3','rit1']},
-     {type:'tema',k:'Casos y lugares',t:'Dónde vive un ritual en TMF',
-      lead:'Los rituales más conocidos nacieron de algo que el equipo ya hacía: el «Tea Time» de IDEO, el canto de Walmart o la ruta fija del equipo de Notre Dame hacia el estadio. En TMF, un ritual vive en los <b>momentos que ya existen</b>.',
-      viz:'don',cap:'Cinco momentos de TMF donde puede vivir un ritual. Pasa el cursor por cada uno para ver un ejemplo.',
-      take:'No inventes un momento: dale sentido a uno que ya existe.',src:['rit4','rit2']},
+     {type:'tema',k:'Tipos y ejemplos',t:'Cuatro tipos de rituales',
+      lead:'Los líderes usan rituales en <b>momentos clave</b>: al empezar, al reconocer, al cerrar y consigo mismos. Los más conocidos nacieron de algo que el equipo ya hacía, como el «Tea Time» de IDEO o el canto de Walmart.',
+      viz:'don',wide:1,cap:'Cuatro tipos de rituales, con ejemplos y el momento de TMF donde pueden vivir. Pasa el cursor por cada ejemplo para leerlo completo.',
+      take:'No inventes un momento: dale sentido a uno que ya existe.',src:['rit4','rit3','rit2']},
      {type:'tema',k:'La práctica',t:'Por qué funciona, y por qué falla',
       lead:'Un ritual se sostiene cuando se <b>decide antes</b>, se <b>repite</b> y se <b>sostiene</b>. Falla cuando se impone, cuando se copia algo forzado o cuando se espera entusiasmo desde el primer día.',
       viz:'why',cap:'Tres razones por las que funciona y tres por las que falla.',
@@ -2370,7 +2390,7 @@ var T3={
    ]},
    {t:'Cierre',m:10,d:'Tres ideas para llevar.',close:1}
   ],
-  ideas:['Un ritual es una acción que <b>se repite, se hace en grupo y tiene significado</b>. Por eso lo diseña el equipo.','Parte de <b>lo que más necesita el área</b> y se mide: si lo hicimos y si cambió algo.','<b>Ubuntu.</b> Los equipos lo practican, los gerentes lo conectan y la gerencia lo sostiene. Yo soy porque nosotros somos.']
+  ideas:['Un ritual de liderazgo es una <b>práctica repetida y con significado</b>: la rutina ordena el cómo, el ritual renueva el porqué.','Parte de <b>lo que más necesita el área</b> y se mide: si lo hicimos y si cambió algo.','<b>Ubuntu.</b> Los equipos lo practican, los gerentes lo conectan y la gerencia lo sostiene. Yo soy porque nosotros somos.']
 };
 var FMT={ind:['Individual','ind'],pair:['En parejas','pair'],team:['En equipo','team'],all:['En plenaria','all'],gg:['Gerencia general','gg'],net:['Gerentes','net']};
 var NUMW=['','un','dos','tres','cuatro','cinco','seis','siete','ocho'];
@@ -2407,12 +2427,15 @@ var EST=[['Directivo','Coercitivo y ejemplar','En un cierre de mes con un error 
 function vizEst(){return '<div class="vz vz-est"><div class="eh"><span>Estilo · Taller 1</span><span>Goleman</span><span>Cómo se ve en TMF</span></div>'+EST.map(function(e,i){return '<div class="er hot"'+nAttr(e[3])+' style="--dot:'+SPCOL[i]+'"><b>'+e[0]+'</b><span class="g">'+e[1]+'</span><span>'+e[2]+'</span></div>'}).join('')+'</div>'}
 function vizIdx(){var B=[['En exploración','0 a 39','Hay intención, pero la conducta aparece poco. Buen lugar para un primer ritual.'],['En práctica','40 a 59','La conducta aparece cada semana, aunque no siempre.'],['Consolidado','60 a 79','Es parte de cómo lideras, varias veces por semana.'],['Referente','80 a 100','Lo haces casi siempre, y otros aprenden de ti.']];
   return '<div class="vz vz-idx"><div class="bands">'+B.map(function(b,i){return '<div class="hot b'+i+'"'+nAttr(b[0]+' ('+b[1]+'): '+b[2])+'><b>'+b[0]+'</b><span>'+b[1]+'</span></div>'}).join('')+'</div><div class="scale"><span>0</span><span>40</span><span>60</span><span>80</span><span>100</span></div><p class="gain"><b>+10</b> puntos en un superpoder entre el Taller 3 y el Taller 4 = un avance real.</p></div>'}
-function vizTres(){var T=[['Físico','Palabras o acciones concretas.','Ejemplo: abrir siempre con la misma pregunta.'],['Comunitario','Lo hacemos juntos, al mismo tiempo.','Ejemplo: todo el equipo, en la misma reunión.'],['Psicológico','Tiene un sentido: «así lo hacemos aquí».','Ejemplo: el equipo lo explica a quien llega nuevo.']];
+function vizTres(){var T=[['El porqué','La rutina busca eficiencia, el cómo. El ritual renueva el sentido y la pertenencia.','Ejemplo: abrir el cierre de mes recordando a qué cliente sostiene ese trabajo.'],['Consistencia','Se repite en el mismo momento. Esa predictibilidad da estabilidad cuando hay incertidumbre.','Ejemplo: cada lunes, la misma pregunta al abrir la reunión, pase lo que pase.'],['Refuerzo cultural','Muestra con acciones lo que de verdad importa. El líder modela la cultura de forma tangible.','Ejemplo: el líder es el primero en contar un error y lo que aprendió.']];
   return '<ol class="vz vz-tres">'+T.map(function(t,i){return '<li class="hot"'+nAttr(t[2])+' style="--dot:'+SPCOL[[1,2,5][i]]+'"><span class="no">'+(i+1)+'</span><b>'+t[0]+'</b><span>'+t[1]+'</span></li>'}).join('')+'</ol>'}
 function vizDat(){var D=[['16 %','más significado','Las personas que comparten actividades de vínculo en grupo valoran su trabajo como más significativo.','Norton y colegas · HBS'],['38 %','con ritual de equipo','De los lectores de HBR encuestados, el 38 % tiene un ritual de equipo; el 79 % tiene uno para empezar su día.','Norton · HBR, 2024'],['3 años','de estudio','Los equipos con rituales regulares mostraron más compromiso, más seguridad psicológica y más satisfacción.','Hadley · HBR, 2025']];
   return '<div class="vz vz-dat">'+D.map(function(d,i){return '<div style="--dot:'+SPCOL[[1,4,3][i]]+'"><b>'+d[0]+'</b><em>'+d[1]+'</em><span>'+d[2]+'</span><i>'+d[3]+'</i></div>'}).join('')+'</div>'}
-function vizDon(){var D=[['Reunión semanal','Cinco minutos al abrir: un aprendizaje de la semana.'],['Cierre de mes','Al terminar el cierre: qué salió bien y a quién agradecemos.'],['Entrega a un cliente','Antes de enviar: una segunda mirada de alguien del equipo.'],['Llegada de alguien nuevo','La primera semana: cada persona le cuenta «cómo lo hacemos aquí».'],['Después de un error','En 24 horas: qué pasó y qué aprendimos, sin culpables.']];
-  return '<ul class="vz vz-don">'+D.map(function(d,i){return '<li class="hot"'+nAttr('Ejemplo: '+d[1])+' style="--dot:'+SPCOL[i]+'"><b>'+d[0]+'</b><span>'+d[1]+'</span></li>'}).join('')+'</ul>'}
+var TIPOS=[['Inicio y conexión','Reunión semanal',[['Check-in de una palabra','Los primeros cinco minutos de la reunión semanal: cada persona dice en una palabra cómo llega, antes de hablar de trabajo.'],['Café sin agenda','Una vez al mes, el líder conversa con el equipo sin temas de negocio, de forma horizontal.']]],
+ ['Reconocimiento y celebración','Cierre de mes',[['El reconocimiento itinerante','Un objeto simbólico que el líder entrega por un logro; la semana siguiente, esa persona lo entrega a otro compañero.'],['Muro de agradecimientos','Al cerrar el mes, cada persona hace visible la ayuda que recibió de otra.']]],
+ ['Reflexión y cierre','Después de un error o de una entrega',[['Revisión sin culpables','Después de un error, el líder abre el espacio: buscamos aprendizajes del sistema, no culpables, y él asume la primera responsabilidad.'],['El mejor error del trimestre','Cada trimestre, el equipo comparte el error del que más aprendió.']]],
+ ['Personal del líder','Antes y después de liderar',[['Pausa antes de lo difícil','Dos minutos para respirar y elegir la intención antes de una conversación difícil.'],['Revisión del viernes','Diez minutos para mirar cómo lideré la semana y qué ajusto.']]]];
+function vizDon(){return '<div class="vz vz-tipos">'+TIPOS.map(function(t,i){return '<div style="--dot:'+SPCOL[[0,4,2,5][i]]+'"><p class="tk">'+t[0]+'</p><p class="tm">En TMF: '+t[1]+'</p><ul>'+t[2].map(function(e){return '<li class="hot"'+nAttr(e[0]+': '+e[1])+'><b>'+e[0]+'</b><span>'+e[1]+'</span></li>'}).join('')+'</ul></div>'}).join('')+'</div>'}
 function vizWhy(){var OK=[['Decidir antes','Fijar cuándo y dónde. Por eso cada ritual tiene su momento.'],['Repetir','Un hábito se forma en meses, no en semanas.'],['Sostener','El líder cree en él, lo practica y la gerencia lo respalda.']],KO=[['Imponerlo','Funciona mejor cuando lo crea el equipo.'],['Forzarlo','Copiar algo que no tiene sentido aquí.'],['Apurarlo','El significado llega con el tiempo, no el primer día.']];
   function col(a,cls,t){return '<div class="'+cls+'"><p class="hd">'+t+'</p><ol>'+a.map(function(w,i){return '<li><span class="no">'+(i+1)+'</span><b>'+w[0]+'</b><span>'+w[1]+'</span></li>'}).join('')+'</ol></div>'}
   return '<div class="vz vz-why2">'+col(OK,'ok','Funciona si…')+col(KO,'ko','Falla si…')+'</div>'}
