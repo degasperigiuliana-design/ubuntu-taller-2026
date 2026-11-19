@@ -1205,6 +1205,10 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
 
 .ej-src{display:block;margin-top:8px;font:400 .82rem/1.45 var(--body);font-style:normal;opacity:.85}.ej-src a{color:inherit}
 
+.step .ctx{margin:14px 0 4px;padding:12px 16px;border-radius:14px;background:color-mix(in srgb,var(--accent,#1267E0) 8%,transparent);border-left:3px solid var(--accent,#1267E0);font-size:.95rem;line-height:1.5}
+.step .ctx p{margin:0}.step .ctx .ctx-t{font:600 .72rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.step .ctx .pw{display:inline-block;margin:2px 2px 0 0;padding:2px 10px;border-radius:999px;background:var(--card,#fff);border:1px solid color-mix(in srgb,var(--accent,#1267E0) 30%,transparent);font-size:.86rem}
+
 </style>
 <div class="wrap">
 <div class="top">
@@ -1847,7 +1851,8 @@ var WHEEL=[
  {n:'Coherencia',q:'¿Qué pienso? ¿Qué siento? ¿Qué hago?',s:'Lo que pienso, lo que siento y lo que hago van en la misma dirección.'},
  {n:'Cultura y propósito',q:'¿Qué hago visible de la cultura TMF?',s:'Hago visible la cultura de TMF en mi día a día.'}
 ];
-var LS_ANS='ua_ans_v1',LS_NAME='ua_name_v1',LS_TEAMS='ua_teams_v1',LS_WHEEL='ua_wheel_v1';
+var LS_ANS='ua_ans_v2',LS_NAME='ua_name_v2',LS_TEAMS='ua_teams_v2',LS_WHEEL='ua_wheel_v2';
+['ua_ans_v1','ua_name_v1','ua_teams_v1','ua_wheel_v1'].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});
 
 /* ---------- Estado ---------- */
 var ans=new Array(24).fill(0),wheel={s:[0,0,0,0,0],n:['','','','',''],a:'',b:''},teams=[];
@@ -1976,14 +1981,21 @@ function stepsFor(key,team){
     return hs;
   }
   function f(key2,q,help,ph,type,opt){return{k:'Piloto de un mes',q:q,help:help,ph:ph,type:type||'text',opt:opt,val:function(){return team[key2]},set:function(v){team[key2]=v;saveTeams()}}}
+  function W(i){return wheelDone()?'<b>'+WHEEL[i].n+'</b> '+pct(wheel.s[i])+'/100':''}
+  function C(tool,body){return function(){var b=body();return '<p class="ctx-t">Lo que traes de '+tool+'</p><p>'+(b||'Completa '+(tool==='tu rueda'?'La rueda de mi liderazgo':'el Hexágono Ubuntu')+' en Mi espacio y aquí verás tu punto de partida.')+'</p>'}}
+  function X(st,k,ctx){st.k=k;st.ctx=ctx;return st}
+  function hexLine(){if(!hexDone())return '';var sc=scores(),mx=Math.max.apply(null,sc),mn=Math.min.apply(null,sc);
+    return 'Tu práctica más constante: <b>'+POWERS.filter(function(_,i){return sc[i]===mx}).map(function(P){return P.n}).join(' y ')+'</b>. Más espacio para crecer: <b>'+POWERS.filter(function(_,i){return sc[i]===mn}).map(function(P){return P.n}).join(' y ')+'</b>. Compártelo con tu equipo antes de elegir.'}
+  function powLine(){var P=POWERS.filter(function(P){return P.n===team.poder})[0];if(!P)return 'Elige primero el superpoder común.';
+    return 'Los cuatro poderes de <b>'+esc(P.n)+'</b>: '+P.p.map(function(x){return '<span class="pw">'+esc(x)+'</span>'}).join(' ')+'. El gesto pone en práctica uno de ellos.'}
   return [
     f('equipo','¿Cómo se llama el equipo?','','Ej.: Contabilidad Lima'),
-    f('para','¿Qué necesita hoy el área?','La prioridad que el equipo eligió. El ritual existe para eso.','Ej.: que el cliente reciba un mismo mensaje claro de todo el equipo','long'),
-    f('poder','¿Qué superpoder hará visible?','El superpoder común del equipo.','','sp'),
-    f('gesto','¿Qué harán exactamente?','Un gesto concreto y corto, que el líder también practica.','Ej.: abrir la reunión contando una situación en la que vimos un principio de TMF en acción','long'),
-    f('disp','¿Cuándo, y cada cuánto?','El momento que lo activa y su frecuencia.','Ej.: cada lunes, al abrir la reunión del equipo'),
-    f('con','¿Con quién, y quién lo conduce?','La conducción puede rotar para que otros la aprendan.','Ej.: todo el equipo; conduce una persona distinta cada semana'),
-    f('senal','¿Cómo sabremos que funciona?','Algo que se pueda contar, ver u oír.','Ej.: lo hicimos 4 de 4 lunes y al menos tres personas lo condujeron'),
+    X(f('para','¿Qué necesita hoy el área?','La prioridad que el equipo eligió. El ritual existe para eso.','Ej.: que el cliente reciba un mismo mensaje claro de todo el equipo','long'),'Rueda · Cultura y propósito',C('tu rueda',function(){return wheelDone()?W(4)+'.'+(wheel.b?' Quieres fortalecer: «'+esc(wheel.b)+'».':''):''})),
+    X(f('poder','¿Qué superpoder hará visible?','El superpoder común del equipo.','','sp'),'Hexágono · Superpoder',C('tu Hexágono',hexLine)),
+    X(f('gesto','¿Qué harán exactamente?','Un gesto concreto y corto, que el líder también practica.','Ej.: abrir la reunión contando una situación en la que vimos un principio de TMF en acción','long'),'Hexágono · Un poder',C('tu Hexágono',powLine)),
+    X(f('disp','¿Cuándo, y cada cuánto?','El momento que lo activa y su frecuencia.','Ej.: cada lunes, al abrir la reunión del equipo'),'Rueda · Coherencia',C('tu rueda',function(){return wheelDone()?W(3)+'. Ponerlo en el calendario es la forma de que lo que decimos y lo que hacemos coincidan.':''})),
+    X(f('con','¿Con quién, y quién lo conduce?','La conducción puede rotar para que otros la aprendan.','Ej.: todo el equipo; conduce una persona distinta cada semana'),'Rueda · Equipo y Capacidades',C('tu rueda',function(){return wheelDone()?W(1)+' · '+W(2)+'. Que la conducción rote desarrolla capacidad en otros desde la primera semana.':''})),
+    X(f('senal','¿Cómo sabremos que funciona?','Algo que se pueda contar, ver u oír.','Ej.: lo hicimos 4 de 4 lunes y al menos tres personas lo condujeron'),'Rueda · Autopercepción',C('tu rueda',function(){return wheelDone()?W(0)+'. Suma una señal que el equipo perciba: así contrastas cómo te ves con cómo te ven.':''})),
     f('inicio','¿Cuándo empieza?','El check-in será en la semana 2 y el cierre, el día 30.','','date')
   ];
 }
@@ -2009,7 +2021,7 @@ function renderStep(){
     var msg=F.key==='rueda'?'Tu rueda está lista. Mírala junto a tu Hexágono en tu perfil.':F.key==='hex'?'Tu Hexágono está listo. Es una fotografía de hoy: en diciembre podrás compararla.':'El piloto quedó registrado. Comparte el código con tu equipo y agenda el check-in en Outlook.';
     st.innerHTML='<div class="step done"><i class="orb" aria-hidden="true"></i><h2>Listo</h2><p class="help">'+msg+'</p></div>';$('flowNext').focus();return;
   }
-  var s=F.steps[F.i],v=s.val(),h='<div class="step"><p class="k"><b>'+(F.i+1)+'</b>'+esc(s.k)+'</p><h2 id="stepQ">'+esc(s.q)+'</h2>'+(s.help?'<p class="help">'+esc(s.help)+'</p>':'');
+  var s=F.steps[F.i],v=s.val(),h='<div class="step"><p class="k"><b>'+(F.i+1)+'</b>'+esc(s.k)+'</p><h2 id="stepQ">'+esc(s.q)+'</h2>'+(s.help?'<p class="help">'+esc(s.help)+'</p>':'')+(s.ctx?'<div class="ctx">'+s.ctx()+'</div>':'');
   if(s.type==='scale'){h+='<div class="opts" role="group" aria-labelledby="stepQ">'+SCALE.map(function(l,i){return '<button type="button" class="opt" data-v="'+(i+1)+'" aria-pressed="'+(v===i+1)+'"><kbd>'+(i+1)+'</kbd>'+l+(s.auto?'<small>'+SCALE_A[i]+'</small>':'')+'</button>'}).join('')+'</div>';
     if(s.note)h+='<textarea class="note" id="flowNote" placeholder="'+esc(s.note.ph)+'" aria-label="Nota opcional">'+esc(s.note.val())+'</textarea>'}
   else if(s.type==='sp'){h+='<div class="opts sp6">'+POWERS.map(function(P,pi){return '<button type="button" class="opt" data-v="'+esc(P.n)+'" aria-pressed="'+(v===P.n)+'" style="--spc:'+SPCOL[pi]+'"><kbd>'+(pi+1)+'</kbd>'+esc(P.n)+'</button>'}).join('')+'</div>'}
