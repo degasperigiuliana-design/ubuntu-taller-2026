@@ -1208,6 +1208,7 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
 .step .ctx{margin:14px 0 4px;padding:12px 16px;border-radius:14px;background:color-mix(in srgb,var(--accent,#1267E0) 8%,transparent);border-left:3px solid var(--accent,#1267E0);font-size:.95rem;line-height:1.5}
 .step .ctx p{margin:0}.step .ctx .ctx-t{font:600 .72rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
 .step .ctx .pw{display:inline-block;margin:2px 2px 0 0;padding:2px 10px;border-radius:999px;background:var(--card,#fff);border:1px solid color-mix(in srgb,var(--accent,#1267E0) 30%,transparent);font-size:.86rem}
+.ap-grid.one{grid-template-columns:1fr;max-width:760px;margin:8px 0 28px}
 
 </style>
 <div class="wrap">
@@ -2442,6 +2443,7 @@ var T3={
       body:'La rutina responde al <b>cómo</b>; el ritual, al <b>porqué</b>. Puede ser <b>personal</b>, como la pausa que un líder se da antes de una conversación difícil, o <b>de equipo</b>. La investigación de Michael Norton, en Harvard, encuentra en los rituales de grupo tres elementos: acciones concretas, hacerlo juntos y un sentido compartido de «así lo hacemos aquí».',
       viz:'tres',cap:'Tres rasgos de un ritual de liderazgo. Pasa el cursor por cada uno para ver un ejemplo.',
       take:'La rutina ordena el trabajo; el ritual le da sentido.',src:['rit4','rit3']},
+     {type:'dato',src:['rit3']},
      {type:'tema',k:'Los datos',t:'Lo que muestra la investigación',
       lead:'Los rituales de equipo <b>dan más sentido al trabajo</b>, elevan la seguridad psicológica y alinean al equipo sin necesidad de control rígido. Y todavía son poco comunes.',
       viz:'dat',wide:1,cap:'Tres resultados de investigación sobre rituales de equipo.',
@@ -2578,7 +2580,6 @@ function t3Page(){var h='';
   h+='<p class="ed-stand">'+T3.stand+'</p>';
   h+='<div class="row ed-actions"><button type="button" data-present="t3">Ver como presentación</button><button type="button" class="ghost" data-pdf="t3">Descargar PDF</button></div>';
   h+='<aside class="ed-goal"><p class="eyebrow">Objetivo del taller</p><p>'+T3.goal+'</p></aside>';
-  h+='<section class="mom w ed-ap" id="t3-apertura"><p class="mom-k">Apertura · '+T3.ap.m+' min</p><h2>La frase, el dilema y el dato</h2><div class="ap-grid">'+dilHTML()+datoHTML()+'</div>'+dinHTML(T3.ap.din,false)+'</section>';
   h+='<section class="mom ed-ruta" id="t3-ruta"><p class="mom-k">Hoja de ruta · 3 horas</p><h2>'+momTitle()+'</h2>'+vizRuta()+'</section>';
   var alt=0;
   T3.mom.forEach(function(M){
@@ -2587,6 +2588,7 @@ function t3Page(){var h='';
     h+='<section class="'+cls+'" id="t3-m'+M.n+'"><p class="mom-k">Momento '+M.n+' de '+T3.nm+' · '+M.m+' min</p><h2>'+M.t+'</h2>';
     if(M.close)h+=vizIdeas()+'<div class="note"><b>El trabajo de hoy queda en Mi espacio.</b> Ahí están tu rueda, tu Índice Ubuntu y el piloto de tu equipo, y desde ahí te envías tu PDF. <a href="#mi-espacio">Abrir Mi espacio</a></div>';
     (M.blocks||[]).forEach(function(b){
+      if(b.type==='dato'){h+='<div class="ap-grid one">'+datoHTML()+'</div>';return}
       if(b.type==='din'){h+=dinHTML(b,false);return}
       if(b.type==='nota'){h+=notaHTML(b);return}
       h+='<div class="tema"><p class="tema-k">'+b.k+'</p><h3>'+b.t+'</h3><p class="ed-lead">'+b.lead+supHTML(b.src)+'</p>'+(b.body?'<p>'+b.body+'</p>':'')+
@@ -2599,11 +2601,8 @@ function t3Page(){var h='';
 /* ---------- La presentación (y su PDF): mismas secciones, mismo orden ---------- */
 function t3Slides(){var S=[],alt=0;
   function add(cls,inner){S.push({html:'<div class="slide sx '+cls+'">'+inner+'</div>'})}
-  S.push({html:'<div class="slide cover sx-cover"><img src="img/'+T3.photo+'.jpg" alt=""><div class="tx"><p class="eyebrow">Taller 3 de 4 · Ubuntu en acción</p><h2 class="xl">'+T3.title+'</h2><p class="sp-p">'+T3.stand+'</p></div></div>'});
-  add('v-quote sx-open','<div class="tx"><p class="eyebrow">Apertura · La frase</p><blockquote>'+T3.open.q+'</blockquote><p class="sp-p">'+T3.open.p+'</p></div>');
-  add('v-quoteW sx-dil','<div class="tx"><p class="eyebrow">Apertura · El dilema</p>'+dilHTML()+'</div>');
-  add('v-quote sx-dato','<div class="tx">'+datoHTML()+'</div>');
-  add('v-dark sx-din','<div class="tx"><p class="eyebrow">Apertura · '+T3.ap.m+' min</p>'+dinHTML(T3.ap.din,true)+'</div>');
+  S.push({html:'<div class="slide cover sx-cover"><img src="img/'+T3.photo+'.jpg" alt=""><div class="tx"><p class="eyebrow">Taller 3 de 4 · Ubuntu en acción</p><h2 class="xl">'+T3.title+'</h2></div></div>'});
+  add('v-quote sx-open','<div class="tx"><blockquote>'+T3.open.q+'</blockquote><p class="sp-p">'+T3.open.p+'</p></div>');
   add('v-quoteW sx-goal','<div class="tx"><p class="eyebrow">Objetivo del taller</p><h2>'+T3.goal+'</h2></div>');
   add('bg-w sx-ruta','<div class="tx"><p class="eyebrow">Hoja de ruta · 3 horas</p><h2>'+momTitle()+'</h2>'+vizRuta()+'</div>');
   T3.mom.forEach(function(M){
@@ -2611,6 +2610,7 @@ function t3Slides(){var S=[],alt=0;
     var bg=(alt++)%2===0?'bg-w':'bg-b',mk='Momento '+M.n+' de '+T3.nm;
     if(M.close){add(bg+' sx-ideas','<div class="tx"><p class="eyebrow">'+mk+' · Cierre</p><h2>Tres ideas para llevar</h2>'+vizIdeas()+'</div>');return}
     (M.blocks||[]).forEach(function(b){
+      if(b.type==='dato'){add('v-quote sx-dato','<div class="tx">'+datoHTML()+'</div>');return}
       if(b.type==='din'){add('v-dark sx-din'+(b.ej?' sx-din-ej':''),'<div class="tx">'+'<p class="eyebrow">'+mk+' · '+M.t+'</p>'+dinHTML(b,true)+'</div>');return}
       if(b.type==='nota'){add('v-quote sx-nota','<div class="tx"><p class="eyebrow">'+mk+' · '+b.t+' · '+FMT[b.fmt][0]+' · '+b.m+' min</p><h2>'+b.txt+'</h2></div>');return}
       add(bg+' sx-tema sx-'+b.viz+(b.wide?' sx-wide':''),'<div class="tx"><p class="eyebrow">'+mk+' · '+b.k+'</p><h2>'+b.t+'</h2><p class="lead">'+b.lead+'</p><p class="take">'+b.take+'</p>'+slLinks(b.src)+'</div><figure class="vz-wrap">'+VIZ[b.viz]()+'</figure>')})});
