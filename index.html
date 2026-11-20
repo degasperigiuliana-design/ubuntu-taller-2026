@@ -1350,6 +1350,11 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
 .tri-f span{font-size:.92rem;color:var(--muted)}
 .tri-f span b{color:var(--fg);font-weight:600}
 .step .tri-f input.big{font-size:clamp(1.1rem,3vw,1.35rem)}
+.eqrows{display:grid;gap:10px}
+.eqrow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto;gap:10px;align-items:center}
+.eqrow input{font-size:1.05rem;padding:13px 14px;border-radius:14px}
+.eqrow .eqX{font-size:1.2rem;line-height:1;padding:10px 14px}
+@media(max-width:560px){.eqrows{gap:20px}.eqrow{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px}.eqrow .eqC{grid-column:1;grid-row:2}.eqrow .eqX{grid-row:1/3;grid-column:2}}
 </style>
 <div class="wrap">
 <div class="top">
@@ -1594,7 +1599,7 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
       <div class="eqgrid">
         <div class="field"><label for="eqNombre">Nombre del equipo</label><input type="text" id="eqNombre" autocomplete="off" placeholder="Ej.: Impuestos corporativos · Lima"></div>
         <div class="field"><label for="teamIn">Código del equipo <span class="opt-l">si ya lo tienen</span></label><input type="text" id="teamIn" autocomplete="off" spellcheck="false" placeholder="Ej.: KX4M7P"></div>
-        <div class="field eq-m"><label for="eqMbr">Integrantes: nombre y celular, uno por línea</label><textarea id="eqMbr" rows="4" placeholder="Ana Pérez · 987654321&#10;Luis Rojas · 912345678"></textarea></div>
+        <div class="field eq-m"><label>Integrantes</label><div id="eqRows" class="eqrows"></div><textarea id="eqMbr" hidden></textarea><div class="row"><button type="button" class="small ghost" id="eqAdd">+ Agregar integrante</button></div></div>
         <button type="button" id="teamJoin">Ingresar</button>
       </div>
       <p class="legend" id="eqMsg" role="status"></p>
@@ -2263,8 +2268,15 @@ function eqText(code){var t=teams[0],o='Trabajo en equipo · '+(eq.n||'Mi equipo
   if(lid)o+='\nCompromiso de los líderes por área:\n'+lidLine()+'\n';
   return o+'\nPara ver las tres actividades, abre Mi espacio, ve a «Ingreso del equipo» y escribe este código: '+code+'\n'+SITE}
 var eqSeq=0;
+function rowHTML(n,c){return '<div class="eqrow"><input type="text" class="eqN" autocomplete="off" placeholder="Nombre y apellido" aria-label="Nombre y apellido" value="'+esc(n)+'"><input type="tel" class="eqC" inputmode="tel" autocomplete="off" placeholder="Celular · 987 654 321" aria-label="Celular" value="'+esc(c)+'"><button type="button" class="small ghost eqX" aria-label="Quitar integrante">×</button></div>'}
+function drawRows(t){var L=parseMbr(t),h=L.map(function(m){return rowHTML(m.n==='Sin nombre'?'':m.n,m.c?m.c.slice(2):'')}).join('');for(var i=L.length;i<3;i++)h+=rowHTML('','');$('eqRows').innerHTML=h}
+function syncRows(){$('eqMbr').value=[].map.call($('eqRows').querySelectorAll('.eqrow'),function(r){var n=r.querySelector('.eqN').value.trim(),c=r.querySelector('.eqC').value.replace(/\D/g,'');return n||c?(n||'Sin nombre')+(c?' · '+c:''):''}).filter(Boolean).join('\n')}
+$('eqRows').addEventListener('input',syncRows);
+$('eqRows').addEventListener('click',function(e){var x=e.target.closest('.eqX');if(!x)return;var rs=$('eqRows').querySelectorAll('.eqrow');if(rs.length>1)x.parentNode.remove();else x.parentNode.querySelectorAll('input').forEach(function(i){i.value=''});syncRows()});
+$('eqAdd').onclick=function(){$('eqRows').insertAdjacentHTML('beforeend',rowHTML('',''));$('eqRows').lastElementChild.querySelector('input').focus()};
+drawRows(eq.mbr);
 function renderEq(){
-  if(document.activeElement!==$('eqNombre'))$('eqNombre').value=eq.n;if(document.activeElement!==$('eqMbr'))$('eqMbr').value=eq.mbr;
+  if(document.activeElement!==$('eqNombre'))$('eqNombre').value=eq.n;if(!$('eqRows').contains(document.activeElement)){$('eqMbr').value=eq.mbr;drawRows(eq.mbr)}
   var L=parseMbr(eq.mbr),msg=$('eqMsg');
   msg.innerHTML=eq.n||L.length?'Equipo <b>'+esc(eq.n||'sin nombre')+'</b> · '+(L.length?L.length+(L.length===1?' integrante':' integrantes'):'sin integrantes todavía')+'.':'Aún no hay un equipo en tu espacio.';
   var box=$('eqShare');if(!eqHas()){box.hidden=true;return}box.hidden=false;
