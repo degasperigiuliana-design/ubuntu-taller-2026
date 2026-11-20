@@ -2007,7 +2007,7 @@ function stepsBase(key,team){
     X(f('disp','¿Cuándo, y cada cuánto?','El momento que lo activa y su frecuencia.','Ej.: cada lunes, al abrir la reunión del equipo'),'Rueda · Coherencia',C('tu rueda',function(){return wheelDone()?W(3)+'. Ponerlo en el calendario es la forma de que lo que decimos y lo que hacemos coincidan.':''})),
     X(f('con','¿Con quién, y quién lo conduce?','La conducción puede rotar para que otros la aprendan.','Ej.: todo el equipo; conduce una persona distinta cada semana'),'Rueda · Equipo y Capacidades',C('tu rueda',function(){return wheelDone()?W(1)+' · '+W(2)+'. Que la conducción rote desarrolla capacidad en otros desde la primera semana.':''})),
     X({k:'Piloto de un mes',q:'¿Cómo sabremos que funciona?',help:'Algo que se pueda contar, ver u oír, en tres partes.',type:'tri',parts:TRI,val:function(){var p=triParse(team.senal);return p[0]&&p[1]&&p[2]?team.senal:''},set:function(v){team.senal=v;saveTeams()}},'Rueda · Autopercepción',C('tu rueda',function(){return wheelDone()?W(0)+'. Suma una señal que el equipo perciba: así contrastas cómo te ves con cómo te ven.':''})),
-    f('inicio','¿Cuándo empieza?','El cierre es el Taller 4, el 18 de diciembre, y el check-in queda a mitad de camino.','','date')
+    f('inicio','¿Cuándo empieza?','Idealmente dentro de la próxima semana. El check-in será dos semanas después y el cierre, en el Taller 4, el 18 de diciembre.','','date')
   ];
 }
 /* ---------- Guías y ejemplos: cómo completar cada actividad ---------- */
@@ -2028,7 +2028,7 @@ var INTRO={
   para:"Convertir un superpoder en una práctica concreta que responda a algo que tu área necesita, y dejarla escrita para que cada integrante sepa qué, cuándo y con quién.",
   quien:"Lo registra una persona por equipo, la que lidera. Toma entre 15 y 20 minutos, idealmente con el equipo al lado o con las personas del equipo que estén en el taller.",
   need:"Tu Hexágono y tu rueda (aparecen como contexto en cada pregunta), los integrantes con su celular (se registran en «Ingreso del equipo») y tu calendario para elegir el primer día.",
-  res:"Una ficha que se envía por WhatsApp a cada integrante, con el check-in a mitad de camino y el cierre en el Taller 4 (18 de diciembre) para agendar en Outlook.",
+  res:"Una ficha que se envía por WhatsApp a cada integrante, con el check-in dos semanas después del inicio y el cierre en el Taller 4 (18 de diciembre) para agendar en Outlook.",
   tips:["Parte de una necesidad del área y recién después elige el gesto. Un ritual sin necesidad detrás se cae en el primer cierre de mes.","Que sea pequeño y repetible: entre 5 y 15 minutos, una vez por semana, enganchado a un espacio que ya existe, como la reunión de lunes o el cierre.","Todo ritual necesita tres piezas: un disparador (cuándo), una conducción (quién) y una señal (cómo sabremos). Si falta una, se diluye.","En 30 días no se forma un hábito: se prueba. El piloto sirve para aprender qué ajustar, y el círculo de dirección decide en el Taller 4 cómo sostenerlo."],
   ej:[["Equipo","Impuestos corporativos · Lima"],["Lo que necesita el área","Que las observaciones de revisión aparezcan antes del día de presentación y no durante el cierre de la declaración mensual."],["Superpoder","Confianza, con foco en seguridad psicológica."],["Qué hacemos","«Ronda de riesgos»: cada persona dice en un minuto qué riesgo ve en su entrega de la semana y qué ayuda necesita. Quien conduce solo anota y agradece; las soluciones se ven después de la ronda."],["Cuándo","Cada lunes a las 9:00, 10 minutos, antes de la reunión de pendientes."],["Con quién y quién conduce","Las 6 personas del equipo. Conduce una persona distinta cada semana, empezando por la de menor antigüedad."],["Cómo sabremos que funciona","Frecuencia: 4 de 4 lunes realizados. Percepción: en el check-in de la semana 2, al menos 4 de 6 dicen que les sirve. Resultado: las observaciones detectadas el día de presentación bajan de 5 a 2 o menos."]]},
  compr:{title:"Compromiso del círculo de dirección con los equipos",lead:"Es la respuesta a «¿quién respalda estos rituales cuando el trabajo aprieta?». El círculo de dirección escribe lo que hará, no lo que espera de los equipos.",
@@ -2059,7 +2059,7 @@ var TIPS={
   ex:["Las 6 personas del equipo. Conduce una persona distinta cada semana, empezando por la de menor antigüedad.","Todo el equipo, con la jefa de área como oyente en la semana 2. Conduce quien tiene el caso de la semana."]},
  "¿Cómo sabremos que funciona?":{tip:"Completa las tres partes con una cifra: frecuencia (¿lo hicimos?), percepción (¿lo sienten útil?) y resultado (¿cambiaría algo en el área?). Anoten quién la registra: es lo que presentarán en el Taller 4.",
   ex:["Constancia: 4 de 4 lunes realizados. Percepción: en el check-in de la semana 2, al menos 4 de 6 dicen que les sirve. Resultado: los pendientes detectados después del día 3 bajan de 6 a 3 o menos.","Constancia: 4 de 4 semanas con el caso presentado. Percepción: 2 personas nuevas dicen que ya preguntan antes de entregar. Resultado: baja el retrabajo en las entregas de esas personas."]},
- "¿Cuándo empieza?":{tip:"Elige el primer día hábil después del taller en que el ritual ya pueda ocurrir. El check-in se calcula solo, a mitad de camino, y el cierre es el Taller 4, el 18 de diciembre."},
+ "¿Cuándo empieza?":{tip:"Elige el primer día hábil después del taller en que el ritual ya pueda ocurrir. Que sea dentro de la próxima semana. El check-in se calcula solo, dos semanas después del inicio, y el cierre es el Taller 4, el 18 de diciembre."},
  "¿Cuál es nuestro objetivo?":{tip:"Ya viene propuesto para que no empiecen de cero. Ajústenlo solo si el círculo de dirección lo diría distinto. Debe ser algo que el círculo de dirección pueda cumplir, no algo que dependa de los equipos."},
  "¿Qué protegemos para que los rituales vivan?":{help:"Lo que el círculo de dirección cuida, aun en las semanas más exigentes.",tip:"Piensen en el peor momento del mes, el cierre. Comprometan tiempo, agenda y condiciones, no intenciones.",
   ex:["Los 10 minutos de cada ritual no se cancelan por cierre de mes: si hay cierre, se mueven de día, no se eliminan.","Ninguna reunión del círculo de dirección ni revisión de resultados se programa sobre el horario de los rituales de los equipos.","Si un ritual se interrumpe, preguntamos qué lo bloqueó antes de preguntar quién falló."]},
@@ -2202,7 +2202,7 @@ async function unpack(text){
 }
 var T4='2026-12-18';
 function pilotD(t,k){var a=addDays(t.inicio,0),b=addDays(T4,0),n=Math.round((b-a)/864e5);if(k===0)return a;
-  if(n<4)return addDays(t.inicio,k===14?14:30);return k===30?b:addDays(t.inicio,Math.round(n/2))}
+  if(n<4)return addDays(t.inicio,k===14?14:30);return k===30?b:addDays(t.inicio,n>17?14:Math.round(n/2))}
 function evt(t,days){var d=pilotD(t,days),title=(days===14?'Check-in del piloto':'Cierre del piloto')+(t.equipo?' · '+t.equipo:'')+' · Ubuntu en acción';
   var body=(t.gesto?'Ritual: '+t.gesto+'\n':'')+(t.freq?'Frecuencia: '+t.freq+'\n':'')+(t.senal?'Señal de que funciona: '+t.senal+'\n':'')+(days===14?'Preguntas: ¿lo estamos haciendo? ¿Qué ajustamos?':'Preguntas: ¿qué cambió y para quién? ¿Lo mantenemos?');
   return{d:d,title:title,body:body}}
@@ -2233,7 +2233,7 @@ function renderLid(){var el=$('lidBox');if(!el)return;
 function renderTeams(){renderCompr();renderLid();renderEq();$('addTeam').hidden=teams.length>0;
   if(!teams.length){tdiv.innerHTML='<div class="empty">Todavía no hay un ritual registrado. Regístrenlo aquí o escriban arriba el código del equipo.</div>';return}
   tdiv.innerHTML=teams.map(function(t,i){
-    var F2=[['Lo que necesita el área',t.para],['Superpoder',t.poder],['Qué hacemos',t.gesto],['Cuándo',t.disp||t.freq],['Con quién y quién conduce',t.con],['Cómo sabremos que funciona',t.senal],['Inicio',niceD(addDays(t.inicio,0))],['Check-in · mitad del piloto',niceD(pilotD(t,14))],['Cierre · Taller 4',niceD(pilotD(t,30))]];if(compr)F2.push(['Cómo nos respalda el círculo de dirección',comprLine()]);
+    var F2=[['Lo que necesita el área',t.para],['Superpoder',t.poder],['Qué hacemos',t.gesto],['Cuándo',t.disp||t.freq],['Con quién y quién conduce',t.con],['Cómo sabremos que funciona',t.senal],['Inicio',niceD(addDays(t.inicio,0))],['Check-in · semana 2',niceD(pilotD(t,14))],['Cierre · Taller 4',niceD(pilotD(t,30))]];if(compr)F2.push(['Cómo nos respalda el círculo de dirección',comprLine()]);
     return '<div class="tcard" data-i="'+i+'"><header><div><p class="eyebrow">'+(t.shared?'Compartido conmigo':'Registrado aquí')+'</p><h3>'+esc(t.equipo||'Equipo '+(i+1))+'</h3></div><div class="row"><button type="button" class="small ghost" data-flow="piloto" data-ti="'+i+'">Editar</button><button type="button" class="small ghost" data-del="'+i+'">Quitar</button></div></header>'+
       '<dl>'+F2.map(function(f){return '<div><dt>'+f[0]+'</dt><dd>'+(esc(f[1])||'<span class="muted">Sin completar</span>')+'</dd></div>'}).join('')+'</dl>'+
       '<div class="row"><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t,14)+'">Agendar check-in en Outlook</a><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t,30)+'">Agendar cierre en Outlook</a><button type="button" class="small ghost" data-ics="'+i+'">Archivo de calendario (.ics)</button></div>'+'</div>';
@@ -2497,7 +2497,7 @@ function teamBody(c,y,t,go,col){
   if(t.mbr)yy+=fld(c,x+pad+8,yy,iw,'Integrantes',mbrNames(t.mbr),dry);
   if(compr)yy+=fld(c,x+pad+8,yy,iw,'Cómo nos respalda el círculo de dirección',comprLine(),dry);
   var bw=(iw-48)/3;
-  if(go)[['Inicio',0],['Check-in · mitad',14],['Cierre · Taller 4',30]].forEach(function(d,i){var bx=x+pad+8+i*(bw+24);rr(c,bx,yy,bw-3,112,24,i?'rgba(18,103,224,.08)':col,i?'rgba(18,103,224,.18)':null);
+  if(go)[['Inicio',0],['Check-in · semana 2',14],['Cierre · Taller 4',30]].forEach(function(d,i){var bx=x+pad+8+i*(bw+24);rr(c,bx,yy,bw-3,112,24,i?'rgba(18,103,224,.08)':col,i?'rgba(18,103,224,.18)':null);
     txt(c,d[0].toUpperCase(),bx+22,yy+20,{font:'600 15px '+FB,color:i?MUT:'#fff',lh:22});txt(c,niceD(pilotD(t,d[1])),bx+22,yy+52,{font:'400 24px '+FD,color:i?INK:'#fff',lh:32,w:bw-34})});
   return yy+112+pad-y}
 function teamBand(c,y,t,dry){
