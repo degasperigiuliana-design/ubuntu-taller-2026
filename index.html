@@ -1345,6 +1345,11 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
 .tool.fin .st{color:var(--accent);font-weight:600}
 #keepBox{margin-top:18px}
 #piloto{margin-top:12px}
+.tri{display:grid;gap:22px;margin-top:6px}
+.tri-f{display:grid;gap:4px}
+.tri-f span{font-size:.92rem;color:var(--muted)}
+.tri-f span b{color:var(--fg);font-weight:600}
+.step .tri-f input.big{font-size:clamp(1.1rem,3vw,1.35rem)}
 </style>
 <div class="wrap">
 <div class="top">
@@ -1957,6 +1962,10 @@ function renderTools(){
 }
 /* ---------- Formularios paso a paso ---------- */
 var F=null,flow=$('flow'),lastFocus=null;
+var TRI=[['Frecuencia','Constancia: ¿lo hicimos?','Ej.: 4 de 4 lunes realizados'],['Percepción','¿Lo sienten útil?','Ej.: en el check-in de la semana 2, al menos 4 de 6 dicen que les sirve'],['Resultado','¿Cambiaría algo en el área?','Ej.: los pendientes detectados después del día 3 bajan de 6 a 3 o menos']];
+function triParse(t){t=String(t||'');var m=/^(?:Frecuencia|Constancia):\s*([\s\S]*?)\s*(?:Percepción:\s*([\s\S]*?))?\s*(?:Resultado:\s*([\s\S]*?))?\s*$/.exec(t);
+  if(!m)return [t,'',''];return [m[1]||'',m[2]||'',m[3]||''].map(function(x){return x.replace(/\.$/,'').trim()})}
+function triJoin(a){return a.map(function(x,i){return x?TRI[i][0]+': '+x.replace(/\.$/,'')+'.':''}).filter(Boolean).join(' ')}
 function stepsBase(key,team){
   if(key==='rueda'){
     var st=WHEEL.map(function(w,i){return{k:w.n,q:w.s,help:w.q+' Responde según lo que haces habitualmente.',type:'scale',val:function(){return wheel.s[i]},set:function(v){wheel.s[i]=v;saveWheel()},
@@ -1992,7 +2001,7 @@ function stepsBase(key,team){
     X(f('gesto','¿Qué harán exactamente?','Un gesto concreto y corto, que el líder también practica.','Ej.: abrir la reunión contando una situación en la que vimos un principio de TMF en acción','long'),'Hexágono · Un poder',C('tu Hexágono',powLine)),
     X(f('disp','¿Cuándo, y cada cuánto?','El momento que lo activa y su frecuencia.','Ej.: cada lunes, al abrir la reunión del equipo'),'Rueda · Coherencia',C('tu rueda',function(){return wheelDone()?W(3)+'. Ponerlo en el calendario es la forma de que lo que decimos y lo que hacemos coincidan.':''})),
     X(f('con','¿Con quién, y quién lo conduce?','La conducción puede rotar para que otros la aprendan.','Ej.: todo el equipo; conduce una persona distinta cada semana'),'Rueda · Equipo y Capacidades',C('tu rueda',function(){return wheelDone()?W(1)+' · '+W(2)+'. Que la conducción rote desarrolla capacidad en otros desde la primera semana.':''})),
-    X(f('senal','¿Cómo sabremos que funciona?','Algo que se pueda contar, ver u oír.','Ej.: lo hicimos 4 de 4 lunes y al menos tres personas lo condujeron'),'Rueda · Autopercepción',C('tu rueda',function(){return wheelDone()?W(0)+'. Suma una señal que el equipo perciba: así contrastas cómo te ves con cómo te ven.':''})),
+    X({k:'Piloto de un mes',q:'¿Cómo sabremos que funciona?',help:'Algo que se pueda contar, ver u oír, en tres partes.',type:'tri',parts:TRI,val:function(){var p=triParse(team.senal);return p[0]&&p[1]&&p[2]?team.senal:''},set:function(v){team.senal=v;saveTeams()}},'Rueda · Autopercepción',C('tu rueda',function(){return wheelDone()?W(0)+'. Suma una señal que el equipo perciba: así contrastas cómo te ves con cómo te ven.':''})),
     f('inicio','¿Cuándo empieza?','El check-in será en la semana 2 y el cierre, el día 30.','','date')
   ];
 }
@@ -2016,7 +2025,7 @@ var INTRO={
   need:"Tu Hexágono y tu rueda (aparecen como contexto en cada pregunta), los integrantes con su celular (se registran en «Ingreso del equipo») y tu calendario para elegir el primer día.",
   res:"Una ficha que se envía por WhatsApp a cada integrante, con el check-in de la semana 2 y el cierre del día 30 para agendar en Outlook.",
   tips:["Parte de una necesidad del área y recién después elige el gesto. Un ritual sin necesidad detrás se cae en el primer cierre de mes.","Que sea pequeño y repetible: entre 5 y 15 minutos, una vez por semana, enganchado a un espacio que ya existe, como la reunión de lunes o el cierre.","Todo ritual necesita tres piezas: un disparador (cuándo), una conducción (quién) y una señal (cómo sabremos). Si falta una, se diluye.","En 30 días no se forma un hábito: se prueba. El piloto sirve para aprender qué ajustar, y el círculo de dirección decide en el Taller 4 cómo sostenerlo."],
-  ej:[["Equipo","Impuestos corporativos · Lima"],["Lo que necesita el área","Que las observaciones de revisión aparezcan antes del día de presentación y no durante el cierre de la declaración mensual."],["Superpoder","Confianza, con foco en seguridad psicológica."],["Qué hacemos","«Ronda de riesgos»: cada persona dice en un minuto qué riesgo ve en su entrega de la semana y qué ayuda necesita. Quien conduce solo anota y agradece; las soluciones se ven después de la ronda."],["Cuándo","Cada lunes a las 9:00, 10 minutos, antes de la reunión de pendientes."],["Con quién y quién conduce","Las 6 personas del equipo. Conduce una persona distinta cada semana, empezando por la de menor antigüedad."],["Cómo sabremos que funciona","Constancia: 4 de 4 lunes realizados. Percepción: en el check-in de la semana 2, al menos 4 de 6 dicen que les sirve. Resultado: las observaciones detectadas el día de presentación bajan de 5 a 2 o menos."]]},
+  ej:[["Equipo","Impuestos corporativos · Lima"],["Lo que necesita el área","Que las observaciones de revisión aparezcan antes del día de presentación y no durante el cierre de la declaración mensual."],["Superpoder","Confianza, con foco en seguridad psicológica."],["Qué hacemos","«Ronda de riesgos»: cada persona dice en un minuto qué riesgo ve en su entrega de la semana y qué ayuda necesita. Quien conduce solo anota y agradece; las soluciones se ven después de la ronda."],["Cuándo","Cada lunes a las 9:00, 10 minutos, antes de la reunión de pendientes."],["Con quién y quién conduce","Las 6 personas del equipo. Conduce una persona distinta cada semana, empezando por la de menor antigüedad."],["Cómo sabremos que funciona","Frecuencia: 4 de 4 lunes realizados. Percepción: en el check-in de la semana 2, al menos 4 de 6 dicen que les sirve. Resultado: las observaciones detectadas el día de presentación bajan de 5 a 2 o menos."]]},
  compr:{title:"Compromiso del círculo de dirección con los equipos",lead:"Es la respuesta a «¿quién respalda estos rituales cuando el trabajo aprieta?». El círculo de dirección escribe lo que hará, no lo que espera de los equipos.",
   para:"Dejar por escrito qué protege, cómo acompaña y cómo reconoce el círculo de dirección los rituales de sus equipos, para que sobrevivan a las semanas exigentes.",
   quien:"El círculo de dirección, en la Dinámica 2 del taller. Unos 20 minutos: una persona escribe y el resto valida. Después se envía a los jefes y a los equipos.",
@@ -2043,7 +2052,7 @@ var TIPS={
   ex:["Cada lunes a las 9:00, 10 minutos, antes de la reunión de pendientes.","El día hábil siguiente al cierre mensual, 15 minutos, antes de abrir el nuevo ciclo.","Cada viernes a las 4:30 p. m., 10 minutos, al cerrar la semana."]},
  "¿Con quién, y quién lo conduce?":{tip:"Rotar la conducción desarrolla capacidad en otros desde la primera semana y evita que el ritual dependa de ti. Si se suma alguien de otra área, anótalo.",
   ex:["Las 6 personas del equipo. Conduce una persona distinta cada semana, empezando por la de menor antigüedad.","Todo el equipo, con la jefa de área como oyente en la semana 2. Conduce quien tiene el caso de la semana."]},
- "¿Cómo sabremos que funciona?":{tip:"Mezcla tres capas: constancia (¿lo hicimos?), percepción (¿lo sienten útil?) y resultado (¿cambió algo del área?). Escribe la cifra y quién la anota: es lo que presentarán en el Taller 4.",
+ "¿Cómo sabremos que funciona?":{tip:"Completa las tres partes con una cifra: frecuencia (¿lo hicimos?), percepción (¿lo sienten útil?) y resultado (¿cambiaría algo en el área?). Anoten quién la registra: es lo que presentarán en el Taller 4.",
   ex:["Constancia: 4 de 4 lunes realizados. Percepción: en el check-in de la semana 2, al menos 4 de 6 dicen que les sirve. Resultado: los pendientes detectados después del día 3 bajan de 6 a 3 o menos.","Constancia: 4 de 4 semanas con el caso presentado. Percepción: 2 personas nuevas dicen que ya preguntan antes de entregar. Resultado: baja el retrabajo en las entregas de esas personas."]},
  "¿Cuándo empieza?":{tip:"Elige el primer día hábil después del taller en que el ritual ya pueda ocurrir. El check-in de la semana 2 y el cierre del día 30 se calculan solos."},
  "¿Cuál es nuestro objetivo?":{tip:"Ya viene propuesto para que no empiecen de cero. Ajústenlo solo si el círculo de dirección lo diría distinto. Debe ser algo que el círculo de dirección pueda cumplir, no algo que dependa de los equipos."},
@@ -2100,7 +2109,7 @@ function closeFlow(){
   if(F.key==='piloto'){teams=teams.filter(function(x){return x.equipo||x.gesto||x.poder});saveTeams()}
   F=null;flow.hidden=true;document.body.style.overflow='';refresh();if(lastFocus&&lastFocus.focus)lastFocus.focus();
 }
-function commit(){if(!F||F.i>=F.steps.length)return;var s=F.steps[F.i],el=$('flowIn');if(el&&s.type!=='scale'&&s.type!=='power'&&s.type!=='sp')s.set(el.value.trim());var nt=$('flowNote');if(nt&&s.note)s.note.set(nt.value.trim())}
+function commit(){if(!F||F.i>=F.steps.length)return;var s=F.steps[F.i],el=$('flowIn');if(s.type==='tri'){s.set(triJoin([0,1,2].map(function(i){var x=$('flowTri'+i);return x?x.value.trim():''})));return}if(el&&s.type!=='scale'&&s.type!=='power'&&s.type!=='sp')s.set(el.value.trim());var nt=$('flowNote');if(nt&&s.note)s.note.set(nt.value.trim())}
 function renderStep(){
   var n=F.steps.length,st=$('flowStage');
   $('flowProg').style.width=(Math.min(F.i,n)/n*100)+'%';$('flowPrev').disabled=F.i===0;
@@ -2116,15 +2125,16 @@ function renderStep(){
     if(s.note)h+='<textarea class="note" id="flowNote" placeholder="'+esc(s.note.ph)+'" aria-label="Nota opcional">'+esc(s.note.val())+'</textarea>'}
   else if(s.type==='sp'){h+='<div class="opts sp6">'+POWERS.map(function(P,pi){return '<button type="button" class="opt" data-v="'+esc(P.n)+'" aria-pressed="'+(v===P.n)+'" style="--spc:'+SPCOL[pi]+'"><kbd>'+(pi+1)+'</kbd>'+esc(P.n)+'</button>'}).join('')+'</div>'}
   else if(s.type==='power'){h+='<div class="pgrid">'+POWERS.map(function(P,pi){return '<div><p class="eyebrow" style="color:'+SPCOL[pi]+'">'+P.n+'</p>'+P.p.map(function(x){return '<button type="button" class="opt" data-v="'+esc(x)+'" aria-pressed="'+(v===x)+'">'+esc(x)+'</button>'}).join('')+'</div>'}).join('')+'</div>'}
+  else if(s.type==='tri'){var tp=triParse(s.set&&F.team?F.team.senal:'');h+='<div class="tri">'+s.parts.map(function(pt,i){return '<label class="tri-f"><span><b>'+esc(pt[0])+'</b> · '+esc(pt[1])+'</span><input class="big" id="flowTri'+i+'" type="text" value="'+esc(tp[i])+'" placeholder="'+esc(pt[2])+'" autocomplete="off"></label>'}).join('')+'</div>'}
   else if(s.type==='long'){h+='<textarea class="big" id="flowIn"'+(s.tall?' style="min-height:8.5em"':'')+' placeholder="'+esc(s.ph||'')+'" aria-labelledby="stepQ">'+esc(v)+'</textarea>'}
   else{h+='<input class="big" id="flowIn" type="'+(s.type==='date'?'date':'text')+'" value="'+esc(v)+'" placeholder="'+esc(s.ph||'')+'" aria-labelledby="stepQ" autocomplete="off">'}
   st.innerHTML=h+exHTML(s)+'</div>';st.scrollTop=0;
   $('flowCount').textContent=(F.i+1-off)+' de '+(n-off);$('flowNext').textContent=F.i===n-1?'Terminar':'Continuar';
-  var el=$('flowIn')||st.querySelector('.opt[aria-pressed="true"]')||st.querySelector('.opt');if(el)el.focus({preventScroll:true});
+  var el=$('flowIn')||$('flowTri0')||st.querySelector('.opt[aria-pressed="true"]')||st.querySelector('.opt');if(el)el.focus({preventScroll:true});
 }
 function next(){
   if(!F)return;if(F.i>=F.steps.length){var k=F.key;closeFlow();var tg=$(k==='piloto'||k==='compr'||k==='lideres'?'eqShare':'keepBox');if(tg&&!tg.hidden)setTimeout(function(){tg.scrollIntoView({behavior:'smooth',block:'center'})},60);return}
-  commit();var s=F.steps[F.i];if(!s.opt&&!s.val()){toast(s.type==='scale'||s.type==='power'?'Elige una opción para continuar.':'Escribe una respuesta para continuar.');return}
+  commit();var s=F.steps[F.i];if(!s.opt&&!s.val()){toast(s.type==='scale'||s.type==='power'?'Elige una opción para continuar.':s.type==='tri'?'Completa las tres partes: frecuencia, percepción y resultado.':'Escribe una respuesta para continuar.');return}
   if(s.check){var cm=s.check();if(cm){toast(cm);return}}
   F.i++;renderStep();
 }
