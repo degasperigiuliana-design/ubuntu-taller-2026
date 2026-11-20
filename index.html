@@ -1583,11 +1583,11 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
   <section id="piloto">
     <p class="eyebrow">Equipo</p>
     <h2>Mis acuerdos de equipo</h2>
-    <p class="lead">Tres actividades que se comparten con un código y por WhatsApp a cada integrante: el ritual de tu equipo, el compromiso de la gerencia con los equipos y el compromiso de los líderes por área.</p>
+    <p class="lead">Tres actividades que se comparten con un código y por WhatsApp a cada integrante: el ritual de tu equipo, el compromiso del círculo de dirección con los equipos y el compromiso de los líderes por área.</p>
     <h3 class="sub-h">1 · Ritual de mi equipo</h3>
     <div id="teams" style="display:grid;gap:14px"></div>
     <div class="row"><button type="button" id="addTeam">Registrar un ritual</button></div>
-    <h3 class="sub-h">2 · Compromiso de la gerencia con los equipos</h3>
+    <h3 class="sub-h">2 · Compromiso del círculo de dirección con los equipos</h3>
     <div id="comprBox"></div>
     <h3 class="sub-h">3 · Compromiso de los líderes por área</h3>
     <div id="lidBox"></div>
@@ -1923,7 +1923,7 @@ function renderTools(){
    hex:{id:'hex',c:'#B77BC8',c2:'#5B5BD6',no:'Personal · 1 de 2',tags:['Construcción del líder','7 min'],h:'Hexágono Ubuntu',d:'24 afirmaciones sobre lo que haces habitualmente. Te da tu Índice Ubuntu de 0 a 100, para compararlo en el Taller 4 y en diciembre.',n:hh,of:24},
    rueda:{id:'rueda',c:'#2FB7B0',c2:'#1267E0',no:'Personal · 2 de 2',tags:['Rueda del liderazgo','2 min'],h:'La rueda de mi liderazgo',d:'Cinco preguntas para mirarte como líder y dos para decidir qué quieres fortalecer.',n:w,of:5},
    piloto:{id:'piloto',c:'#C98A4B',c2:'#D9738F',no:'Equipo · 1 de 3',tags:['Piloto de un mes','9 pasos'],h:'Ritual de mi equipo',d:'El ritual que tu equipo practicará durante un mes. Lo registra una persona y se envía a cada integrante por WhatsApp.',n:t,of:0},
-   compr:{id:'compr',c:'#5B5BD6',c2:'#1267E0',no:'Equipo · 2 de 3',tags:['Gerencia general y gerentes','7 pasos'],h:'Compromiso de la gerencia con los equipos',d:'Qué protege, cómo acompaña y cómo reconoce la gerencia los rituales de sus equipos. Aparece en la ficha de cada ritual.',n:compr?1:0,of:0},
+   compr:{id:'compr',c:'#5B5BD6',c2:'#1267E0',no:'Equipo · 2 de 3',tags:['Círculo de dirección','7 pasos'],h:'Compromiso del círculo de dirección con los equipos',d:'Qué protege, cómo acompaña y cómo reconoce el círculo de dirección los rituales de sus equipos. Aparece en la ficha de cada ritual.',n:compr?1:0,of:0},
    lideres:{id:'lideres',c:'#D9738F',c2:'#5B5BD6',no:'Equipo · 3 de 3',tags:['Líderes por área','10 pasos'],h:'Compromiso de los líderes por área',d:'El ritual de la red de líderes: compartir buenas prácticas y oportunidades de mejora entre las áreas, con sus acuerdos.',n:lid?1:0,of:0}
   };
   function card(x){
@@ -1996,21 +1996,21 @@ var INTRO={
   quien:"Lo registra una persona por equipo, la que lidera. Toma entre 15 y 20 minutos, idealmente con el equipo al lado o con las personas del equipo que estén en el taller.",
   need:"Tu Hexágono y tu rueda (aparecen como contexto en cada pregunta), los celulares de los integrantes y tu calendario para elegir el primer día.",
   res:"Una ficha que se envía por WhatsApp a cada integrante, con el check-in de la semana 2 y el cierre del día 30 para agendar en Outlook.",
-  tips:["Parte de una necesidad del área y recién después elige el gesto. Un ritual sin necesidad detrás se cae en el primer cierre de mes.","Que sea pequeño y repetible: entre 5 y 15 minutos, una vez por semana, enganchado a un espacio que ya existe, como la reunión de lunes o el cierre.","Todo ritual necesita tres piezas: un disparador (cuándo), una conducción (quién) y una señal (cómo sabremos). Si falta una, se diluye.","En 30 días no se forma un hábito: se prueba. El piloto sirve para aprender qué ajustar, y la gerencia decide en el Taller 4 cómo sostenerlo."],
+  tips:["Parte de una necesidad del área y recién después elige el gesto. Un ritual sin necesidad detrás se cae en el primer cierre de mes.","Que sea pequeño y repetible: entre 5 y 15 minutos, una vez por semana, enganchado a un espacio que ya existe, como la reunión de lunes o el cierre.","Todo ritual necesita tres piezas: un disparador (cuándo), una conducción (quién) y una señal (cómo sabremos). Si falta una, se diluye.","En 30 días no se forma un hábito: se prueba. El piloto sirve para aprender qué ajustar, y el círculo de dirección decide en el Taller 4 cómo sostenerlo."],
   ej:[["Equipo","Impuestos corporativos · Lima"],["Lo que necesita el área","Que las observaciones de revisión aparezcan antes del día de presentación y no durante el cierre de la declaración mensual."],["Superpoder","Confianza, con foco en seguridad psicológica."],["Qué hacemos","«Ronda de riesgos»: cada persona dice en un minuto qué riesgo ve en su entrega de la semana y qué ayuda necesita. Quien conduce solo anota y agradece; las soluciones se ven después de la ronda."],["Cuándo","Cada lunes a las 9:00, 10 minutos, antes de la reunión de pendientes."],["Con quién y quién conduce","Las 6 personas del equipo. Conduce una persona distinta cada semana, empezando por la de menor antigüedad."],["Cómo sabremos que funciona","Constancia: 4 de 4 lunes realizados. Percepción: en el check-in de la semana 2, al menos 4 de 6 dicen que les sirve. Resultado: las observaciones detectadas el día de presentación bajan de 5 a 2 o menos."]]},
- compr:{title:"Compromiso de la gerencia con los equipos",lead:"Es la respuesta a «¿quién respalda estos rituales cuando el trabajo aprieta?». La gerencia escribe lo que hará, no lo que espera de los equipos.",
-  para:"Dejar por escrito qué protege, cómo acompaña y cómo reconoce la gerencia los rituales de sus equipos, para que sobrevivan a las semanas exigentes.",
-  quien:"La gerencia general junto con los gerentes, en la Dinámica 2 del taller. Unos 20 minutos: una persona escribe y el resto valida. Después se envía a los jefes y a los equipos.",
+ compr:{title:"Compromiso del círculo de dirección con los equipos",lead:"Es la respuesta a «¿quién respalda estos rituales cuando el trabajo aprieta?». El círculo de dirección escribe lo que hará, no lo que espera de los equipos.",
+  para:"Dejar por escrito qué protege, cómo acompaña y cómo reconoce el círculo de dirección los rituales de sus equipos, para que sobrevivan a las semanas exigentes.",
+  quien:"El círculo de dirección, en la Dinámica 2 del taller. Unos 20 minutos: una persona escribe y el resto valida. Después se envía a los jefes y a los equipos.",
   need:"Una idea de los rituales que están diseñando sus equipos y la agenda de las próximas cuatro semanas, con el cierre de mes a la vista.",
   res:"Una ficha que aparece dentro de cada ritual de equipo y que se presenta en el Taller 4.",
   tips:["Comprometan conductas observables, no intenciones. «Estamos atentos» no se puede verificar; «participo como oyente en un ritual de cada equipo en la semana 2» sí.","Los tres verbos importan: proteger (tiempo y condiciones), acompañar (presencia sin control) y reconocer (lo que el equipo vive como reconocimiento).","Piensen en el peor momento del mes, el cierre. Si el compromiso resiste ese momento, resiste cualquier otro.","Si lo escriben, deben cumplirlo: elijan menos cosas y más seguras. Se revisa ante todos en el Taller 4."],
-  ej:[["Objetivo","Conectar los rituales de los equipos con el propósito de TMF y sostenerlos durante los 30 días del piloto."],["Protegemos","Los 10 minutos de cada ritual no se cancelan por cierre de mes: si hay cierre, se mueven de día, no se eliminan. Ninguna reunión de gerencia se programa sobre el horario de los rituales."],["Acompañamos","Cada gerente participa como oyente, sin conducir ni evaluar, en un ritual de cada equipo de su área durante la semana 2, y le devuelve al equipo una pregunta, no una instrucción."],["Reconocemos","El día 30 cada equipo cuenta en tres minutos qué cambió y para quién, ante la gerencia general. Se destaca también el ritual que se ajustó o se dejó, por lo que enseñó."],["Revisamos","Día 30, en el Taller 4: qué funcionó, qué ajustamos y qué mantenemos."]]},
+  ej:[["Objetivo","Conectar los rituales de los equipos con el propósito de TMF y sostenerlos durante los 30 días del piloto."],["Protegemos","Los 10 minutos de cada ritual no se cancelan por cierre de mes: si hay cierre, se mueven de día, no se eliminan. Ninguna reunión del círculo de dirección se programa sobre el horario de los rituales."],["Acompañamos","Cada integrante del círculo de dirección participa como oyente, sin conducir ni evaluar, en un ritual de cada equipo de su área durante la semana 2, y le devuelve al equipo una pregunta, no una instrucción."],["Reconocemos","El día 30 cada equipo cuenta en tres minutos qué cambió y para quién, ante el círculo de dirección. Se destaca también el ritual que se ajustó o se dejó, por lo que enseñó."],["Revisamos","Día 30, en el Taller 4: qué funcionó, qué ajustamos y qué mantenemos."]]},
  lideres:{title:"Compromiso de los líderes por área",lead:"Es el ritual de la red de líderes: un espacio regular para que lo que funciona en un área viaje a las demás y para pedir ayuda entre áreas.",
   para:"Acordar cómo se encuentran los líderes de las distintas áreas para compartir buenas prácticas y oportunidades de mejora, y dejar los acuerdos escritos con responsable y fecha.",
   quien:"Los jefes y líderes de todas las áreas, en la Dinámica 2 del taller. Unos 20 minutos: una persona escribe y el resto valida. Se comparte con todos por código y WhatsApp.",
   need:"Una buena práctica real de su área y una oportunidad de mejora que dependa de otra área. Pueden llegar pensadas.",
   res:"Una ficha de la red con sus buenas prácticas, sus oportunidades de mejora, su ritual y sus reglas de juego, que cada integrante ve ingresando con su celular y pegando el código.",
-  tips:["Una buena práctica por área, concreta y trasladable: qué se hace, cuándo y qué resultado dio. Evita «comunicamos mejor» y escribe «reunión de 15 minutos el día 1 del cierre que redujo el retrabajo».","Las oportunidades de mejora se plantean como pedido a la red, no como queja: qué necesito, de quién y para cuándo.","Acuerden reglas de juego primero: se habla de casos y no de personas, lo que se dice en la mesa se queda en la mesa y cada sesión termina con un acuerdo con responsable y fecha.","Midan lo que importa a la gerencia: constancia (¿nos reunimos?), adopción (¿una práctica pasó a otra área?) y resultado (¿se cerró una oportunidad?)."],
+  tips:["Una buena práctica por área, concreta y trasladable: qué se hace, cuándo y qué resultado dio. Evita «comunicamos mejor» y escribe «reunión de 15 minutos el día 1 del cierre que redujo el retrabajo».","Las oportunidades de mejora se plantean como pedido a la red, no como queja: qué necesito, de quién y para cuándo.","Acuerden reglas de juego primero: se habla de casos y no de personas, lo que se dice en la mesa se queda en la mesa y cada sesión termina con un acuerdo con responsable y fecha.","Midan lo que importa al círculo de dirección: constancia (¿nos reunimos?), adopción (¿una práctica pasó a otra área?) y resultado (¿se cerró una oportunidad?)."],
   ej:[["Nuestra red","Jefes de Fideicomisos, Impuestos, Contabilidad y Nómina."],["Buenas prácticas","Contabilidad: reunión de 15 minutos el día 1 del cierre con quienes aportan datos de otras áreas, que redujo el retrabajo. Nómina: calendario visible de hitos con responsables, compartido con el cliente."],["Oportunidades de mejora","Las solicitudes entre áreas llegan sin plazo ni prioridad. Pedimos acordar un formato mínimo: qué se necesita, para cuándo y para qué."],["Nuestro ritual","Mesa de práctica de 45 minutos cada dos semanas: dos líderes presentan una buena práctica (10 minutos cada uno), se trabaja una oportunidad de mejora y se cierra con un acuerdo por persona."],["Reglas de juego","Se habla de casos, no de personas. Lo que se dice en la mesa se queda en la mesa. Cada sesión termina con un acuerdo con responsable y fecha."],["Cómo sabremos que funciona","Constancia: 2 de 2 mesas realizadas. Adopción: al día 30, 3 prácticas probadas por otra área. Resultado: 1 oportunidad de mejora cerrada."]]}
 };
 var TIPS={
@@ -2027,13 +2027,13 @@ var TIPS={
  "¿Cómo sabremos que funciona?":{tip:"Mezcla tres capas: constancia (¿lo hicimos?), percepción (¿lo sienten útil?) y resultado (¿cambió algo del área?). Escribe la cifra y quién la anota: es lo que presentarán en el Taller 4.",
   ex:["Constancia: 4 de 4 lunes realizados. Percepción: en el check-in de la semana 2, al menos 4 de 6 dicen que les sirve. Resultado: los pendientes detectados después del día 3 bajan de 6 a 3 o menos.","Constancia: 4 de 4 semanas con el caso presentado. Percepción: 2 personas nuevas dicen que ya preguntan antes de entregar. Resultado: baja el retrabajo en las entregas de esas personas."]},
  "¿Cuándo empieza?":{tip:"Elige el primer día hábil después del taller en que el ritual ya pueda ocurrir. El check-in de la semana 2 y el cierre del día 30 se calculan solos."},
- "¿Cuál es nuestro objetivo?":{tip:"Ya viene propuesto para que no empiecen de cero. Ajústenlo solo si la gerencia lo diría distinto. Debe ser algo que la gerencia pueda cumplir, no algo que dependa de los equipos."},
- "¿Qué protegemos para que los rituales vivan?":{help:"Lo que la gerencia cuida, aun en las semanas más exigentes.",tip:"Piensen en el peor momento del mes, el cierre. Comprometan tiempo, agenda y condiciones, no intenciones.",
-  ex:["Los 10 minutos de cada ritual no se cancelan por cierre de mes: si hay cierre, se mueven de día, no se eliminan.","Ninguna reunión de gerencia ni revisión de resultados se programa sobre el horario de los rituales de los equipos.","Si un ritual se interrumpe, preguntamos qué lo bloqueó antes de preguntar quién falló."]},
- "¿Cómo los acompañamos?":{help:"Presencia concreta, sin convertirla en control.",tip:"Acompañar es escuchar y preguntar, no evaluar. Definan quién, cuándo y qué hará exactamente cada persona de la gerencia.",
-  ex:["Cada gerente participa como oyente en un ritual de cada equipo de su área durante la semana 2, y le devuelve al equipo una pregunta, no una instrucción.","La gerencia general dedica 15 minutos por área el día 15 para escuchar qué necesitan para sostener el ritual."]},
+ "¿Cuál es nuestro objetivo?":{tip:"Ya viene propuesto para que no empiecen de cero. Ajústenlo solo si el círculo de dirección lo diría distinto. Debe ser algo que el círculo de dirección pueda cumplir, no algo que dependa de los equipos."},
+ "¿Qué protegemos para que los rituales vivan?":{help:"Lo que el círculo de dirección cuida, aun en las semanas más exigentes.",tip:"Piensen en el peor momento del mes, el cierre. Comprometan tiempo, agenda y condiciones, no intenciones.",
+  ex:["Los 10 minutos de cada ritual no se cancelan por cierre de mes: si hay cierre, se mueven de día, no se eliminan.","Ninguna reunión del círculo de dirección ni revisión de resultados se programa sobre el horario de los rituales de los equipos.","Si un ritual se interrumpe, preguntamos qué lo bloqueó antes de preguntar quién falló."]},
+ "¿Cómo los acompañamos?":{help:"Presencia concreta, sin convertirla en control.",tip:"Acompañar es escuchar y preguntar, no evaluar. Definan quién, cuándo y qué hará exactamente cada persona del círculo de dirección.",
+  ex:["Cada integrante del círculo de dirección participa como oyente en un ritual de cada equipo de su área durante la semana 2, y le devuelve al equipo una pregunta, no una instrucción.","El círculo de dirección dedica 15 minutos por área el día 15 para escuchar qué necesitan para sostener el ritual."]},
  "¿Cómo los reconocemos?":{help:"Lo que el equipo vive como un reconocimiento real.",tip:"El reconocimiento debe ser específico y público si el equipo lo desea. Premiar la constancia y el aprendizaje, no solo el resultado.",
-  ex:["El día 30, cada equipo cuenta en tres minutos qué cambió y para quién, ante la gerencia general.","Se destaca también el ritual que se ajustó o se dejó, por lo que enseñó, no solo los que salieron bien."]},
+  ex:["El día 30, cada equipo cuenta en tres minutos qué cambió y para quién, ante el círculo de dirección.","Se destaca también el ritual que se ajustó o se dejó, por lo que enseñó, no solo los que salieron bien."]},
  "¿Cuándo revisamos este compromiso?":{help:"Una fecha para mirar juntos qué funcionó y qué ajustar.",tip:"Lo natural es el día 30, en el Taller 4, cuando los equipos cuentan cómo les fue."},
  "¿Qué descubriste que ya tienes?":{tip:"Mira tus puntajes más altos y piensa en una situación real reciente donde se notó. Una fortaleza con ejemplo sirve más que una lista de adjetivos.",ex:["Cuando el cierre se complica, mi equipo me busca porque mantengo la calma y ordeno prioridades.","Sé escuchar: las personas me cuentan los problemas a tiempo, antes de que lleguen al cliente."]},
  "¿Qué quisieras fortalecer?":{tip:"Elige una sola cosa, la que más impacto tendría en tu equipo en los próximos 30 días. Será la semilla de tu ritual.",ex:["Delegar sin volver a revisarlo todo: confiar más en que la persona lo haga a su manera.","Dar feedback a tiempo, sin esperar al cierre del trimestre."]}
@@ -2058,7 +2058,7 @@ function lidSteps(){
   ]}
 function stepsFor(key,team){
   var st=key==="lideres"?lidSteps():stepsBase(key,team);
-  if(key==="compr"){if(!compr.mbr)compr.mbr="";st.splice(st.length-1,0,mbrStep(compr,"¿Quiénes lo asumen y quiénes lo reciben?","Las personas de la gerencia que lo asumen y los jefes o líderes de los equipos que lo reciben, una por línea, con su celular.",MBR_EX))}
+  if(key==="compr"){if(!compr.mbr)compr.mbr="";st.splice(st.length-1,0,mbrStep(compr,"¿Quiénes lo asumen y quiénes lo reciben?","Las personas del círculo de dirección que lo asumen y los jefes o líderes de los equipos que lo reciben, una por línea, con su celular.",MBR_EX))}
   if(key==="piloto")st.splice(st.length-1,0,mbrStep(team,"¿Quiénes integran el equipo?","Un integrante por línea, con su celular. Con eso podrás enviarles el ritual por WhatsApp.",MBR_EX));
   st.forEach(function(s){var t=TIPS[s.q];if(t){if(t.tip&&!s.tip)s.tip=t.tip;if(t.ex&&!s.ex)s.ex=t.ex;if(t.help)s.help=t.help}});
   var it=INTRO[key];if(it)st.unshift({k:"Antes de empezar",q:it.title,type:"intro",intro:it,opt:true,val:function(){return 1},set:function(){}});
@@ -2069,7 +2069,7 @@ function introHTML(it){
    (it.ej?'<details class="tip exfull"><summary>Ver un ejemplo completo (ilustrativo)</summary><dl>'+it.ej.map(function(r){return '<div><dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd></div>'}).join('')+'</dl><p class="legend" style="margin-top:10px">Es un ejemplo para orientarte. Cámbialo por la realidad de tu equipo.</p></details>':'')+'</div>'}
 function exHTML(s){return s.ex&&(s.type==="text"||s.type==="long")?'<div class="exs"><p class="ctx-t">Ejemplos (toca uno para usarlo como punto de partida)</p>'+s.ex.map(function(x,i){return '<button type="button" class="exbtn" data-x="'+i+'">'+esc(x)+'</button>'}).join('')+'</div>':''}
 
-var FT={rueda:'La rueda de mi liderazgo',hex:'Hexágono Ubuntu',piloto:'Ritual de mi equipo',compr:'Compromiso de la gerencia con los equipos',lideres:'Compromiso de los líderes por área'};
+var FT={rueda:'La rueda de mi liderazgo',hex:'Hexágono Ubuntu',piloto:'Ritual de mi equipo',compr:'Compromiso del círculo de dirección con los equipos',lideres:'Compromiso de los líderes por área'};
 function openFlow(key,ti){
   var team=null;
   if(key==='piloto'){if(ti==null){team={equipo:'',para:'',poder:'',gesto:'',freq:'',con:'',senal:'',disp:'',inicio:today()};teams.push(team);ti=teams.length-1}else team=teams[ti]}
@@ -2090,7 +2090,7 @@ function renderStep(){
   $('flowProg').style.width=(Math.min(F.i,n)/n*100)+'%';$('flowPrev').disabled=F.i===0;
   if(F.i>=n){
     $('flowCount').textContent='';$('flowNext').textContent=F.key==='piloto'||F.key==='compr'||F.key==='lideres'?'Ver la ficha':'Ver mi perfil';
-    var msg=F.key==='rueda'?'Tu rueda está lista. Mírala junto a tu Hexágono en tu perfil.':F.key==='hex'?'Tu Hexágono está listo. Es una fotografía de hoy: en diciembre podrás compararla.':F.key==='lideres'?'El compromiso de los líderes quedó registrado. Envíalo a cada integrante por WhatsApp: al pegar el código en Mi espacio verán sus acuerdos.':F.key==='compr'?'El compromiso de la gerencia quedó registrado. Envíalo a los gerentes y a los equipos: aparecerá en la ficha de cada ritual.':'El ritual quedó registrado. Envíalo a cada integrante por WhatsApp y agenda el check-in en Outlook.';
+    var msg=F.key==='rueda'?'Tu rueda está lista. Mírala junto a tu Hexágono en tu perfil.':F.key==='hex'?'Tu Hexágono está listo. Es una fotografía de hoy: en diciembre podrás compararla.':F.key==='lideres'?'El compromiso de los líderes quedó registrado. Envíalo a cada integrante por WhatsApp: al pegar el código en Mi espacio verán sus acuerdos.':F.key==='compr'?'El compromiso del círculo de dirección quedó registrado. Envíalo a los líderes y a los equipos: aparecerá en la ficha de cada ritual.':'El ritual quedó registrado. Envíalo a cada integrante por WhatsApp y agenda el check-in en Outlook.';
     st.innerHTML='<div class="step done"><i class="orb" aria-hidden="true"></i><h2>Listo</h2><p class="help">'+msg+'</p></div>';$('flowNext').focus();return;
   }
   var s=F.steps[F.i],v=s.val(),off=F.steps[0].type==='intro'?1:0;
@@ -2191,9 +2191,9 @@ function wireAcc(k,packer,msgFn,getD,clear,mbr){packer(getD()).then(function(cod
   $(k+'Copy').onclick=function(){copyText($(k+'Code').textContent,'Código copiado')};
   $(k+'Del').onclick=function(){var d=$(k+'Del');if(d.dataset.sure){clear();refresh()}else{d.dataset.sure='1';d.textContent='Confirmar: quitar';setTimeout(function(){if(d.isConnected){delete d.dataset.sure;d.textContent='Quitar'}},4000)}}}
 function renderCompr(){var el=$('comprBox');if(!el)return;
-  if(!compr){el.innerHTML='<div class="empty"><p>Cuando la gerencia registre su compromiso, aparecerá aquí y en la ficha de cada ritual. Si te lo enviaron, escribe abajo su código de 6 letras.</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="compr">Registrar el compromiso</button></div></div>';return}
-  el.innerHTML=accHTML({k:'compr',d:compr,eb:'Gerencia general y gerentes',h:'Compromiso de la gerencia con los equipos',f:comprFields()});
-  wireAcc('compr',packC,function(code){return 'Compromiso de la gerencia con los equipos · Ubuntu en acción\nObjetivo: '+compr.obj+'\n'+comprLine()+'\n\nPara verlo en tu celular, abre Mi espacio, ingresa con tu número y pega este código:\n'+code},function(){return compr},function(){compr=null;saveCompr()},compr.mbr)}
+  if(!compr){el.innerHTML='<div class="empty"><p>Cuando el círculo de dirección registre su compromiso, aparecerá aquí y en la ficha de cada ritual. Si te lo enviaron, escribe abajo su código de 6 letras.</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="compr">Registrar el compromiso</button></div></div>';return}
+  el.innerHTML=accHTML({k:'compr',d:compr,eb:'Círculo de dirección',h:'Compromiso del círculo de dirección con los equipos',f:comprFields()});
+  wireAcc('compr',packC,function(code){return 'Compromiso del círculo de dirección con los equipos · Ubuntu en acción\nObjetivo: '+compr.obj+'\n'+comprLine()+'\n\nPara verlo en tu celular, abre Mi espacio, ingresa con tu número y pega este código:\n'+code},function(){return compr},function(){compr=null;saveCompr()},compr.mbr)}
 function lidLine(){return lid?['Buenas prácticas: '+lid.practica,'Oportunidades: '+lid.oport,'Ritual: '+lid.ritual+(lid.cuando?' ('+lid.cuando+')':'')].filter(function(s){return !/: $/.test(s)}).join('\n'):''}
 function renderLid(){var el=$('lidBox');if(!el)return;
   if(!lid){el.innerHTML='<div class="empty"><p>Cuando los líderes de las áreas registren su compromiso, aparecerá aquí. Si te lo enviaron, escribe abajo su código de 6 letras.</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="lideres">Registrar el compromiso de los líderes</button></div></div>';return}
@@ -2202,7 +2202,7 @@ function renderLid(){var el=$('lidBox');if(!el)return;
 function renderTeams(){renderCompr();renderLid();
   if(!teams.length){tdiv.innerHTML='<div class="empty">Todavía no hay rituales en este dispositivo. Registra el de tu equipo o pega abajo el código que te compartieron.</div>';return}
   tdiv.innerHTML=teams.map(function(t,i){
-    var F2=[['Lo que necesita el área',t.para],['Superpoder',t.poder],['Qué hacemos',t.gesto],['Cuándo',t.disp||t.freq],['Con quién y quién conduce',t.con],['Cómo sabremos que funciona',t.senal],['Inicio',niceD(addDays(t.inicio,0))],['Check-in · semana 2',niceD(addDays(t.inicio,14))],['Cierre · día 30',niceD(addDays(t.inicio,30))]];F2.splice(6,0,['Integrantes',mbrNames(t.mbr)]);if(compr)F2.push(['Cómo nos respalda la gerencia',comprLine()]);
+    var F2=[['Lo que necesita el área',t.para],['Superpoder',t.poder],['Qué hacemos',t.gesto],['Cuándo',t.disp||t.freq],['Con quién y quién conduce',t.con],['Cómo sabremos que funciona',t.senal],['Inicio',niceD(addDays(t.inicio,0))],['Check-in · semana 2',niceD(addDays(t.inicio,14))],['Cierre · día 30',niceD(addDays(t.inicio,30))]];F2.splice(6,0,['Integrantes',mbrNames(t.mbr)]);if(compr)F2.push(['Cómo nos respalda el círculo de dirección',comprLine()]);
     return '<div class="tcard" data-i="'+i+'"><header><div><p class="eyebrow">'+(t.shared?'Compartido conmigo':'Registrado aquí')+'</p><h3>'+esc(t.equipo||'Equipo '+(i+1))+'</h3></div><div class="row"><button type="button" class="small ghost" data-flow="piloto" data-ti="'+i+'">Editar</button><button type="button" class="small ghost" data-del="'+i+'">Quitar</button></div></header>'+
       '<dl>'+F2.map(function(f){return '<div><dt>'+f[0]+'</dt><dd>'+(esc(f[1])||'<span class="muted">Sin completar</span>')+'</dd></div>'}).join('')+'</dl>'+
       '<div class="row"><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t,14)+'">Agendar check-in en Outlook</a><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t,30)+'">Agendar cierre en Outlook</a><button type="button" class="small ghost" data-ics="'+i+'">Archivo de calendario (.ics)</button></div>'+
@@ -2218,7 +2218,7 @@ tdiv.addEventListener('click',function(e){
 $('addTeam').onclick=function(){openFlow('piloto',null)};
 function joinLong(){
   if(/UL1[zj]/.test($('teamIn').value.replace(/\s+/g,''))){unpackL($('teamIn').value).then(function(l){lid=l;saveLid();$('teamIn').value='';refresh();toast('Compromiso de los líderes cargado')},function(){toast('No reconozco ese código. Cópialo completo, desde «UL1».')});return}
-  if(/UC1[zj]/.test($('teamIn').value.replace(/\s+/g,''))){unpackC($('teamIn').value).then(function(c){compr=c;saveCompr();$('teamIn').value='';refresh();toast('Compromiso de la gerencia cargado')},function(){toast('No reconozco ese código. Cópialo completo, desde «UC1».')});return}
+  if(/UC1[zj]/.test($('teamIn').value.replace(/\s+/g,''))){unpackC($('teamIn').value).then(function(c){compr=c;saveCompr();$('teamIn').value='';refresh();toast('Compromiso del círculo de dirección cargado')},function(){toast('No reconozco ese código. Cópialo completo, desde «UC1».')});return}
   unpack($('teamIn').value).then(function(t){
     var dup=teams.findIndex(function(x){return x.equipo===t.equipo&&x.shared});if(dup>=0)teams[dup]=t;else teams.push(t);
     saveTeams();$('teamIn').value='';refresh();toast('Ficha del equipo cargada');tdiv.lastElementChild.scrollIntoView({behavior:'smooth',block:'center'});
@@ -2423,7 +2423,7 @@ function teamBody(c,y,t,go,col){
   var a=fld(c,x+pad+8,yy,cw,'Cuándo',t.disp||t.freq,dry),b=fld(c,x+pad+8+cw+34,yy,cw,'Con quién y quién conduce',t.con,dry);yy+=Math.max(a,b);
   yy+=fld(c,x+pad+8,yy,iw,'Cómo sabremos que funciona',t.senal,dry);
   if(t.mbr)yy+=fld(c,x+pad+8,yy,iw,'Integrantes',mbrNames(t.mbr),dry);
-  if(compr)yy+=fld(c,x+pad+8,yy,iw,'Cómo nos respalda la gerencia',comprLine(),dry);
+  if(compr)yy+=fld(c,x+pad+8,yy,iw,'Cómo nos respalda el círculo de dirección',comprLine(),dry);
   var bw=(iw-48)/3;
   if(go)[['Inicio',0],['Check-in · semana 2',14],['Cierre · día 30',30]].forEach(function(d,i){var bx=x+pad+8+i*(bw+24);rr(c,bx,yy,bw-3,112,24,i?'rgba(18,103,224,.08)':col,i?'rgba(18,103,224,.18)':null);
     txt(c,d[0].toUpperCase(),bx+22,yy+20,{font:'600 15px '+FB,color:i?MUT:'#fff',lh:22});txt(c,niceD(addDays(t.inicio,d[1])),bx+22,yy+52,{font:'400 24px '+FD,color:i?INK:'#fff',lh:32,w:bw-34})});
@@ -2457,7 +2457,7 @@ async function buildProfile(){
   var items=[],dn=[];WHEEL.forEach(function(w,i){if(wheel.n[i])dn.push([w.n,wheel.n[i]])});
   if(dn.length)items.push({h:notesH(c,dn),draw:function(c,y){return notesBand(c,y,dn)}});
   teams.forEach(function(t){items.push({h:teamBand(c,0,t,true),draw:function(c,y){return teamBand(c,y,t)}})});
-  if(compr)items.push({h:agreeBand(c,0,'GERENCIA GENERAL Y GERENTES','Compromiso de la gerencia con los equipos',comprFields(),'#5B5BD6',true),draw:function(c,y){return agreeBand(c,y,'GERENCIA GENERAL Y GERENTES','Compromiso de la gerencia con los equipos',comprFields(),'#5B5BD6')}});
+  if(compr)items.push({h:agreeBand(c,0,'CÍRCULO DE DIRECCIÓN','Compromiso del círculo de dirección con los equipos',comprFields(),'#5B5BD6',true),draw:function(c,y){return agreeBand(c,y,'CÍRCULO DE DIRECCIÓN','Compromiso del círculo de dirección con los equipos',comprFields(),'#5B5BD6')}});
   if(lid)items.push({h:agreeBand(c,0,'LÍDERES POR ÁREA','Compromiso de los líderes por área',lidFields(),'#D9738F',true),draw:function(c,y){return agreeBand(c,y,'LÍDERES POR ÁREA','Compromiso de los líderes por área',lidFields(),'#D9738F')}});
   var cur=null,cy=0;items.forEach(function(it){if(!cur||cy+it.h>PH-120){cur={a:[]};pages.push(cur);cy=300}cur.a.push({y:cy,it:it});cy+=it.h+26});
   var n=0;for(var i=0;i<pages.length;i++){n++;if(i)d.addPage();c.clearRect(0,0,PW,PH);
@@ -2466,7 +2466,7 @@ async function buildProfile(){
   /* última página: códigos como texto real, para copiar y pegar */
   var codes=[];if(myCode())codes.push(['Código de mi perfil (rueda y Hexágono)',myCode()]);
   for(var t=0;t<teams.length;t++)codes.push(['Código del ritual · '+(teams[t].equipo||'Equipo '+(t+1)),await pack(teams[t])]);
-  if(compr)codes.push(['Código del compromiso de la gerencia',await packC(compr)]);
+  if(compr)codes.push(['Código del compromiso del círculo de dirección',await packC(compr)]);
   if(lid)codes.push(['Código del compromiso de los líderes',await packL(lid)]);
   codeList=codes;
   if(codes.length){
