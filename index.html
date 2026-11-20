@@ -1333,6 +1333,15 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
 .exfull dd{margin:2px 0 0}
 .mbrbtns{display:flex;gap:8px;flex-wrap:wrap}
 @media(min-width:821px){.ws-head{background:linear-gradient(180deg,#C6E1F5,#B8D4EB)}.ws-head img{left:auto;right:0;width:auto;max-width:100%;aspect-ratio:3/2;object-fit:cover;object-position:100% 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%);mask-image:linear-gradient(90deg,transparent,#000 22%)}}
+.who4{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,.9fr) auto}
+.opt-l{font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)}
+.eqgrid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px;align-items:end}
+.eqgrid .eq-m{grid-column:1/-1}
+.eqgrid textarea{font:inherit;font-size:1.05rem;padding:13px 14px;border-radius:14px;width:100%;min-height:7.5em;resize:vertical}
+.eqgrid button{justify-self:start}
+@media(max-width:700px){.who4,.eqgrid{grid-template-columns:1fr}.eqgrid button{width:100%}}
+.step .exfull dd,.step .exfull .legend{color:var(--fg)}
+#eqShare{margin-top:28px}
 </style>
 <div class="wrap">
 <div class="top">
@@ -1532,7 +1541,7 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
         <ul>
           <li><b>Rueda, Hexágono y nombre:</b> en la memoria de tu navegador, en este dispositivo. No viajan a ningún servidor.</li>
           <li><b>PDF y códigos:</b> son tuyos. Quien reciba tu PDF o tu código puede ver lo que contiene, así que compártelo con cuidado.</li>
-          <li><b>Códigos de equipo:</b> contienen la ficha completa, con los nombres y celulares de los integrantes que tú escribas. Compártelos solo con ellos.</li>
+          <li><b>Códigos de 6 letras:</b> guardan tu perfil o las actividades del equipo, con los nombres y celulares de sus integrantes, en un servidor protegido del taller. Solo quien tiene el código puede abrirlos. Compártelos solo con tu equipo.</li>
           <li><b>Tu celular:</b> identifica tu espacio dentro de este dispositivo. No se envía a ningún servidor.</li>
         </ul>
         <div class="row"><button type="button" class="small ghost" id="wipeBtn">Borrar mis datos de este dispositivo</button></div>
@@ -1540,31 +1549,28 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
     </div>
   </aside>
 
-  <section style="padding-top:28px">
+  <section id="perfil" style="padding-top:28px">
+    <p class="eyebrow">Personal</p>
+    <h2>Mi espacio personal</h2>
     <div class="panel ingreso">
       <div><h3>Mi ingreso</h3>
-      <p class="muted">Ingresa con tu celular: así tu trabajo queda guardado con tu número y, si otra persona usa este mismo dispositivo, cada una ve solo lo suyo. Si entras desde otro dispositivo, usa tu código o el PDF que te enviaste.</p></div>
-      <div class="who3">
+      <p class="muted">Escribe tu nombre y tu celular. Si ya hiciste la rueda o el Hexágono, agrega tu código y verás tus dos actividades resueltas.</p></div>
+      <div class="who3 who4">
         <div class="field"><label for="nombre">Tu nombre</label><input type="text" id="nombre" autocomplete="name" placeholder="Nombre y apellido"></div>
         <div class="field"><label for="cel">Tu celular</label><input type="tel" id="cel" inputmode="tel" autocomplete="tel" placeholder="987 654 321"></div>
+        <div class="field"><label for="codeIn">Tu código <span class="opt-l">si ya hiciste el test</span></label><input type="text" id="codeIn" autocomplete="off" spellcheck="false" placeholder="Ej.: KX4M7P"></div>
         <button type="button" id="ingresoBtn">Ingresar</button>
       </div>
       <p class="legend" id="ingresoMsg" role="status"></p>
-      <div class="row"><button type="button" class="small" id="perfilPdf">Descargar mi perfil (PDF)</button><button type="button" class="small ghost" id="salirBtn" hidden>Cambiar de persona</button></div>
+      <div class="row"><button type="button" class="small ghost" id="salirBtn" hidden>Cambiar de persona</button></div>
     </div>
-    <div id="tools"></div>
-  </section>
-
-  <section id="perfil">
-    <p class="eyebrow">Personal</p>
-    <h2>Mi perfil de hoy</h2>
     <div class="charts">
       <div class="panel chart"><h3>Hexágono Ubuntu</h3><div id="hexBox"></div></div>
       <div class="panel chart"><h3>La rueda de mi liderazgo</h3><div id="wheelBox"></div></div>
     </div>
     <div class="panel" id="keepBox" hidden>
       <h3>Guarda tu perfil</h3>
-      <p class="muted">Tu código personal recrea tu rueda y tu Hexágono en cualquier dispositivo. Guárdalo donde lo encuentres en diciembre.</p>
+      <p class="muted">Tu código personal recrea tu rueda y tu Hexágono en cualquier dispositivo: escríbelo en «Mi ingreso». Guárdalo donde lo encuentres en diciembre.</p>
       <div class="code" id="codeOut"></div>
       <div class="row">
         <button type="button" class="small" id="perfilPdf2">Descargar mi perfil (PDF)</button>
@@ -1575,27 +1581,35 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
       <div class="note" id="waStep" hidden><p id="waMsg"></p><a class="btn ghost" id="waLink" href="#" target="_blank" rel="noopener">Abrir WhatsApp</a></div>
       <p class="legend">En el celular se abre el menú de compartir: eliges WhatsApp y el PDF viaja adjunto. En el computador se guarda el PDF y WhatsApp se abre para que lo adjuntes.</p>
     </div>
-    <details>
-      <summary>Ya lo hice en otro dispositivo: recuperar con mi código</summary>
-      <div class="joinrow" style="margin-top:12px"><input type="text" id="codeIn" inputmode="numeric" placeholder="Código de 24 o 29 dígitos"><button type="button" class="ghost" id="restoreBtn">Recuperar</button></div>
-    </details>
   </section>
 
   <section id="piloto">
     <p class="eyebrow">Equipo</p>
-    <h2>Mis acuerdos de equipo</h2>
-    <p class="lead">Tres actividades que se comparten con un código y por WhatsApp a cada integrante: el ritual de tu equipo, el compromiso del círculo de dirección con los equipos y el compromiso de los líderes por área.</p>
+    <h2>Trabajo en equipo</h2>
+    <div class="panel ingreso">
+      <div><h3>Ingreso del equipo</h3>
+      <p class="muted">Escriban el nombre del equipo y a sus integrantes con su celular. Si el equipo ya tiene su código, escríbanlo y verán sus tres actividades resueltas.</p></div>
+      <div class="eqgrid">
+        <div class="field"><label for="eqNombre">Nombre del equipo</label><input type="text" id="eqNombre" autocomplete="off" placeholder="Ej.: Impuestos corporativos · Lima"></div>
+        <div class="field"><label for="teamIn">Código del equipo <span class="opt-l">si ya lo tienen</span></label><input type="text" id="teamIn" autocomplete="off" spellcheck="false" placeholder="Ej.: KX4M7P"></div>
+        <div class="field eq-m"><label for="eqMbr">Integrantes: nombre y celular, uno por línea</label><textarea id="eqMbr" rows="4" placeholder="Ana Pérez · 987654321&#10;Luis Rojas · 912345678"></textarea></div>
+        <button type="button" id="teamJoin">Ingresar</button>
+      </div>
+      <p class="legend" id="eqMsg" role="status"></p>
+    </div>
     <h3 class="sub-h">1 · Ritual de mi equipo</h3>
     <div id="teams" style="display:grid;gap:14px"></div>
-    <div class="row"><button type="button" id="addTeam">Registrar un ritual</button></div>
+    <div class="row"><button type="button" id="addTeam">Registrar el ritual</button></div>
     <h3 class="sub-h">2 · Compromiso del círculo de dirección con los equipos</h3>
     <div id="comprBox"></div>
     <h3 class="sub-h">3 · Compromiso de los líderes por área</h3>
     <div id="lidBox"></div>
-    <div class="panel">
-      <h3>Tengo un código</h3>
-      <div class="joinrow"><input type="text" id="teamIn" placeholder="Escribe el código de 6 letras, por ejemplo KX4M7P" autocomplete="off" spellcheck="false"><button type="button" class="ghost" id="teamJoin">Ver la ficha</button></div>
-      <p class="legend">Cada ficha tiene un código de 6 letras. Si el equipo cambia la ficha, comparte el código nuevo. Antes de pegarlo, ingresa con tu celular para que quede guardado en tu espacio.</p>
+    <div class="panel" id="eqShare" hidden>
+      <h3>Código del equipo</h3>
+      <p class="muted">Un solo código guarda las tres actividades y a los integrantes. Cualquier integrante lo escribe en «Ingreso del equipo» y ve todo. Si el equipo cambia algo, se genera un código nuevo: vuelvan a compartirlo.</p>
+      <div class="code" id="eqCode">Generando…</div>
+      <div class="row"><button type="button" class="small" id="eqCopy">Copiar código</button><a class="btn ghost" target="_blank" rel="noopener" id="eqWaAny" href="#">Enviar a un contacto por WhatsApp</a></div>
+      <div class="field"><label>Enviar a cada integrante por WhatsApp</label><div class="mbrbtns" id="eqWa"></div></div>
     </div>
   </section>
 </main>
@@ -1776,12 +1790,13 @@ var WHEEL=[
  {n:'Coherencia',q:'¿Qué pienso? ¿Qué siento? ¿Qué hago?',s:'Lo que pienso, lo que siento y lo que hago van en la misma dirección.'},
  {n:'Cultura y propósito',q:'¿Qué hago visible de la cultura TMF?',s:'Hago visible la cultura de TMF en mi día a día.'}
 ];
-var LS_ANS='ua_ans_v2',LS_NAME='ua_name_v2',LS_TEAMS='ua_teams_v2',LS_WHEEL='ua_wheel_v2',LS_COMPR='ua_compr_v2',LS_LID='ua_lid_v2',LS_CEL='ua_cel_v2',LS_PROF='ua_prof_v2';
+var LS_ANS='ua_ans_v2',LS_NAME='ua_name_v2',LS_TEAMS='ua_teams_v2',LS_WHEEL='ua_wheel_v2',LS_COMPR='ua_compr_v2',LS_LID='ua_lid_v2',LS_CEL='ua_cel_v2',LS_PROF='ua_prof_v2',LS_EQ='ua_eq_v2';
 ['ua_ans_v1','ua_name_v1','ua_teams_v1','ua_wheel_v1'].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});
 
 /* ---------- Estado ---------- */
-var ans=new Array(24).fill(0),wheel={s:[0,0,0,0,0],n:['','','','',''],a:'',b:''},teams=[],compr=null,lid=null;
+var ans=new Array(24).fill(0),wheel={s:[0,0,0,0,0],n:['','','','',''],a:'',b:''},teams=[],compr=null,lid=null,eq={n:'',mbr:''};
 (function(){
+  try{var e0=JSON.parse(load(LS_EQ)||'null');if(e0&&typeof e0==='object')eq={n:String(e0.n||''),mbr:String(e0.mbr||'')}}catch(e){}
   var sa=load(LS_ANS);if(sa&&/^[0-5]{24}$/.test(sa))ans=sa.split('').map(Number);
   try{var w=JSON.parse(load(LS_WHEEL)||'null');if(w&&w.s&&w.s.length===5)wheel=w}catch(e){}
   try{var cm=JSON.parse(load(LS_COMPR)||'null');if(cm&&(cm.protege||cm.acompana||cm.reconoce))compr=cm}catch(e){}
@@ -1792,6 +1807,7 @@ function saveAns(){store(LS_ANS,ans.join(''));saveProf()}
 function saveWheel(){store(LS_WHEEL,JSON.stringify(wheel));saveProf()}
 function saveTeams(){store(LS_TEAMS,JSON.stringify(teams));saveProf()}
 function saveCompr(){if(compr)store(LS_COMPR,JSON.stringify(compr));else try{localStorage.removeItem(LS_COMPR)}catch(e){}saveProf()}
+function saveEq(){store(LS_EQ,JSON.stringify(eq));saveProf()}
 function saveLid(){if(lid)store(LS_LID,JSON.stringify(lid));else try{localStorage.removeItem(LS_LID)}catch(e){}saveProf()}
 var COBJ='Conectar los rituales de los equipos con el propósito de TMF y sostenerlos durante los 30 días del piloto.';
 var nm=$('nombre');nm.value=load(LS_NAME)||'';nm.addEventListener('input',function(){store(LS_NAME,nm.value);saveProf();setShare()});
@@ -1862,14 +1878,14 @@ function drawCharts(){
     hb.innerHTML='<div class="idx"><b>'+hi+'</b><span>de 100 · '+lvl(hi)+'</span><p>Mi Índice Ubuntu</p></div><canvas id="hexCanvas" width="900" height="900" role="img" aria-label="Gráfico de seis vértices con tu puntaje en cada superpoder"></canvas><div class="bars">'+POWERS.map(function(P,i){return '<div class="bar"><span>'+P.n+'</span><span class="track"><i style="width:'+si[i]+'%;background:'+SPCOL[i]+'"></i></span><b>'+si[i]+'</b></div>'}).join('')+'</div><p class="muted">'+lectura()+'</p><div class="row"><button type="button" class="small ghost" data-flow="hex">Revisar mis respuestas</button></div>';
     drawHex($('hexCanvas'),sc,pal());
   }else{var n=ans.filter(Boolean).length;hb.innerHTML='<div class="empty"><p>24 afirmaciones, una por cada poder. Responde según lo que haces habitualmente, no según lo que quisieras.</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="hex">'+(n?'Continuar ('+n+' de 24)':'Empezar el Hexágono')+'</button></div></div>'}
-  var any=hexDone()||wheelDone();$('keepBox').hidden=false;$('codeOut').textContent=any?myCode():'Tu código aparece cuando completes la rueda o el Hexágono.';setShare()
+  var any=hexDone()||wheelDone();$('keepBox').hidden=!any;$('codeOut').textContent=any?(SHORT['UP'+myCode()]||'Generando…'):'Tu código aparece cuando completes la rueda o el Hexágono.';if(any){var mc='UP'+myCode();shortOf(mc).then(function(c){if(myCode()&&'UP'+myCode()===mc)$('codeOut').textContent=c===mc?myCode():c})}setShare()
 }
 function myCode(){return (wheelDone()?wheel.s.join(''):'')+(hexDone()?ans.join(''):'')}
 function summaryText(){
   var n=nm.value.trim(),t='Mi perfil de liderazgo'+(n?' · '+n:'')+' · Ubuntu en acción, TMF Group Perú\n';
   if(wheelDone())t+='\nLa rueda de mi liderazgo · índice '+wheelIdx()+' / 100\n'+WHEEL.map(function(w,i){return w.n+': '+pct(wheel.s[i])+' / 100'}).join('\n')+(wheel.a?'\nYa tengo: '+wheel.a:'')+(wheel.b?'\nQuiero fortalecer: '+wheel.b:'')+'\n';
   if(hexDone()){var sc=scores();var si=spIdx();t+='\nHexágono Ubuntu · Índice Ubuntu '+hexIdx()+' / 100 ('+lvl(hexIdx())+')\n'+POWERS.map(function(P,i){return P.n+': '+si[i]+' / 100'}).join('\n')+'\n'}
-  return t+'\nMi código para recuperarlo: '+myCode();
+  var sc2=SHORT['UP'+myCode()];return t+'\nMi código para recuperarlo: '+(sc2&&sc2.length===6?sc2:myCode());
 }
 function normCel(v){var d=(v||'').replace(/\D/g,'');if(d.length===9)d='51'+d;return d}
 function setShare(){$('waLink').href='https://wa.me/'+normCel($('cel').value)+'?text='+encodeURIComponent('Mi perfil de liderazgo · Ubuntu en acción (PDF adjunto)')}
@@ -1877,16 +1893,16 @@ $('cel').addEventListener('input',setShare);
 /* ---------- Ingreso por celular (guardado local por número) ---------- */
 var activeCel=load(LS_CEL)||'';
 function loadReg(){try{return JSON.parse(load(LS_PROF)||'{}')||{}}catch(e){return {}}}
-function snapNow(){return {name:nm.value,ans:ans.join(''),wheel:wheel,teams:teams,compr:compr,lid:lid}}
+function snapNow(){return {name:nm.value,ans:ans.join(''),wheel:wheel,teams:teams,compr:compr,lid:lid,eq:eq}}
 function saveProf(){if(!activeCel)return;var r=loadReg();r[activeCel]=snapNow();store(LS_PROF,JSON.stringify(r))}
 function persistWorking(){store(LS_ANS,ans.join(''));store(LS_WHEEL,JSON.stringify(wheel));store(LS_TEAMS,JSON.stringify(teams));store(LS_NAME,nm.value);
-  if(compr)store(LS_COMPR,JSON.stringify(compr));if(lid)store(LS_LID,JSON.stringify(lid))}
-function resetState(){ans=new Array(24).fill(0);wheel={s:[0,0,0,0,0],n:['','','','',''],a:'',b:''};teams=[];compr=null;lid=null;nm.value='';
-  [LS_ANS,LS_NAME,LS_TEAMS,LS_WHEEL,LS_COMPR,LS_LID].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}})}
+  if(compr)store(LS_COMPR,JSON.stringify(compr));if(lid)store(LS_LID,JSON.stringify(lid));store(LS_EQ,JSON.stringify(eq))}
+function resetState(){ans=new Array(24).fill(0);wheel={s:[0,0,0,0,0],n:['','','','',''],a:'',b:''};teams=[];compr=null;lid=null;eq={n:'',mbr:''};nm.value='';
+  [LS_ANS,LS_NAME,LS_TEAMS,LS_WHEEL,LS_COMPR,LS_LID,LS_EQ].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}})}
 function applySnap(s){resetState();
   if(typeof s.ans==='string'&&/^[0-5]{24}$/.test(s.ans))ans=s.ans.split('').map(Number);
   if(s.wheel&&s.wheel.s&&s.wheel.s.length===5)wheel=s.wheel;
-  teams=Array.isArray(s.teams)?s.teams:[];compr=s.compr||null;lid=s.lid||null;nm.value=s.name||''}
+  teams=Array.isArray(s.teams)?s.teams:[];compr=s.compr||null;lid=s.lid||null;eq=s.eq||{n:'',mbr:''};nm.value=s.name||''}
 function fmtCel(c){return c?'+51 '+c.slice(2,5)+' '+c.slice(5,8)+' '+c.slice(8):''}
 function renderIngreso(){var m=$('ingresoMsg');if(!m)return;
   if(activeCel){m.innerHTML='Estás en el espacio de <b>'+esc(nm.value||'tu número')+'</b> · '+fmtCel(activeCel)+'. Lo que completes se guarda con este número en este dispositivo.';$('salirBtn').hidden=false;$('ingresoBtn').textContent='Actualizar'}
@@ -1897,7 +1913,7 @@ $('ingresoBtn').onclick=function(){
   var reg=loadReg(),prev=activeCel,msg='Listo. Desde ahora tu trabajo se guarda con este número.';
   if(prev&&prev!==c){saveProf();resetState();if(reg[c]){applySnap(reg[c]);msg='Recuperé tu espacio de este dispositivo.'}}
   else if(prev!==c&&reg[c]){applySnap(reg[c]);msg='Recuperé tu espacio de este dispositivo.'}
-  activeCel=c;store(LS_CEL,c);persistWorking();saveProf();refresh();toast(msg)};
+  activeCel=c;store(LS_CEL,c);persistWorking();saveProf();refresh();toast(msg);var cv=$('codeIn').value.trim();if(cv)restoreCode(cv)};
 $('salirBtn').onclick=function(){saveProf();resetState();activeCel='';try{localStorage.removeItem(LS_CEL)}catch(e){}$('cel').value='';refresh();toast('Listo: ya puede ingresar otra persona')};
 if(activeCel)$('cel').value=activeCel.slice(2);
 /* ---------- Integrantes: nombre y celular, uno por línea ---------- */
@@ -1909,16 +1925,19 @@ function mbrBtns(t,msg){var L=parseMbr(t);if(!L.length)return '<span class="mute
   return L.map(function(m){return m.c?'<a class="btn ghost" target="_blank" rel="noopener" href="https://wa.me/'+m.c+'?text='+encodeURIComponent(msg)+'">Enviar a '+esc(m.n.split(' ')[0])+'</a>':'<span class="muted">'+esc(m.n)+' (falta el celular)</span>'}).join('')}
 
 $('copyBtn').onclick=function(){copyText(summaryText())};
-$('restoreBtn').onclick=function(){
-  var v=$('codeIn').value.replace(/\D/g,'');
-  if(!/^[1-5]+$/.test(v)||[5,24,29].indexOf(v.length)<0){toast('El código tiene 24 o 29 dígitos, del 1 al 5.');return}
+function restoreDigits(v){
+  v=String(v||'').replace(/\D/g,'');
+  if(!/^[1-5]+$/.test(v)||[5,24,29].indexOf(v.length)<0){toast('No reconozco ese código. Revisa las 6 letras.');return}
   if(v.length!==24){wheel.s=v.slice(0,5).split('').map(Number);saveWheel();v=v.slice(5)}
   if(v.length===24){ans=v.split('').map(Number);saveAns()}
-  refresh();toast('Perfil recuperado');
-};
+  $('codeIn').value='';refresh();toast('Listo: estas son tus dos actividades');
+}
+function restoreCode(v){v=(v||'').trim();
+  if(isShort(v)){toast('Buscando tu código…');expandCode(v).then(function(p){if(!/^UP\d+$/.test(p)){toast('Ese es un código de equipo: escríbelo en «Ingreso del equipo».');return}restoreDigits(p.slice(2))},function(){toast('No encuentro ese código. Revisa las 6 letras y que tengas internet.')});return}
+  restoreDigits(v)}
 
 /* ---------- Tarjetas de herramientas ---------- */
-function renderTools(){
+function renderTools(){if(!$('tools'))return;
   var w=wheel.s.filter(Boolean).length,hh=ans.filter(Boolean).length,t=teams.length;
   var TT={
    hex:{id:'hex',c:'#B77BC8',c2:'#5B5BD6',no:'Personal · 1 de 2',tags:['Construcción del líder','7 min'],h:'Hexágono Ubuntu',d:'24 afirmaciones sobre lo que haces habitualmente. Te da tu Índice Ubuntu de 0 a 100, para compararlo en el Taller 4 y en diciembre.',n:hh,of:24},
@@ -1995,7 +2014,7 @@ var INTRO={
  piloto:{title:"Ritual de mi equipo: un piloto de un mes",lead:"Un ritual es un gesto pequeño, repetido y compartido que hace visible un superpoder. Aquí lo defines con tu equipo para probarlo durante 30 días.",
   para:"Convertir un superpoder en una práctica concreta que responda a algo que tu área necesita, y dejarla escrita para que cada integrante sepa qué, cuándo y con quién.",
   quien:"Lo registra una persona por equipo, la que lidera. Toma entre 15 y 20 minutos, idealmente con el equipo al lado o con las personas del equipo que estén en el taller.",
-  need:"Tu Hexágono y tu rueda (aparecen como contexto en cada pregunta), los celulares de los integrantes y tu calendario para elegir el primer día.",
+  need:"Tu Hexágono y tu rueda (aparecen como contexto en cada pregunta), los integrantes con su celular (se registran en «Ingreso del equipo») y tu calendario para elegir el primer día.",
   res:"Una ficha que se envía por WhatsApp a cada integrante, con el check-in de la semana 2 y el cierre del día 30 para agendar en Outlook.",
   tips:["Parte de una necesidad del área y recién después elige el gesto. Un ritual sin necesidad detrás se cae en el primer cierre de mes.","Que sea pequeño y repetible: entre 5 y 15 minutos, una vez por semana, enganchado a un espacio que ya existe, como la reunión de lunes o el cierre.","Todo ritual necesita tres piezas: un disparador (cuándo), una conducción (quién) y una señal (cómo sabremos). Si falta una, se diluye.","En 30 días no se forma un hábito: se prueba. El piloto sirve para aprender qué ajustar, y el círculo de dirección decide en el Taller 4 cómo sostenerlo."],
   ej:[["Equipo","Impuestos corporativos · Lima"],["Lo que necesita el área","Que las observaciones de revisión aparezcan antes del día de presentación y no durante el cierre de la declaración mensual."],["Superpoder","Confianza, con foco en seguridad psicológica."],["Qué hacemos","«Ronda de riesgos»: cada persona dice en un minuto qué riesgo ve en su entrega de la semana y qué ayuda necesita. Quien conduce solo anota y agradece; las soluciones se ven después de la ronda."],["Cuándo","Cada lunes a las 9:00, 10 minutos, antes de la reunión de pendientes."],["Con quién y quién conduce","Las 6 personas del equipo. Conduce una persona distinta cada semana, empezando por la de menor antigüedad."],["Cómo sabremos que funciona","Constancia: 4 de 4 lunes realizados. Percepción: en el check-in de la semana 2, al menos 4 de 6 dicen que les sirve. Resultado: las observaciones detectadas el día de presentación bajan de 5 a 2 o menos."]]},
@@ -2010,7 +2029,7 @@ var INTRO={
   para:"Acordar cómo se encuentran los líderes de las distintas áreas para compartir buenas prácticas y oportunidades de mejora, y dejar los acuerdos escritos con responsable y fecha.",
   quien:"Los jefes y líderes de todas las áreas, en la Dinámica 2 del taller. Unos 20 minutos: una persona escribe y el resto valida. Se comparte con todos por código y WhatsApp.",
   need:"Una buena práctica real de su área y una oportunidad de mejora que dependa de otra área. Pueden llegar pensadas.",
-  res:"Una ficha de la red con sus buenas prácticas, sus oportunidades de mejora, su ritual y sus reglas de juego, que cada integrante ve ingresando con su celular y pegando el código.",
+  res:"Una ficha de la red con sus buenas prácticas, sus oportunidades de mejora, su ritual y sus reglas de juego, que cada integrante ve al escribir el código del equipo en Mi espacio.",
   tips:["Una buena práctica por área, concreta y trasladable: qué se hace, cuándo y qué resultado dio. Evita «comunicamos mejor» y escribe «reunión de 15 minutos el día 1 del cierre que redujo el retrabajo».","Las oportunidades de mejora se plantean como pedido a la red, no como queja: qué necesito, de quién y para cuándo.","Acuerden reglas de juego primero: se habla de casos y no de personas, lo que se dice en la mesa se queda en la mesa y cada sesión termina con un acuerdo con responsable y fecha.","Midan lo que importa al círculo de dirección: constancia (¿nos reunimos?), adopción (¿una práctica pasó a otra área?) y resultado (¿se cerró una oportunidad?)."],
   ej:[["Nuestra red","Jefes de Fideicomisos, Impuestos, Contabilidad y Nómina."],["Buenas prácticas","Contabilidad: reunión de 15 minutos el día 1 del cierre con quienes aportan datos de otras áreas, que redujo el retrabajo. Nómina: calendario visible de hitos con responsables, compartido con el cliente."],["Oportunidades de mejora","Las solicitudes entre áreas llegan sin plazo ni prioridad. Pedimos acordar un formato mínimo: qué se necesita, para cuándo y para qué."],["Nuestro ritual","Mesa de práctica de 45 minutos cada dos semanas: dos líderes presentan una buena práctica (10 minutos cada uno), se trabaja una oportunidad de mejora y se cierra con un acuerdo por persona."],["Reglas de juego","Se habla de casos, no de personas. Lo que se dice en la mesa se queda en la mesa. Cada sesión termina con un acuerdo con responsable y fecha."],["Cómo sabremos que funciona","Constancia: 2 de 2 mesas realizadas. Adopción: al día 30, 3 prácticas probadas por otra área. Resultado: 1 oportunidad de mejora cerrada."]]}
 };
@@ -2054,13 +2073,10 @@ function lidSteps(){
    g("cuando","Cuándo","¿Cuándo y cada cuánto nos reunimos?","Día, hora y duración. Enganchado a algo que ya existe.","Ej.: Cada dos jueves, 10:00, 45 minutos","text","Elijan un horario que no choque con el cierre de mes. Si es virtual, dilo.",["Cada dos jueves a las 10:00, 45 minutos, en la sala de directorio.","El primer martes después del cierre mensual, 45 minutos."]),
    g("regla","Reglas de juego","¿Qué reglas de juego acordamos?","Lo que hace seguro compartir lo que no sale bien.","Ej.: Se habla de casos, no de personas","long","Tres reglas bastan. Las de seguridad psicológica son las que más pesan: sin ellas, nadie trae sus oportunidades de mejora.",["Se habla de casos, no de personas. Lo que se dice en la mesa se queda en la mesa. Cada sesión termina con un acuerdo con responsable y fecha."]),
    g("medida","Cómo sabremos","¿Cómo sabremos que funciona?","Algo que se pueda contar, ver u oír, y que presentarán en el Taller 4.","Ej.: 2 de 2 mesas realizadas y 3 prácticas probadas por otra área","long","Mezcla constancia (¿nos reunimos?), adopción (¿una práctica pasó a otra área?) y resultado (¿se cerró una oportunidad?).",["Constancia: 2 de 2 mesas realizadas. Adopción: al día 30, 3 prácticas probadas por otra área. Resultado: 1 oportunidad de mejora cerrada."]),
-   mbrStep(lid,"¿Quiénes integran la red de líderes?","Un integrante por línea, con su celular. Es lo que permite enviarles el compromiso por WhatsApp.",MBR_EX),
    {k:"Revisamos",q:"¿Cuándo revisamos este compromiso?",help:"Una fecha para mirar juntos qué funcionó y qué ajustar.",type:"date",tip:"Lo natural es el día 30, en el Taller 4.",val:function(){return lid.rev},set:function(v){lid.rev=v;saveLid()}}
   ]}
 function stepsFor(key,team){
   var st=key==="lideres"?lidSteps():stepsBase(key,team);
-  if(key==="compr"){if(!compr.mbr)compr.mbr="";st.splice(st.length-1,0,mbrStep(compr,"¿Quiénes lo asumen y quiénes lo reciben?","Las personas del círculo de dirección que lo asumen y los jefes o líderes de los equipos que lo reciben, una por línea, con su celular.",MBR_EX))}
-  if(key==="piloto")st.splice(st.length-1,0,mbrStep(team,"¿Quiénes integran el equipo?","Un integrante por línea, con su celular. Con eso podrás enviarles el ritual por WhatsApp.",MBR_EX));
   st.forEach(function(s){var t=TIPS[s.q];if(t){if(t.tip&&!s.tip)s.tip=t.tip;if(t.ex&&!s.ex)s.ex=t.ex;if(t.help)s.help=t.help}});
   var it=INTRO[key];if(it)st.unshift({k:"Antes de empezar",q:it.title,type:"intro",intro:it,opt:true,val:function(){return 1},set:function(){}});
   return st}
@@ -2072,10 +2088,10 @@ function exHTML(s){return s.ex&&(s.type==="text"||s.type==="long")?'<div class="
 
 var FT={rueda:'La rueda de mi liderazgo',hex:'Hexágono Ubuntu',piloto:'Ritual de mi equipo',compr:'Compromiso del círculo de dirección con los equipos',lideres:'Compromiso de los líderes por área'};
 function openFlow(key,ti){
-  var team=null;
-  if(key==='piloto'){if(ti==null){team={equipo:'',para:'',poder:'',gesto:'',freq:'',con:'',senal:'',disp:'',inicio:today()};teams.push(team);ti=teams.length-1}else team=teams[ti]}
+  var team=null,isNew=ti==null;
+  if(key==='piloto'){if(ti==null){team={equipo:eq.n||'',para:'',poder:'',gesto:'',freq:'',con:'',senal:'',disp:'',inicio:today()};teams.push(team);ti=teams.length-1}else team=teams[ti]}
   F={key:key,steps:stepsFor(key,team),i:0,team:team};
-  if(key==='compr'||key==='lideres'){F.i=0}else if(key!=='piloto'||ti!=null){var first=F.steps.findIndex(function(s){return !s.opt&&!s.val()});F.i=first<0?0:first}if(F.steps[0].type==='intro'&&F.i<=1)F.i=0;
+  if(key==='compr'||key==='lideres'){F.i=0}else if(!(key==='piloto'&&isNew)){var first=F.steps.findIndex(function(s){return !s.opt&&!s.val()});F.i=first<0?0:first}if(F.steps[0].type==='intro'&&F.i<=1)F.i=0;
   lastFocus=document.activeElement;flow.hidden=false;document.body.style.overflow='hidden';$('flowTitle').textContent=FT[key];renderStep();
 }
 function closeFlow(){
@@ -2091,7 +2107,7 @@ function renderStep(){
   $('flowProg').style.width=(Math.min(F.i,n)/n*100)+'%';$('flowPrev').disabled=F.i===0;
   if(F.i>=n){
     $('flowCount').textContent='';$('flowNext').textContent=F.key==='piloto'||F.key==='compr'||F.key==='lideres'?'Ver la ficha':'Ver mi perfil';
-    var msg=F.key==='rueda'?'Tu rueda está lista. Mírala junto a tu Hexágono en tu perfil.':F.key==='hex'?'Tu Hexágono está listo. Es una fotografía de hoy: en diciembre podrás compararla.':F.key==='lideres'?'El compromiso de los líderes quedó registrado. Envíalo a cada integrante por WhatsApp: al pegar el código en Mi espacio verán sus acuerdos.':F.key==='compr'?'El compromiso del círculo de dirección quedó registrado. Envíalo a los líderes y a los equipos: aparecerá en la ficha de cada ritual.':'El ritual quedó registrado. Envíalo a cada integrante por WhatsApp y agenda el check-in en Outlook.';
+    var msg=F.key==='rueda'?'Tu rueda está lista. Mírala junto a tu Hexágono en tu perfil.':F.key==='hex'?'Tu Hexágono está listo. Es una fotografía de hoy: en diciembre podrás compararla.':F.key==='lideres'?'El compromiso de los líderes quedó registrado. Compártelo con el código del equipo, al final de Trabajo en equipo.':F.key==='compr'?'El compromiso del círculo de dirección quedó registrado. Compártelo con el código del equipo, al final de Trabajo en equipo.':'El ritual quedó registrado. Agenda el check-in en Outlook y compártelo con el código del equipo, al final de Trabajo en equipo.';
     st.innerHTML='<div class="step done"><i class="orb" aria-hidden="true"></i><h2>Listo</h2><p class="help">'+msg+'</p></div>';$('flowNext').focus();return;
   }
   var s=F.steps[F.i],v=s.val(),off=F.steps[0].type==='intro'?1:0;
@@ -2183,33 +2199,28 @@ function ics(t){
 }
 function teamText(t,code){return 'Ritual de mi equipo · '+(t.equipo||'Equipo')+' · Ubuntu en acción\nLo que necesita el área: '+(t.para||'')+'\nSuperpoder: '+t.poder+'\nQué hacemos: '+t.gesto+'\nCuándo: '+(t.disp||t.freq)+'\nCon quién: '+t.con+'\nCómo sabremos que funciona: '+t.senal+'\nInicio: '+niceD(addDays(t.inicio,0))+(compr?'\nCómo nos respalda el círculo de dirección: '+comprLine():'')+'\n\nPara verlo en tu celular, abre Mi espacio, ingresa con tu número y pega este código:\n'+code}
 var tdiv=$('teams');
-function comprFields(){return [['Objetivo',compr.obj],['Protegemos',compr.protege],['Acompañamos',compr.acompana],['Reconocemos',compr.reconoce],['Integrantes',mbrNames(compr.mbr)],['Revisamos',compr.rev?niceD(addDays(compr.rev,0)):'']]}
-function lidFields(){return [['Nuestra red',lid.red],['Buenas prácticas que compartimos',lid.practica],['Oportunidades de mejora',lid.oport],['Nuestro ritual',lid.ritual],['Cuándo',lid.cuando],['Reglas de juego',lid.regla],['Cómo sabremos que funciona',lid.medida],['Integrantes',mbrNames(lid.mbr)],['Revisamos',lid.rev?niceD(addDays(lid.rev,0)):'']]}
-function accHTML(o){return '<div class="tcard compr"><header><div><p class="eyebrow">'+(o.d.shared?'Compartido conmigo':'Registrado aquí')+' · '+o.eb+'</p><h3>'+o.h+'</h3></div><div class="row"><button type="button" class="small ghost" data-flow="'+o.k+'">Editar</button><button type="button" class="small ghost" id="'+o.k+'Del">Quitar</button></div></header><dl>'+o.f.map(function(f){return '<div><dt>'+f[0]+'</dt><dd>'+(esc(f[1])||'<span class="muted">Sin completar</span>')+'</dd></div>'}).join('')+'</dl>'+
-  '<div class="field"><label>Enviar a cada integrante por WhatsApp</label><div class="mbrbtns" id="'+o.k+'Mbr"></div></div>'+
-  '<div class="field"><label>Código</label><div class="code" id="'+o.k+'Code">Generando…</div><div class="row"><button type="button" class="small" id="'+o.k+'Copy">Copiar código</button><a class="btn ghost" target="_blank" rel="noopener" id="'+o.k+'Wa" href="#">Enviar a un contacto por WhatsApp</a></div></div></div>'}
-function wireAcc(k,packer,msgFn,getD,clear,mbr){packer(getD()).then(function(code){$(k+'Code').textContent=code;var m=msgFn(code);$(k+'Wa').href='https://wa.me/?text='+encodeURIComponent(m);$(k+'Mbr').innerHTML=mbrBtns(mbr,m)});
-  $(k+'Copy').onclick=function(){copyText($(k+'Code').textContent,'Código copiado')};
+function comprFields(){return [['Objetivo',compr.obj],['Protegemos',compr.protege],['Acompañamos',compr.acompana],['Reconocemos',compr.reconoce],['Revisamos',compr.rev?niceD(addDays(compr.rev,0)):'']]}
+function lidFields(){return [['Nuestra red',lid.red],['Buenas prácticas que compartimos',lid.practica],['Oportunidades de mejora',lid.oport],['Nuestro ritual',lid.ritual],['Cuándo',lid.cuando],['Reglas de juego',lid.regla],['Cómo sabremos que funciona',lid.medida],['Revisamos',lid.rev?niceD(addDays(lid.rev,0)):'']]}
+function accHTML(o){return '<div class="tcard compr"><header><div><p class="eyebrow">'+(o.d.shared?'Compartido conmigo':'Registrado aquí')+' · '+o.eb+'</p><h3>'+o.h+'</h3></div><div class="row"><button type="button" class="small ghost" data-flow="'+o.k+'">Editar</button><button type="button" class="small ghost" id="'+o.k+'Del">Quitar</button></div></header><dl>'+o.f.map(function(f){return '<div><dt>'+f[0]+'</dt><dd>'+(esc(f[1])||'<span class="muted">Sin completar</span>')+'</dd></div>'}).join('')+'</dl>'+'</div>'}
+function wireAcc(k,packer,msgFn,getD,clear,mbr){
   $(k+'Del').onclick=function(){var d=$(k+'Del');if(d.dataset.sure){clear();refresh()}else{d.dataset.sure='1';d.textContent='Confirmar: quitar';setTimeout(function(){if(d.isConnected){delete d.dataset.sure;d.textContent='Quitar'}},4000)}}}
 function renderCompr(){var el=$('comprBox');if(!el)return;
-  if(!compr){el.innerHTML='<div class="empty"><p>Cuando el círculo de dirección registre su compromiso, aparecerá aquí y en la ficha de cada ritual. Si te lo enviaron, escribe abajo su código de 6 letras.</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="compr">Registrar el compromiso</button></div></div>';return}
+  if(!compr){el.innerHTML='<div class="empty"><p>Cuando el círculo de dirección registre su compromiso, aparecerá aquí y en la ficha de cada ritual. Si el equipo ya tiene su código, escríbanlo arriba, en «Ingreso del equipo».</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="compr">Registrar el compromiso</button></div></div>';return}
   el.innerHTML=accHTML({k:'compr',d:compr,eb:'Círculo de dirección',h:'Compromiso del círculo de dirección con los equipos',f:comprFields()});
   wireAcc('compr',packC,function(code){return 'Compromiso del círculo de dirección con los equipos · Ubuntu en acción\nObjetivo: '+compr.obj+'\n'+comprLine()+'\n\nPara verlo en tu celular, abre Mi espacio, ingresa con tu número y pega este código:\n'+code},function(){return compr},function(){compr=null;saveCompr()},compr.mbr)}
 function lidLine(){return lid?['Buenas prácticas: '+lid.practica,'Oportunidades: '+lid.oport,'Ritual: '+lid.ritual+(lid.cuando?' ('+lid.cuando+')':'')].filter(function(s){return !/: $/.test(s)}).join('\n'):''}
 function renderLid(){var el=$('lidBox');if(!el)return;
-  if(!lid){el.innerHTML='<div class="empty"><p>Cuando los líderes de las áreas registren su compromiso, aparecerá aquí. Si te lo enviaron, escribe abajo su código de 6 letras.</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="lideres">Registrar el compromiso de los líderes</button></div></div>';return}
+  if(!lid){el.innerHTML='<div class="empty"><p>Cuando los líderes de las áreas registren su compromiso, aparecerá aquí. Si el equipo ya tiene su código, escríbanlo arriba, en «Ingreso del equipo».</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="lideres">Registrar el compromiso de los líderes</button></div></div>';return}
   el.innerHTML=accHTML({k:'lid',d:lid,eb:'Líderes por área',h:'Compromiso de los líderes por área',f:lidFields()});
   wireAcc('lid',packL,function(code){return 'Compromiso de los líderes por área · Ubuntu en acción\n'+lidLine()+'\n\nPara verlo en tu celular, abre Mi espacio, ingresa con tu número y pega este código:\n'+code},function(){return lid},function(){lid=null;saveLid()},lid.mbr)}
-function renderTeams(){renderCompr();renderLid();
-  if(!teams.length){tdiv.innerHTML='<div class="empty">Todavía no hay rituales en este dispositivo. Registra el de tu equipo o pega abajo el código que te compartieron.</div>';return}
+function renderTeams(){renderCompr();renderLid();renderEq();$('addTeam').hidden=teams.length>0;
+  if(!teams.length){tdiv.innerHTML='<div class="empty">Todavía no hay un ritual registrado. Regístrenlo aquí o escriban arriba el código del equipo.</div>';return}
   tdiv.innerHTML=teams.map(function(t,i){
-    var F2=[['Lo que necesita el área',t.para],['Superpoder',t.poder],['Qué hacemos',t.gesto],['Cuándo',t.disp||t.freq],['Con quién y quién conduce',t.con],['Cómo sabremos que funciona',t.senal],['Inicio',niceD(addDays(t.inicio,0))],['Check-in · semana 2',niceD(addDays(t.inicio,14))],['Cierre · día 30',niceD(addDays(t.inicio,30))]];F2.splice(6,0,['Integrantes',mbrNames(t.mbr)]);if(compr)F2.push(['Cómo nos respalda el círculo de dirección',comprLine()]);
+    var F2=[['Lo que necesita el área',t.para],['Superpoder',t.poder],['Qué hacemos',t.gesto],['Cuándo',t.disp||t.freq],['Con quién y quién conduce',t.con],['Cómo sabremos que funciona',t.senal],['Inicio',niceD(addDays(t.inicio,0))],['Check-in · semana 2',niceD(addDays(t.inicio,14))],['Cierre · día 30',niceD(addDays(t.inicio,30))]];if(compr)F2.push(['Cómo nos respalda el círculo de dirección',comprLine()]);
     return '<div class="tcard" data-i="'+i+'"><header><div><p class="eyebrow">'+(t.shared?'Compartido conmigo':'Registrado aquí')+'</p><h3>'+esc(t.equipo||'Equipo '+(i+1))+'</h3></div><div class="row"><button type="button" class="small ghost" data-flow="piloto" data-ti="'+i+'">Editar</button><button type="button" class="small ghost" data-del="'+i+'">Quitar</button></div></header>'+
       '<dl>'+F2.map(function(f){return '<div><dt>'+f[0]+'</dt><dd>'+(esc(f[1])||'<span class="muted">Sin completar</span>')+'</dd></div>'}).join('')+'</dl>'+
-      '<div class="row"><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t,14)+'">Agendar check-in en Outlook</a><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t,30)+'">Agendar cierre en Outlook</a><button type="button" class="small ghost" data-ics="'+i+'">Archivo de calendario (.ics)</button></div>'+
-      '<div class="field"><label>Código de equipo</label><div class="code" data-code="'+i+'">Generando…</div><div class="row"><button type="button" class="small" data-copy="'+i+'">Copiar código</button><a class="btn ghost" target="_blank" rel="noopener" data-wa="'+i+'" href="#">Enviar a un contacto por WhatsApp</a></div></div><div class="field"><label>Enviar a cada integrante por WhatsApp</label><div class="mbrbtns" data-mbr="'+i+'"></div></div></div>';
+      '<div class="row"><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t,14)+'">Agendar check-in en Outlook</a><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t,30)+'">Agendar cierre en Outlook</a><button type="button" class="small ghost" data-ics="'+i+'">Archivo de calendario (.ics)</button></div>'+'</div>';
   }).join('');
-  teams.forEach(function(t,i){pack(t).then(function(code){var el=tdiv.querySelector('[data-code="'+i+'"]');if(el)el.textContent=code;var wa=tdiv.querySelector('[data-wa="'+i+'"]');if(wa)wa.href='https://wa.me/?text='+encodeURIComponent(teamText(t,code));var mb=tdiv.querySelector('[data-mbr="'+i+'"]');if(mb)mb.innerHTML=mbrBtns(t.mbr,teamText(t,code))})});
 }
 tdiv.addEventListener('click',function(e){
   var d=e.target.closest('[data-del]');if(d){if(d.dataset.sure){teams.splice(+d.dataset.del,1);saveTeams();refresh()}else{d.dataset.sure='1';d.textContent='Confirmar: quitar';setTimeout(function(){if(d.isConnected){delete d.dataset.sure;d.textContent='Quitar'}},4000)}return}
@@ -2225,7 +2236,42 @@ function joinLong(){
     saveTeams();$('teamIn').value='';refresh();toast('Ficha del equipo cargada');tdiv.lastElementChild.scrollIntoView({behavior:'smooth',block:'center'});
   },function(){toast('No reconozco ese código. Cópialo completo, desde «UB1», «UC1» o «UL1».')});
 };
-$('teamJoin').onclick=function(){var v=$('teamIn').value;if(isShort(v)){toast('Buscando el código…');expandCode(v).then(function(p){$('teamIn').value=p;joinLong()},function(){toast('No encuentro ese código. Revisa las 6 letras y que tengas internet.')});return}joinLong()};
+var SITE='https://degasperigiuliana-design.github.io/ubuntu-taller-2026/#piloto';
+async function z64(obj,pfx){var raw=new TextEncoder().encode(JSON.stringify(obj)),z=null;try{if(window.CompressionStream)z=await pipe(raw,CompressionStream)}catch(e){z=null}return z&&z.length<raw.length?pfx+'z'+b64u(z):pfx+'j'+b64u(raw)}
+var TK=['equipo','para','poder','gesto','freq','con','senal','disp','inicio','mbr'],CK=['obj','protege','acompana','reconoce','rev','mbr'],LK=['red','practica','oport','ritual','cuando','regla','medida','rev','mbr'];
+function pick(o,K){if(!o||typeof o!=='object')return null;var r={};K.forEach(function(k){r[k]=typeof o[k]==='string'?o[k].slice(0,800):''});return r}
+function eqHas(){return !!(eq.n||eq.mbr||teams.length||compr||lid)}
+async function packE(){return shortOf(await z64({n:eq.n,m:eq.mbr,t:teams.map(function(t){return pick(t,TK)}),c:pick(compr,CK),l:pick(lid,LK)},'UE1'))}
+async function unpackE(text){var m=/UE1([zj])([A-Za-z0-9_-]{8,})/.exec((text||'').replace(/\s+/g,''));if(!m)throw new Error('formato');
+  var u=unb64u(m[2]);if(m[1]==='z'){if(!window.DecompressionStream)throw new Error('navegador');u=await pipe(u,DecompressionStream)}
+  var x=JSON.parse(new TextDecoder().decode(u));if(!x||typeof x!=='object')throw new Error('formato');
+  var T=Array.isArray(x.t)?x.t.map(function(t){var r=pick(t,TK);if(!/^\d{4}-\d{2}-\d{2}$/.test(r.inicio))r.inicio=today();r.shared=true;return r}):[];
+  var C=pick(x.c,CK),L=pick(x.l,LK);if(C)C.shared=true;if(L)L.shared=true;
+  return{eq:{n:String(x.n||'').slice(0,200),mbr:String(x.m||'').slice(0,1500)},teams:T,compr:C,lid:L}}
+function eqText(code){var t=teams[0],o='Trabajo en equipo · '+(eq.n||'Mi equipo')+' · Ubuntu en acción\n';
+  if(t)o+='\nRitual: '+(t.gesto||'')+(t.disp||t.freq?' ('+(t.disp||t.freq)+')':'')+'\n';
+  if(compr)o+='\nCompromiso del círculo de dirección: '+comprLine()+'\n';
+  if(lid)o+='\nCompromiso de los líderes por área:\n'+lidLine()+'\n';
+  return o+'\nPara ver las tres actividades, abre Mi espacio, ve a «Ingreso del equipo» y escribe este código: '+code+'\n'+SITE}
+var eqSeq=0;
+function renderEq(){
+  if(document.activeElement!==$('eqNombre'))$('eqNombre').value=eq.n;if(document.activeElement!==$('eqMbr'))$('eqMbr').value=eq.mbr;
+  var L=parseMbr(eq.mbr),msg=$('eqMsg');
+  msg.innerHTML=eq.n||L.length?'Equipo <b>'+esc(eq.n||'sin nombre')+'</b> · '+(L.length?L.length+(L.length===1?' integrante':' integrantes'):'sin integrantes todavía')+'.':'Aún no hay un equipo en tu espacio.';
+  var box=$('eqShare');if(!eqHas()){box.hidden=true;return}box.hidden=false;
+  var my=++eqSeq;$('eqCode').textContent='Generando…';
+  packE().then(function(code){if(my!==eqSeq)return;$('eqCode').textContent=code;var m=eqText(code);$('eqWaAny').href='https://wa.me/?text='+encodeURIComponent(m);$('eqWa').innerHTML=mbrBtns(eq.mbr,m)})}
+$('eqCopy').onclick=function(){copyText($('eqCode').textContent,'Código copiado')};
+function loadTeamPayload(p){
+  if(/UE1[zj]/.test(p)){unpackE(p).then(function(b){eq=b.eq;teams=b.teams;compr=b.compr;lid=b.lid;saveEq();saveTeams();saveCompr();saveLid();$('teamIn').value='';refresh();toast('Listo: estas son las actividades del equipo')},function(){toast('No reconozco ese código. Revisa las 6 letras.')});return}
+  $('teamIn').value=p;joinLong()}
+$('teamJoin').onclick=function(){
+  var n=$('eqNombre').value.trim(),mb=$('eqMbr').value.trim(),v=$('teamIn').value.trim();
+  if(!v&&!n&&!mb){toast('Escribe el nombre del equipo y sus integrantes, o el código del equipo.');$('eqNombre').focus();return}
+  if(n||mb){eq.n=n;eq.mbr=mb;saveEq()}
+  if(!v){refresh();toast(parseMbr(mb).some(function(x){return x.c})?'Listo: el equipo quedó registrado en tu espacio.':'Listo. Agrega el celular de cada integrante para enviarles el código por WhatsApp.');return}
+  if(isShort(v)){toast('Buscando el código…');expandCode(v).then(function(p){if(/^UP\d+$/.test(p)){toast('Ese es un código personal: escríbelo en «Mi ingreso».');return}loadTeamPayload(p)},function(){toast('No encuentro ese código. Revisa las 6 letras y que tengas internet.')});return}
+  loadTeamPayload(v)};
 
 /* ---------- Superpoderes y fichas ---------- */
 document.querySelectorAll('[data-links]').forEach(function(el){el.outerHTML=linksHTML(el.dataset.links.split(','))});
@@ -2496,7 +2542,7 @@ async function profilePDF(){
   if(busy)return;busy=true;toast('Preparando tu perfil…');
   try{var r=await buildProfile();if(r){var s=await save(r.name,r.blob,true);if(s==='alt')showImgs(r)}}catch(e){console.error(e&&e.stack||e);toast('No se pudo crear el PDF.')}busy=false;
 }
-$('perfilPdf').onclick=profilePDF;$('perfilPdf2').onclick=profilePDF;
+$('perfilPdf2').onclick=profilePDF;
 /* WhatsApp: se envía el PDF, no un texto */
 async function sendWA(){
   if(busy)return;busy=true;toast('Preparando tu PDF…');
@@ -2514,7 +2560,7 @@ $('waSend').onclick=sendWA;$('imgClose').onclick=function(){$('imgDlg').close()}
 /* Borrar mis datos de este dispositivo */
 $('wipeBtn').onclick=function(){var b=$('wipeBtn');
   if(!b.dataset.sure){b.dataset.sure='1';b.textContent='Confirmar: borrar todo';setTimeout(function(){if(b.isConnected){delete b.dataset.sure;b.textContent='Borrar mis datos de este dispositivo'}},4000);return}
-  [LS_ANS,LS_NAME,LS_TEAMS,LS_WHEEL,LS_COMPR,LS_LID,LS_CEL].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});var rg=loadReg();if(activeCel){delete rg[activeCel];store(LS_PROF,JSON.stringify(rg))}activeCel='';$('cel').value='';compr=null;lid=null;
+  [LS_ANS,LS_NAME,LS_TEAMS,LS_WHEEL,LS_COMPR,LS_LID,LS_CEL,LS_EQ].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});var rg=loadReg();if(activeCel){delete rg[activeCel];store(LS_PROF,JSON.stringify(rg))}activeCel='';$('cel').value='';compr=null;lid=null;eq={n:'',mbr:''};
   ans=new Array(24).fill(0);wheel={s:[0,0,0,0,0],n:['','','','',''],a:'',b:''};teams=[];nm.value='';delete b.dataset.sure;b.textContent='Borrar mis datos de este dispositivo';refresh();toast('Listo: borré tus datos de este dispositivo')};
 
 /* ---------- Taller 3: un solo contenido para la página (artículo), la presentación y el PDF ---------- */
