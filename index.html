@@ -1355,6 +1355,12 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
 .eqrow input{font-size:1.05rem;padding:13px 14px;border-radius:14px}
 .eqrow .eqX{font-size:1.2rem;line-height:1;padding:10px 14px}
 @media(max-width:560px){.eqrows{gap:20px}.eqrow{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px}.eqrow .eqC{grid-column:1;grid-row:2}.eqrow .eqX{grid-row:1/3;grid-column:2}}
+.multi{display:grid;gap:18px;margin-top:6px}
+.mgrp{display:grid;gap:8px}
+.mopts{display:flex;flex-wrap:wrap;gap:8px}
+.mopt{text-align:left;font-weight:500;font-size:.95rem;line-height:1.4;border-radius:14px;padding:10px 14px;background:transparent;color:var(--fg);border:1px solid var(--tint);white-space:normal}
+.mopt[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.mopt[aria-pressed="true"]::before{content:"✓ "}
 </style>
 <div class="wrap">
 <div class="top">
@@ -2075,6 +2081,13 @@ function mbrStep(o,q,help,ex){return{k:"Integrantes",q:q,help:help,type:"long",t
   val:function(){return o.mbr||""},set:function(v){o.mbr=v;o===lid?saveLid():o===compr?saveCompr():saveTeams()},
   check:function(){return parseMbr(o.mbr).some(function(m){return m.c})?"":"Agrega al menos una persona con su celular de 9 dígitos, una por línea."}}}
 var MBR_EX=["Ana Pérez · 987654321\nLuis Rojas · 912345678\nCarla Díaz · 955512345","Marcos Salas · 944433221\nRocío Vera · 966677889"];
+var REGLAS=[
+ ["Confianza",["Se habla de casos, no de personas.","Lo que se dice en la mesa se queda en la mesa.","Primero preguntamos, después opinamos.","Agradecemos a quien trae una dificultad: así aprendemos todos.","Cada voz tiene su turno: nadie interrumpe."]],
+ ["Foco y acción",["Quien trae una dificultad también trae una idea.","Cada sesión termina con un acuerdo con responsable y fecha.","Abrimos revisando los acuerdos de la sesión anterior.","Una buena práctica se comparte con su resultado, aunque sea pequeño."]],
+ ["Ritmo",["Empezamos y terminamos a la hora.","La conducción rota entre los líderes.","Celulares en silencio; si es virtual, cámaras encendidas.","Si no podemos asistir, enviamos a alguien del área o un aporte por escrito."]],
+ ["Mejora continua",["Cada mes revisamos si el ritual sigue sirviendo y qué ajustamos.","Medimos y compartimos cómo vamos: constancia, adopción y resultado."]]];
+function multiParse(t,G){var all=[].concat.apply([],G.map(function(g){return g[1]})),rest=String(t||''),sel=[];
+  all.forEach(function(r){if(rest.indexOf(r)>=0){sel.push(r);rest=rest.replace(r,'')}});return{sel:sel,otra:rest.replace(/\s+/g,' ').trim()}}
 function lidSteps(){
   if(!lid)lid={red:"",practica:"",oport:"",ritual:"",cuando:"",regla:"",medida:"",mbr:"",rev:T4};
   function g(k,kk,q,help,ph,type,tip,ex){return{k:kk,q:q,help:help,ph:ph,type:type||"long",tip:tip,ex:ex,val:function(){return lid[k]},set:function(v){lid[k]=v;saveLid()}}}
@@ -2084,7 +2097,7 @@ function lidSteps(){
    g("oport","Oportunidades de mejora","¿Qué oportunidades de mejora trabajaremos entre áreas?","Plantéalas como un pedido a la red: qué necesitas, de quién y para cuándo.","Ej.: Las solicitudes entre áreas llegan sin plazo ni prioridad","long","Una oportunidad por área, formulada sin culpables. Si depende de otra área, nómbrala.",["Las solicitudes entre áreas llegan sin plazo ni prioridad. Pedimos acordar un formato mínimo: qué se necesita, para cuándo y para qué.","Los traspasos de casos entre áreas pierden contexto. Proponemos una ficha de traspaso de una página."]),
    g("ritual","Nuestro ritual","¿Cómo será el ritual de la red de líderes?","El formato de cada encuentro, con tiempos.","Ej.: Mesa de práctica de 45 minutos cada dos semanas","long","Define cuántos minutos se dedican a compartir una práctica, cuántos a una oportunidad de mejora y cómo se cierra. Con 45 minutos alcanza si hay estructura.",["Mesa de práctica de 45 minutos cada dos semanas: dos líderes presentan una buena práctica (10 minutos cada uno), se trabaja una oportunidad de mejora y se cierra con un acuerdo por persona."]),
    g("cuando","Cuándo","¿Cuándo y cada cuánto nos reunimos?","Día, hora y duración. Enganchado a algo que ya existe.","Ej.: Cada dos jueves, 10:00, 45 minutos","text","Elijan un horario que no choque con el cierre de mes. Si es virtual, dilo.",["Cada dos jueves a las 10:00, 45 minutos, en la sala de directorio.","El primer martes después del cierre mensual, 45 minutos."]),
-   g("regla","Reglas de juego","¿Qué reglas de juego acordamos?","Lo que hace seguro compartir lo que no sale bien.","Ej.: Se habla de casos, no de personas","long","Tres reglas bastan. Las de seguridad psicológica son las que más pesan: sin ellas, nadie trae sus oportunidades de mejora.",["Se habla de casos, no de personas. Lo que se dice en la mesa se queda en la mesa. Cada sesión termina con un acuerdo con responsable y fecha."]),
+   {k:"Reglas de juego",q:"¿Qué reglas de juego acordamos?",help:"Lo que hace seguro compartir lo que no sale bien y útil cada encuentro. Elijan las que necesitan hoy.",type:"multi",groups:REGLAS,tip:"Elijan al menos tres y empiecen por las de confianza: sin ellas, nadie trae sus oportunidades de mejora. En cada revisión del ritual vuelvan a esta lista para sumar o cambiar reglas.",val:function(){return lid.regla},set:function(v){lid.regla=v;saveLid()},check:function(){return multiParse(lid.regla,REGLAS).sel.length+(multiParse(lid.regla,REGLAS).otra?1:0)>=3?"":"Elijan al menos tres reglas."}},
    g("medida","Cómo sabremos","¿Cómo sabremos que funciona?","Algo que se pueda contar, ver u oír, y que presentarán en el Taller 4.","Ej.: 2 de 2 mesas realizadas y 3 prácticas probadas por otra área","long","Mezcla constancia (¿nos reunimos?), adopción (¿una práctica pasó a otra área?) y resultado (¿se cerró una oportunidad?).",["Constancia: 2 de 2 mesas realizadas. Adopción: al día 30, 3 prácticas probadas por otra área. Resultado: 1 oportunidad de mejora cerrada."]),
    {k:"Revisamos",q:"¿Cuándo revisamos este compromiso?",help:"Una fecha para mirar juntos qué funcionó y qué ajustar.",type:"date",tip:"Lo natural es el día 30, en el Taller 4.",val:function(){return lid.rev},set:function(v){lid.rev=v;saveLid()}}
   ]}
@@ -2114,7 +2127,7 @@ function closeFlow(){
   if(F.key==='piloto'){teams=teams.filter(function(x){return x.equipo||x.gesto||x.poder});saveTeams()}
   F=null;flow.hidden=true;document.body.style.overflow='';refresh();if(lastFocus&&lastFocus.focus)lastFocus.focus();
 }
-function commit(){if(!F||F.i>=F.steps.length)return;var s=F.steps[F.i],el=$('flowIn');if(s.type==='tri'){s.set(triJoin([0,1,2].map(function(i){var x=$('flowTri'+i);return x?x.value.trim():''})));return}if(el&&s.type!=='scale'&&s.type!=='power'&&s.type!=='sp')s.set(el.value.trim());var nt=$('flowNote');if(nt&&s.note)s.note.set(nt.value.trim())}
+function commit(){if(!F||F.i>=F.steps.length)return;var s=F.steps[F.i],el=$('flowIn');if(s.type==='multi'){var sel=[].map.call($('flowStage').querySelectorAll('.mopt[aria-pressed="true"]'),function(b){return b.dataset.r}),ot=$('flowOtra')?$('flowOtra').value.trim():'';if(ot&&!/[.!?]$/.test(ot))ot+='.';s.set(sel.concat(ot?[ot]:[]).join(' '));return}if(s.type==='tri'){s.set(triJoin([0,1,2].map(function(i){var x=$('flowTri'+i);return x?x.value.trim():''})));return}if(el&&s.type!=='scale'&&s.type!=='power'&&s.type!=='sp')s.set(el.value.trim());var nt=$('flowNote');if(nt&&s.note)s.note.set(nt.value.trim())}
 function renderStep(){
   var n=F.steps.length,st=$('flowStage');
   $('flowProg').style.width=(Math.min(F.i,n)/n*100)+'%';$('flowPrev').disabled=F.i===0;
@@ -2130,6 +2143,7 @@ function renderStep(){
     if(s.note)h+='<textarea class="note" id="flowNote" placeholder="'+esc(s.note.ph)+'" aria-label="Nota opcional">'+esc(s.note.val())+'</textarea>'}
   else if(s.type==='sp'){h+='<div class="opts sp6">'+POWERS.map(function(P,pi){return '<button type="button" class="opt" data-v="'+esc(P.n)+'" aria-pressed="'+(v===P.n)+'" style="--spc:'+SPCOL[pi]+'"><kbd>'+(pi+1)+'</kbd>'+esc(P.n)+'</button>'}).join('')+'</div>'}
   else if(s.type==='power'){h+='<div class="pgrid">'+POWERS.map(function(P,pi){return '<div><p class="eyebrow" style="color:'+SPCOL[pi]+'">'+P.n+'</p>'+P.p.map(function(x){return '<button type="button" class="opt" data-v="'+esc(x)+'" aria-pressed="'+(v===x)+'">'+esc(x)+'</button>'}).join('')+'</div>'}).join('')+'</div>'}
+  else if(s.type==='multi'){var mp=multiParse(s.val(),s.groups);h+='<div class="multi">'+s.groups.map(function(g){return '<div class="mgrp"><p class="ctx-t">'+esc(g[0])+'</p><div class="mopts">'+g[1].map(function(r){return '<button type="button" class="mopt" aria-pressed="'+(mp.sel.indexOf(r)>=0)+'" data-r="'+esc(r)+'">'+esc(r)+'</button>'}).join('')+'</div></div>'}).join('')+'<label class="tri-f"><span><b>Otra regla</b> · opcional</span><input class="big" id="flowOtra" type="text" value="'+esc(mp.otra)+'" placeholder="Escriban una regla propia" autocomplete="off"></label></div>'}
   else if(s.type==='tri'){var tp=triParse(s.set&&F.team?F.team.senal:'');h+='<div class="tri">'+s.parts.map(function(pt,i){return '<label class="tri-f"><span><b>'+esc(pt[0])+'</b> · '+esc(pt[1])+'</span><input class="big" id="flowTri'+i+'" type="text" value="'+esc(tp[i])+'" placeholder="'+esc(pt[2])+'" autocomplete="off"></label>'}).join('')+'</div>'}
   else if(s.type==='long'){h+='<textarea class="big" id="flowIn"'+(s.tall?' style="min-height:8.5em"':'')+' placeholder="'+esc(s.ph||'')+'" aria-labelledby="stepQ">'+esc(v)+'</textarea>'}
   else{h+='<input class="big" id="flowIn" type="'+(s.type==='date'?'date':'text')+'" value="'+esc(v)+'" placeholder="'+esc(s.ph||'')+'" aria-labelledby="stepQ" autocomplete="off">'}
@@ -2139,7 +2153,7 @@ function renderStep(){
 }
 function next(){
   if(!F)return;if(F.i>=F.steps.length){var k=F.key;closeFlow();var tg=$(k==='piloto'||k==='compr'||k==='lideres'?'eqShare':'keepBox');if(tg&&!tg.hidden)setTimeout(function(){tg.scrollIntoView({behavior:'smooth',block:'center'})},60);return}
-  commit();var s=F.steps[F.i];if(!s.opt&&!s.val()){toast(s.type==='scale'||s.type==='power'?'Elige una opción para continuar.':s.type==='tri'?'Completa las tres partes: frecuencia, percepción y resultado.':'Escribe una respuesta para continuar.');return}
+  commit();var s=F.steps[F.i];if(!s.opt&&!s.val()){commit();toast(s.type==='multi'?'Elijan al menos tres reglas.':s.type==='scale'||s.type==='power'?'Elige una opción para continuar.':s.type==='tri'?'Completa las tres partes: frecuencia, percepción y resultado.':'Escribe una respuesta para continuar.');return}
   if(s.check){var cm=s.check();if(cm){toast(cm);return}}
   F.i++;renderStep();
 }
@@ -2148,6 +2162,7 @@ $('flowStage').addEventListener('click',function(e){var b=e.target.closest('.opt
   [].forEach.call($('flowStage').querySelectorAll('.opt'),function(o){o.setAttribute('aria-pressed',o===b)});
   if(s.auto||s.type==='power'||s.type==='sp'){var at=F.i;setTimeout(function(){if(F&&F.i===at)next()},260)}});
 $('flowStage').addEventListener('click',function(e){var b=e.target.closest('.exbtn');if(!b||!F)return;var s=F.steps[F.i],inp=$('flowIn');if(!inp||!s.ex)return;inp.value=s.ex[+b.dataset.x];inp.focus();inp.dispatchEvent(new Event('input'))});
+$('flowStage').addEventListener('click',function(e){var b=e.target.closest('.mopt');if(!b)return;b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true');commit()});
 $('flowNext').onclick=next;$('flowPrev').onclick=prev;$('flowClose').onclick=closeFlow;
 document.addEventListener('keydown',function(e){
   if(!F||flow.hidden)return;var tag=(e.target.tagName||'').toLowerCase(),typing=tag==='input'||tag==='textarea';
