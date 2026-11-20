@@ -1593,8 +1593,8 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
     <div id="lidBox"></div>
     <div class="panel">
       <h3>Tengo un código</h3>
-      <div class="joinrow"><input type="text" id="teamIn" placeholder="Pega aquí el código del ritual (UB1…), de la gerencia (UC1…) o de los líderes (UL1…)" autocomplete="off" spellcheck="false"><button type="button" class="ghost" id="teamJoin">Ver la ficha</button></div>
-      <p class="legend">El código contiene la ficha completa, así que funciona sin cuentas ni contraseñas. Si el equipo cambia la ficha, comparte el código nuevo. Antes de pegarlo, ingresa con tu celular para que quede guardado en tu espacio.</p>
+      <div class="joinrow"><input type="text" id="teamIn" placeholder="Escribe el código de 6 letras, por ejemplo KX4M7P" autocomplete="off" spellcheck="false"><button type="button" class="ghost" id="teamJoin">Ver la ficha</button></div>
+      <p class="legend">Cada ficha tiene un código de 6 letras. Si el equipo cambia la ficha, comparte el código nuevo. Antes de pegarlo, ingresa con tu celular para que quede guardado en tu espacio.</p>
     </div>
   </section>
 </main>
@@ -2132,12 +2132,20 @@ function unb64u(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='
 async function pipe(u8,S){var st=new Blob([u8]).stream().pipeThrough(new S('deflate-raw'));return new Uint8Array(await new Response(st).arrayBuffer())}
 function spCode(x){var i=POWERS.findIndex(function(P){return P.n===x});return i>=0?100+i:PN.indexOf(x)}
 function spOf(x){var i=POWERS.findIndex(function(P){return P.n===x});return i>=0?i:Math.max(0,Math.floor(PN.indexOf(x)/4))}
-async function pack(t){
+var SB_URL='https://rguswbgeowwkpbffhwwl.supabase.co/rest/v1/rpc/',SB_KEY='sb_publishable_P0ASckRzugK9EQOdipDgPQ_XrSGG8iK',SHORT={};
+async function sbRpc(f,b){var ac=new AbortController(),tm=setTimeout(function(){ac.abort()},8000);try{var r=await fetch(SB_URL+f,{method:'POST',headers:{apikey:SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(b),signal:ac.signal});if(!r.ok)throw new Error('sb '+r.status);return await r.json()}finally{clearTimeout(tm)}}
+async function shortOf(long){if(SHORT[long])return SHORT[long];try{var c=await sbRpc('guardar_codigo',{p_kind:long.slice(0,2),p_payload:long});if(typeof c==='string'&&/^[A-Z2-9]{6}$/.test(c)){SHORT[long]=c;return c}}catch(e){}return long}
+function isShort(v){return /^[A-Za-z2-9]{6}$/.test((v||'').replace(/[\s-]/g,''))}
+async function expandCode(v){var c=(v||'').replace(/[\s-]/g,'').toUpperCase();var r=await sbRpc('leer_codigo',{p_code:c});if(r&&r[0]&&r[0].payload)return r[0].payload;throw new Error('nf')}
+async function pack(t){return shortOf(await packLong(t))}
+async function packC(c){return shortOf(await packCLong(c))}
+async function packL(l){return shortOf(await packLLong(l))}
+async function packLong(t){
   var raw=new TextEncoder().encode(JSON.stringify([t.equipo,spCode(t.poder),t.gesto,t.freq,t.con,t.senal,t.disp,t.inicio,t.para||'',t.mbr||''])),z=null;
   try{if(window.CompressionStream)z=await pipe(raw,CompressionStream)}catch(e){z=null}
   return z&&z.length<raw.length?'UB1z'+b64u(z):'UB1j'+b64u(raw);
 }
-async function packC(c){var raw=new TextEncoder().encode(JSON.stringify([c.obj,c.protege,c.acompana,c.reconoce,c.rev,c.mbr||''])),z=null;
+async function packCLong(c){var raw=new TextEncoder().encode(JSON.stringify([c.obj,c.protege,c.acompana,c.reconoce,c.rev,c.mbr||''])),z=null;
   try{if(window.CompressionStream)z=await pipe(raw,CompressionStream)}catch(e){z=null}
   return z&&z.length<raw.length?'UC1z'+b64u(z):'UC1j'+b64u(raw)}
 async function unpackC(text){var m=/UC1([zj])([A-Za-z0-9_-]{8,})/.exec((text||'').replace(/\s+/g,''));if(!m)return null;
@@ -2145,7 +2153,7 @@ async function unpackC(text){var m=/UC1([zj])([A-Za-z0-9_-]{8,})/.exec((text||''
   var x=JSON.parse(new TextDecoder().decode(u));if(!Array.isArray(x)||(x.length!==5&&x.length!==6))throw new Error('formato');
   function S(v){return typeof v==='string'?v.slice(0,400):''}
   return{obj:S(x[0]),protege:S(x[1]),acompana:S(x[2]),reconoce:S(x[3]),rev:/^\d{4}-\d{2}-\d{2}$/.test(x[4])?x[4]:'',mbr:typeof x[5]==='string'?x[5].slice(0,700):'',shared:true}}
-async function packL(l){var raw=new TextEncoder().encode(JSON.stringify([l.red,l.practica,l.oport,l.ritual,l.cuando,l.regla,l.medida,l.rev,l.mbr||''])),z=null;
+async function packLLong(l){var raw=new TextEncoder().encode(JSON.stringify([l.red,l.practica,l.oport,l.ritual,l.cuando,l.regla,l.medida,l.rev,l.mbr||''])),z=null;
   try{if(window.CompressionStream)z=await pipe(raw,CompressionStream)}catch(e){z=null}
   return z&&z.length<raw.length?'UL1z'+b64u(z):'UL1j'+b64u(raw)}
 async function unpackL(text){var m=/UL1([zj])([A-Za-z0-9_-]{8,})/.exec((text||'').replace(/\s+/g,''));if(!m)return null;
@@ -2183,12 +2191,12 @@ function wireAcc(k,packer,msgFn,getD,clear,mbr){packer(getD()).then(function(cod
   $(k+'Copy').onclick=function(){copyText($(k+'Code').textContent,'Código copiado')};
   $(k+'Del').onclick=function(){var d=$(k+'Del');if(d.dataset.sure){clear();refresh()}else{d.dataset.sure='1';d.textContent='Confirmar: quitar';setTimeout(function(){if(d.isConnected){delete d.dataset.sure;d.textContent='Quitar'}},4000)}}}
 function renderCompr(){var el=$('comprBox');if(!el)return;
-  if(!compr){el.innerHTML='<div class="empty"><p>Cuando la gerencia registre su compromiso, aparecerá aquí y en la ficha de cada ritual. Si te lo enviaron, pega abajo su código (empieza con «UC1»).</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="compr">Registrar el compromiso</button></div></div>';return}
+  if(!compr){el.innerHTML='<div class="empty"><p>Cuando la gerencia registre su compromiso, aparecerá aquí y en la ficha de cada ritual. Si te lo enviaron, escribe abajo su código de 6 letras.</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="compr">Registrar el compromiso</button></div></div>';return}
   el.innerHTML=accHTML({k:'compr',d:compr,eb:'Gerencia general y gerentes',h:'Compromiso de la gerencia con los equipos',f:comprFields()});
   wireAcc('compr',packC,function(code){return 'Compromiso de la gerencia con los equipos · Ubuntu en acción\nObjetivo: '+compr.obj+'\n'+comprLine()+'\n\nPara verlo en tu celular, abre Mi espacio, ingresa con tu número y pega este código:\n'+code},function(){return compr},function(){compr=null;saveCompr()},compr.mbr)}
 function lidLine(){return lid?['Buenas prácticas: '+lid.practica,'Oportunidades: '+lid.oport,'Ritual: '+lid.ritual+(lid.cuando?' ('+lid.cuando+')':'')].filter(function(s){return !/: $/.test(s)}).join('\n'):''}
 function renderLid(){var el=$('lidBox');if(!el)return;
-  if(!lid){el.innerHTML='<div class="empty"><p>Cuando los líderes de las áreas registren su compromiso, aparecerá aquí. Si te lo enviaron, pega abajo su código (empieza con «UL1»).</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="lideres">Registrar el compromiso de los líderes</button></div></div>';return}
+  if(!lid){el.innerHTML='<div class="empty"><p>Cuando los líderes de las áreas registren su compromiso, aparecerá aquí. Si te lo enviaron, escribe abajo su código de 6 letras.</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="lideres">Registrar el compromiso de los líderes</button></div></div>';return}
   el.innerHTML=accHTML({k:'lid',d:lid,eb:'Líderes por área',h:'Compromiso de los líderes por área',f:lidFields()});
   wireAcc('lid',packL,function(code){return 'Compromiso de los líderes por área · Ubuntu en acción\n'+lidLine()+'\n\nPara verlo en tu celular, abre Mi espacio, ingresa con tu número y pega este código:\n'+code},function(){return lid},function(){lid=null;saveLid()},lid.mbr)}
 function renderTeams(){renderCompr();renderLid();
@@ -2208,7 +2216,7 @@ tdiv.addEventListener('click',function(e){
   var k=e.target.closest('[data-ics]');if(k){var t=teams[+k.dataset.ics];save('piloto-ubuntu.ics',ics(t))}
 });
 $('addTeam').onclick=function(){openFlow('piloto',null)};
-$('teamJoin').onclick=function(){
+function joinLong(){
   if(/UL1[zj]/.test($('teamIn').value.replace(/\s+/g,''))){unpackL($('teamIn').value).then(function(l){lid=l;saveLid();$('teamIn').value='';refresh();toast('Compromiso de los líderes cargado')},function(){toast('No reconozco ese código. Cópialo completo, desde «UL1».')});return}
   if(/UC1[zj]/.test($('teamIn').value.replace(/\s+/g,''))){unpackC($('teamIn').value).then(function(c){compr=c;saveCompr();$('teamIn').value='';refresh();toast('Compromiso de la gerencia cargado')},function(){toast('No reconozco ese código. Cópialo completo, desde «UC1».')});return}
   unpack($('teamIn').value).then(function(t){
@@ -2216,6 +2224,7 @@ $('teamJoin').onclick=function(){
     saveTeams();$('teamIn').value='';refresh();toast('Ficha del equipo cargada');tdiv.lastElementChild.scrollIntoView({behavior:'smooth',block:'center'});
   },function(){toast('No reconozco ese código. Cópialo completo, desde «UB1», «UC1» o «UL1».')});
 };
+$('teamJoin').onclick=function(){var v=$('teamIn').value;if(isShort(v)){toast('Buscando el código…');expandCode(v).then(function(p){$('teamIn').value=p;joinLong()},function(){toast('No encuentro ese código. Revisa las 6 letras y que tengas internet.')});return}joinLong()};
 
 /* ---------- Superpoderes y fichas ---------- */
 document.querySelectorAll('[data-links]').forEach(function(el){el.outerHTML=linksHTML(el.dataset.links.split(','))});
