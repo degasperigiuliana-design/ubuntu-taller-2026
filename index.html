@@ -1342,6 +1342,9 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
 @media(max-width:700px){.who4,.eqgrid{grid-template-columns:1fr}.eqgrid button{width:100%}}
 .step .exfull dd,.step .exfull .legend{color:var(--fg)}
 #eqShare{margin-top:28px}
+.tool.fin .st{color:var(--accent);font-weight:600}
+#keepBox{margin-top:18px}
+#piloto{margin-top:12px}
 </style>
 <div class="wrap">
 <div class="top">
@@ -1550,7 +1553,6 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
   </aside>
 
   <section id="perfil" style="padding-top:28px">
-    <p class="eyebrow">Personal</p>
     <h2>Mi espacio personal</h2>
     <div class="panel ingreso">
       <div><h3>Mi ingreso</h3>
@@ -1564,13 +1566,14 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
       <p class="legend" id="ingresoMsg" role="status"></p>
       <div class="row"><button type="button" class="small ghost" id="salirBtn" hidden>Cambiar de persona</button></div>
     </div>
-    <div class="charts">
+    <div id="toolsP"></div>
+    <div class="charts" hidden>
       <div class="panel chart"><h3>Hexágono Ubuntu</h3><div id="hexBox"></div></div>
       <div class="panel chart"><h3>La rueda de mi liderazgo</h3><div id="wheelBox"></div></div>
     </div>
     <div class="panel" id="keepBox" hidden>
-      <h3>Guarda tu perfil</h3>
-      <p class="muted">Tu código personal recrea tu rueda y tu Hexágono en cualquier dispositivo: escríbelo en «Mi ingreso». Guárdalo donde lo encuentres en diciembre.</p>
+      <h3>Envíate tus resultados</h3>
+      <p class="muted">Tus respuestas quedaron guardadas en este dispositivo. <strong>Envía a tu celular el PDF con tus resultados y tu código</strong>: con el código recuperas tu rueda y tu Hexágono en cualquier dispositivo, escribiéndolo en «Mi ingreso».</p>
       <div class="code" id="codeOut"></div>
       <div class="row">
         <button type="button" class="small" id="perfilPdf2">Descargar mi perfil (PDF)</button>
@@ -1584,7 +1587,6 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
   </section>
 
   <section id="piloto">
-    <p class="eyebrow">Equipo</p>
     <h2>Trabajo en equipo</h2>
     <div class="panel ingreso">
       <div><h3>Ingreso del equipo</h3>
@@ -1597,6 +1599,8 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
       </div>
       <p class="legend" id="eqMsg" role="status"></p>
     </div>
+    <div id="toolsE"></div>
+    <div hidden>
     <h3 class="sub-h">1 · Ritual de mi equipo</h3>
     <div id="teams" style="display:grid;gap:14px"></div>
     <div class="row"><button type="button" id="addTeam">Registrar el ritual</button></div>
@@ -1604,12 +1608,14 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
     <div id="comprBox"></div>
     <h3 class="sub-h">3 · Compromiso de los líderes por área</h3>
     <div id="lidBox"></div>
+    </div>
     <div class="panel" id="eqShare" hidden>
-      <h3>Código del equipo</h3>
-      <p class="muted">Un solo código guarda las tres actividades y a los integrantes. Cualquier integrante lo escribe en «Ingreso del equipo» y ve todo. Si el equipo cambia algo, se genera un código nuevo: vuelvan a compartirlo.</p>
+      <h3>Envíen el trabajo del equipo</h3>
+      <p class="muted">Quedó guardado. <strong>Envíen a cada integrante el código del equipo por WhatsApp</strong>: con él, cualquiera ve las tres actividades escribiéndolo en «Ingreso del equipo». Si cambian algo, se genera un código nuevo y vuelven a enviarlo.</p>
       <div class="code" id="eqCode">Generando…</div>
       <div class="row"><button type="button" class="small" id="eqCopy">Copiar código</button><a class="btn ghost" target="_blank" rel="noopener" id="eqWaAny" href="#">Enviar a un contacto por WhatsApp</a></div>
       <div class="field"><label>Enviar a cada integrante por WhatsApp</label><div class="mbrbtns" id="eqWa"></div></div>
+      <div class="field" id="eqCal" hidden><label>Agendar el ritual</label><div class="row" id="eqCalBtns"></div></div>
     </div>
   </section>
 </main>
@@ -1937,25 +1943,23 @@ function restoreCode(v){v=(v||'').trim();
   restoreDigits(v)}
 
 /* ---------- Tarjetas de herramientas ---------- */
-function renderTools(){if(!$('tools'))return;
-  var w=wheel.s.filter(Boolean).length,hh=ans.filter(Boolean).length,t=teams.length;
+function renderTools(){
+  var w=wheel.s.filter(Boolean).length,hh=ans.filter(Boolean).length;
   var TT={
-   hex:{id:'hex',c:'#B77BC8',c2:'#5B5BD6',no:'Personal · 1 de 2',tags:['Construcción del líder','7 min'],h:'Hexágono Ubuntu',d:'24 afirmaciones sobre lo que haces habitualmente. Te da tu Índice Ubuntu de 0 a 100, para compararlo en el Taller 4 y en diciembre.',n:hh,of:24},
-   rueda:{id:'rueda',c:'#2FB7B0',c2:'#1267E0',no:'Personal · 2 de 2',tags:['Rueda del liderazgo','2 min'],h:'La rueda de mi liderazgo',d:'Cinco preguntas para mirarte como líder y dos para decidir qué quieres fortalecer.',n:w,of:5},
-   piloto:{id:'piloto',c:'#C98A4B',c2:'#D9738F',no:'Equipo · 1 de 3',tags:['Piloto de un mes','9 pasos'],h:'Ritual de mi equipo',d:'El ritual que tu equipo practicará durante un mes. Lo registra una persona y se envía a cada integrante por WhatsApp.',n:t,of:0},
-   compr:{id:'compr',c:'#5B5BD6',c2:'#1267E0',no:'Equipo · 2 de 3',tags:['Círculo de dirección','7 pasos'],h:'Compromiso del círculo de dirección con los equipos',d:'Qué protege, cómo acompaña y cómo reconoce el círculo de dirección los rituales de sus equipos. Aparece en la ficha de cada ritual.',n:compr?1:0,of:0},
-   lideres:{id:'lideres',c:'#D9738F',c2:'#5B5BD6',no:'Equipo · 3 de 3',tags:['Líderes por área','10 pasos'],h:'Compromiso de los líderes por área',d:'El ritual de la red de líderes: compartir buenas prácticas y oportunidades de mejora entre las áreas, con sus acuerdos.',n:lid?1:0,of:0}
+   hex:{id:'hex',c:'#B77BC8',c2:'#5B5BD6',no:'Personal · 1 de 2',tags:['Construcción del líder','7 min'],h:'Hexágono Ubuntu',d:'24 afirmaciones sobre lo que haces habitualmente. Te da tu Índice Ubuntu de 0 a 100, para compararlo en el Taller 4 y en diciembre.',n:hh,of:24,ok:hexDone()?'Completo · Índice Ubuntu '+hexIdx()+' de 100':''},
+   rueda:{id:'rueda',c:'#2FB7B0',c2:'#1267E0',no:'Personal · 2 de 2',tags:['Rueda del liderazgo','2 min'],h:'La rueda de mi liderazgo',d:'Cinco preguntas para mirarte como líder y dos para decidir qué quieres fortalecer.',n:w,of:5,ok:wheelDone()?'Completo · índice '+wheelIdx()+' de 100':''},
+   piloto:{id:'piloto',c:'#C98A4B',c2:'#D9738F',no:'Equipo · 1 de 3',tags:['Piloto de un mes','8 pasos'],h:'Ritual de mi equipo',d:'El ritual que tu equipo practicará durante un mes: qué hacen, cuándo, quién conduce y cómo sabrán que funciona.',n:teams.length?1:0,of:0,ti:teams.length?0:null},
+   compr:{id:'compr',c:'#5B5BD6',c2:'#1267E0',no:'Equipo · 2 de 3',tags:['Círculo de dirección','5 pasos'],h:'Compromiso del círculo de dirección con los equipos',d:'Qué protege, cómo acompaña y cómo reconoce el círculo de dirección los rituales de sus equipos.',n:compr?1:0,of:0},
+   lideres:{id:'lideres',c:'#D9738F',c2:'#5B5BD6',no:'Equipo · 3 de 3',tags:['Líderes por área','8 pasos'],h:'Compromiso de los líderes por área',d:'El ritual de la red de líderes: compartir buenas prácticas y oportunidades de mejora entre las áreas, con sus acuerdos.',n:lid?1:0,of:0}
   };
   function card(x){
-    var st=x.of?(x.n===0?'Sin empezar':x.n<x.of?x.n+' de '+x.of:'Completo'):x.id==='piloto'?(x.n?x.n+(x.n===1?' ritual registrado':' rituales registrados'):'Sin empezar'):(x.n?'Registrado':'Sin empezar');
-    var lb=x.of?(x.n===0?'Empezar':x.n<x.of?'Continuar':'Revisar'):x.id==='piloto'?(x.n?'Registrar otro':'Empezar'):(x.n?'Revisar':'Empezar');
-    return '<div class="tool"><i class="ic" aria-hidden="true" style="background:radial-gradient(circle at 32% 28%,#fff 0,'+x.c+' 45%,'+x.c2+' 100%)"></i><p class="no">'+x.no+'</p><div class="tags">'+x.tags.map(function(g){return '<span>'+g+'</span>'}).join('')+'</div><h3>'+x.h+'</h3><p class="muted">'+x.d+'</p>'+
-      '<p class="st">'+st+(x.of?'<i><b style="width:'+(x.n/x.of*100)+'%"></b></i>':'')+'</p><button type="button" data-flow="'+x.id+'">'+lb+'</button></div>'}
-  $('tools').innerHTML=
-    '<div class="tgroup"><header><p class="eyebrow">Personal</p><h2>Dos actividades para mí</h2><p class="muted">Quedan en este dispositivo y en tu PDF. Nadie las ve si tú no las compartes.</p></header><div class="tools">'+card(TT.hex)+card(TT.rueda)+'</div></div>'+
-    '<div class="tgroup"><header><p class="eyebrow">Equipo</p><h2>Tres actividades con otras personas</h2><p class="muted">Cada una se registra con los nombres y celulares de los integrantes y se envía por WhatsApp. Se completan en la Dinámica 2 del taller.</p></header><div class="tools">'+card(TT.piloto)+card(TT.compr)+card(TT.lideres)+'</div></div>';
+    var st=x.of?(x.n===0?'Sin empezar':x.n<x.of?x.n+' de '+x.of:(x.ok||'Completo')):(x.n?'Completo':'Sin empezar');
+    var lb=x.n===0?'Empezar':x.of&&x.n<x.of?'Continuar':'Revisar';
+    return '<div class="tool'+((x.of?x.n>=x.of:x.n)?' fin':'')+'"><i class="ic" aria-hidden="true" style="background:radial-gradient(circle at 32% 28%,#fff 0,'+x.c+' 45%,'+x.c2+' 100%)"></i><p class="no">'+x.no+'</p><div class="tags">'+x.tags.map(function(g){return '<span>'+g+'</span>'}).join('')+'</div><h3>'+x.h+'</h3><p class="muted">'+x.d+'</p>'+
+      '<p class="st">'+st+(x.of?'<i><b style="width:'+(x.n/x.of*100)+'%"></b></i>':'')+'</p><button type="button" data-flow="'+x.id+'"'+(x.ti!=null?' data-ti="'+x.ti+'"':'')+'>'+lb+'</button></div>'}
+  $('toolsP').innerHTML='<div class="tgroup"><header><p class="eyebrow">Personal</p><h2>Dos actividades para mí</h2><p class="muted">Quedan en este dispositivo y en tu PDF. Nadie las ve si tú no las compartes.</p></header><div class="tools">'+card(TT.hex)+card(TT.rueda)+'</div></div>';
+  $('toolsE').innerHTML='<div class="tgroup"><header><p class="eyebrow">Equipo</p><h2>Tres actividades del equipo</h2><p class="muted">Se completan en la Dinámica 2 del taller. Al terminar, se envían a cada integrante con el código del equipo.</p></header><div class="tools">'+card(TT.piloto)+card(TT.compr)+card(TT.lideres)+'</div></div>';
 }
-
 /* ---------- Formularios paso a paso ---------- */
 var F=null,flow=$('flow'),lastFocus=null;
 function stepsBase(key,team){
@@ -2106,8 +2110,8 @@ function renderStep(){
   var n=F.steps.length,st=$('flowStage');
   $('flowProg').style.width=(Math.min(F.i,n)/n*100)+'%';$('flowPrev').disabled=F.i===0;
   if(F.i>=n){
-    $('flowCount').textContent='';$('flowNext').textContent=F.key==='piloto'||F.key==='compr'||F.key==='lideres'?'Ver la ficha':'Ver mi perfil';
-    var msg=F.key==='rueda'?'Tu rueda está lista. Mírala junto a tu Hexágono en tu perfil.':F.key==='hex'?'Tu Hexágono está listo. Es una fotografía de hoy: en diciembre podrás compararla.':F.key==='lideres'?'El compromiso de los líderes quedó registrado. Compártelo con el código del equipo, al final de Trabajo en equipo.':F.key==='compr'?'El compromiso del círculo de dirección quedó registrado. Compártelo con el código del equipo, al final de Trabajo en equipo.':'El ritual quedó registrado. Agenda el check-in en Outlook y compártelo con el código del equipo, al final de Trabajo en equipo.';
+    $('flowCount').textContent='';$('flowNext').textContent=F.key==='piloto'||F.key==='compr'||F.key==='lideres'?'Enviar al equipo':'Enviar mi PDF';
+    var msg=F.key==='rueda'?'Tu rueda quedó guardada. Ahora envía a tu celular el PDF con tus resultados y tu código.':F.key==='hex'?'Tu Hexágono quedó guardado. Ahora envía a tu celular el PDF con tus resultados y tu código.':F.key==='lideres'?'El compromiso de los líderes quedó registrado. Ahora envíenlo a cada integrante con el código del equipo.':F.key==='compr'?'El compromiso del círculo de dirección quedó registrado. Ahora envíenlo a cada integrante con el código del equipo.':'El ritual quedó registrado. Ahora envíenlo a cada integrante con el código del equipo y agenden el check-in.';
     st.innerHTML='<div class="step done"><i class="orb" aria-hidden="true"></i><h2>Listo</h2><p class="help">'+msg+'</p></div>';$('flowNext').focus();return;
   }
   var s=F.steps[F.i],v=s.val(),off=F.steps[0].type==='intro'?1:0;
@@ -2124,7 +2128,7 @@ function renderStep(){
   var el=$('flowIn')||st.querySelector('.opt[aria-pressed="true"]')||st.querySelector('.opt');if(el)el.focus({preventScroll:true});
 }
 function next(){
-  if(!F)return;if(F.i>=F.steps.length){var k=F.key;closeFlow();location.hash=k==='piloto'||k==='compr'||k==='lideres'?'#piloto':'#perfil';return}
+  if(!F)return;if(F.i>=F.steps.length){var k=F.key;closeFlow();var tg=$(k==='piloto'||k==='compr'||k==='lideres'?'eqShare':'keepBox');if(tg&&!tg.hidden)setTimeout(function(){tg.scrollIntoView({behavior:'smooth',block:'center'})},60);return}
   commit();var s=F.steps[F.i];if(!s.opt&&!s.val()){toast(s.type==='scale'||s.type==='power'?'Elige una opción para continuar.':'Escribe una respuesta para continuar.');return}
   if(s.check){var cm=s.check();if(cm){toast(cm);return}}
   F.i++;renderStep();
@@ -2240,7 +2244,7 @@ var SITE='https://degasperigiuliana-design.github.io/ubuntu-taller-2026/#piloto'
 async function z64(obj,pfx){var raw=new TextEncoder().encode(JSON.stringify(obj)),z=null;try{if(window.CompressionStream)z=await pipe(raw,CompressionStream)}catch(e){z=null}return z&&z.length<raw.length?pfx+'z'+b64u(z):pfx+'j'+b64u(raw)}
 var TK=['equipo','para','poder','gesto','freq','con','senal','disp','inicio','mbr'],CK=['obj','protege','acompana','reconoce','rev','mbr'],LK=['red','practica','oport','ritual','cuando','regla','medida','rev','mbr'];
 function pick(o,K){if(!o||typeof o!=='object')return null;var r={};K.forEach(function(k){r[k]=typeof o[k]==='string'?o[k].slice(0,800):''});return r}
-function eqHas(){return !!(eq.n||eq.mbr||teams.length||compr||lid)}
+function eqHas(){return !!(teams.length||compr||lid)}
 async function packE(){return shortOf(await z64({n:eq.n,m:eq.mbr,t:teams.map(function(t){return pick(t,TK)}),c:pick(compr,CK),l:pick(lid,LK)},'UE1'))}
 async function unpackE(text){var m=/UE1([zj])([A-Za-z0-9_-]{8,})/.exec((text||'').replace(/\s+/g,''));if(!m)throw new Error('formato');
   var u=unb64u(m[2]);if(m[1]==='z'){if(!window.DecompressionStream)throw new Error('navegador');u=await pipe(u,DecompressionStream)}
@@ -2259,6 +2263,7 @@ function renderEq(){
   var L=parseMbr(eq.mbr),msg=$('eqMsg');
   msg.innerHTML=eq.n||L.length?'Equipo <b>'+esc(eq.n||'sin nombre')+'</b> · '+(L.length?L.length+(L.length===1?' integrante':' integrantes'):'sin integrantes todavía')+'.':'Aún no hay un equipo en tu espacio.';
   var box=$('eqShare');if(!eqHas()){box.hidden=true;return}box.hidden=false;
+  var t0=teams[0];$('eqCal').hidden=!t0;if(t0)$('eqCalBtns').innerHTML='<a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t0,14)+'">Check-in en Outlook</a><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t0,30)+'">Cierre en Outlook</a>';
   var my=++eqSeq;$('eqCode').textContent='Generando…';
   packE().then(function(code){if(my!==eqSeq)return;$('eqCode').textContent=code;var m=eqText(code);$('eqWaAny').href='https://wa.me/?text='+encodeURIComponent(m);$('eqWa').innerHTML=mbrBtns(eq.mbr,m)})}
 $('eqCopy').onclick=function(){copyText($('eqCode').textContent,'Código copiado')};
