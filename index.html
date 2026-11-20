@@ -1617,25 +1617,18 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
     <div id="toolsE"></div>
     <div class="panel" id="eqShare" hidden>
       <h3>Envíen el trabajo del equipo</h3>
-      <p class="muted">Este es el resumen de lo que registraron. <strong>Revísenlo con calma</strong> y, si algo no refleja lo que el equipo necesita, edítenlo. Luego descarguen la ficha del equipo en PDF y envíenla a cada integrante. El compromiso de los líderes por área va en un PDF aparte.</p>
-      <div class="eqsum">
-    <h3 class="sub-h">Ficha del equipo · Ritual de mi equipo</h3>
-    <div id="teams" style="display:grid;gap:14px"></div>
-    <div class="row" hidden><button type="button" id="addTeam">Registrar el ritual</button></div>
-    <h3 class="sub-h">Ficha del equipo · Compromiso del círculo de dirección</h3>
-    <div id="comprBox"></div>
-    </div>
+      <p class="muted">Quedó guardado en este dispositivo. <strong>Envíen a cada integrante el PDF con la ficha del equipo y su código</strong>: con el código, cualquiera recupera las actividades escribiéndolo en «Ingreso del equipo». Para revisar o editar, usen «Revisar» en cada tarjeta.</p>
+      <div class="code" id="eqCode">Generando…</div>
       <div class="row"><button type="button" id="eqPdf">Descargar y enviar el PDF del equipo</button></div>
-      <p class="legend">Una sola ficha con el ritual, el respaldo del círculo de dirección, los integrantes y el código del equipo. En el celular eliges WhatsApp y el PDF viaja adjunto. En el computador se descarga y lo adjuntas con los botones de abajo.</p>
-      <div class="eqsum eqlid">
-    <h3 class="sub-h">Aparte · Compromiso de los líderes por área</h3>
-    <div id="lidBox"></div>
-      </div>
       <div class="row" id="lidPdfRow" hidden><button type="button" class="ghost" id="lidPdf">Descargar y enviar el PDF de los líderes</button></div>
       <div class="note" id="eqStep" hidden><p id="eqStepMsg"></p></div>
       <div class="field"><label>Enviar a cada integrante por WhatsApp</label><div class="mbrbtns" id="eqWa"></div></div>
-      <div class="field"><label>Código del equipo</label><div class="code" id="eqCode">Generando…</div><div class="row"><button type="button" class="small" id="eqCopy">Copiar código</button><a class="btn ghost" target="_blank" rel="noopener" id="eqWaAny" href="#">Enviar a un contacto por WhatsApp</a></div></div>
-      <div class="field" id="eqCal" hidden><label>Agendar el ritual</label><div class="row" id="eqCalBtns"></div></div>
+      <p class="legend">La ficha del equipo trae el ritual, el compromiso del círculo de dirección, los integrantes y el código. El compromiso de los líderes por área va en un PDF aparte. En el celular eliges WhatsApp y el PDF viaja adjunto. En el computador se descarga y WhatsApp se abre para que lo adjuntes.</p>
+      <div hidden>
+        <div id="teams"></div><div class="row"><button type="button" id="addTeam">Registrar el ritual</button></div><div id="comprBox"></div><div id="lidBox"></div>
+        <button type="button" id="eqCopy">Copiar código</button><a id="eqWaAny" href="#">x</a>
+        <div class="field" id="eqCal"><div class="row" id="eqCalBtns"></div></div>
+      </div>
     </div>
   </section>
 </main>
