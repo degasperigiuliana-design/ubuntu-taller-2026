@@ -1575,14 +1575,9 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
       <h3>Envíate tus resultados</h3>
       <p class="muted">Tus respuestas quedaron guardadas en este dispositivo. <strong>Envía a tu celular el PDF con tus resultados y tu código</strong>: con el código recuperas tu rueda y tu Hexágono en cualquier dispositivo, escribiéndolo en «Mi ingreso».</p>
       <div class="code" id="codeOut"></div>
-      <div class="row">
-        <button type="button" class="small" id="perfilPdf2">Descargar mi perfil (PDF)</button>
-        <button type="button" class="small ghost" id="copyBtn">Copiar resumen</button>
-      </div>
-      <div class="field"><label>Enviar el PDF por WhatsApp</label>
-        <div class="row"><button type="button" id="waSend">Enviar mi PDF por WhatsApp</button></div></div>
+      <div class="row"><button type="button" id="waSend">Descargar y enviar mi PDF por WhatsApp</button></div>
       <div class="note" id="waStep" hidden><p id="waMsg"></p><a class="btn ghost" id="waLink" href="#" target="_blank" rel="noopener">Abrir WhatsApp</a></div>
-      <p class="legend">En el celular se abre el menú de compartir: eliges WhatsApp y el PDF viaja adjunto. En el computador se guarda el PDF y WhatsApp se abre para que lo adjuntes.</p>
+      <p class="legend">Un solo botón: el PDF trae tus resultados, tu código y, si ya registraste el trabajo del equipo, también el código del equipo. En el celular eliges WhatsApp y el PDF viaja adjunto. En el computador se descarga y WhatsApp se abre para que lo adjuntes.</p>
     </div>
   </section>
 
@@ -1641,7 +1636,7 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
   <p>Esta vista no permite descargar archivos. Guárdalo así: en el celular, <strong>mantén presionada cada imagen</strong> y elige «Guardar imagen». En el computador, clic derecho y «Guardar imagen como». También puedes tomar una captura de pantalla.</p>
   <div id="imgList" class="imglist"></div>
   <h3>Tus códigos</h3>
-  <p class="muted">Cópialos y pégalos en Mi espacio para recuperar tu perfil o tu piloto en otro dispositivo.</p>
+  <p class="muted">Escríbelos en Mi espacio para recuperar tu perfil («Mi ingreso») o el trabajo del equipo («Ingreso del equipo») en cualquier dispositivo.</p>
   <div id="imgCodes" style="display:grid;gap:14px"></div>
 </dialog>
 
@@ -1930,7 +1925,7 @@ function mbrNames(t){return parseMbr(t).map(function(m){return m.n}).join(', ')}
 function mbrBtns(t,msg){var L=parseMbr(t);if(!L.length)return '<span class="muted">Sin integrantes registrados.</span>';
   return L.map(function(m){return m.c?'<a class="btn ghost" target="_blank" rel="noopener" href="https://wa.me/'+m.c+'?text='+encodeURIComponent(msg)+'">Enviar a '+esc(m.n.split(' ')[0])+'</a>':'<span class="muted">'+esc(m.n)+' (falta el celular)</span>'}).join('')}
 
-$('copyBtn').onclick=function(){copyText(summaryText())};
+
 function restoreDigits(v){
   v=String(v||'').replace(/\D/g,'');
   if(!/^[1-5]+$/.test(v)||[5,24,29].indexOf(v.length)<0){toast('No reconozco ese código. Revisa las 6 letras.');return}
@@ -2516,17 +2511,15 @@ async function buildProfile(){
     if(i===0)await pages[0](c);else{pageHead(c,'MI PERFIL · '+name.toUpperCase(),'Mis acuerdos de equipo y mis notas','');pages[i].a.forEach(function(e){e.it.draw(c,e.y)})}
     pageFoot(c,n);var du=cv.toDataURL('image/jpeg',.9);imgs.push(du);d.addImage(du,'JPEG',0,0,210,297)}
   /* última página: códigos como texto real, para copiar y pegar */
-  var codes=[];if(myCode())codes.push(['Código de mi perfil (rueda y Hexágono)',myCode()]);
-  for(var t=0;t<teams.length;t++)codes.push(['Código del ritual · '+(teams[t].equipo||'Equipo '+(t+1)),await pack(teams[t])]);
-  if(compr)codes.push(['Código del compromiso del círculo de dirección',await packC(compr)]);
-  if(lid)codes.push(['Código del compromiso de los líderes',await packL(lid)]);
+  var codes=[];if(myCode()){var pc=await shortOf('UP'+myCode());codes.push(['Código de mi perfil (rueda y Hexágono)',pc.length===6?pc:myCode()])}
+  if(eqHas())codes.push(['Código del equipo'+(eq.n?' · '+eq.n:'')+' (las tres actividades)',await packE()]);
   codeList=codes;
   if(codes.length){
     d.addPage();d.setFillColor(234,242,247);d.rect(0,0,210,297,'F');
     d.setTextColor(11,77,176);d.setFont('helvetica','bold');d.setFontSize(9);d.text('MIS CÓDIGOS · UBUNTU EN ACCIÓN',20,24);
     d.setTextColor(16,38,58);d.setFont('times','normal');d.setFontSize(30);d.text('Para copiar y pegar',20,38);
     d.setFont('helvetica','normal');d.setFontSize(11);d.setTextColor(81,104,122);
-    var ins=d.splitTextToSize('Selecciona el código con el cursor, cópialo y pégalo en Mi espacio: el de perfil en «Recuperar con mi código» y los de equipo en «Tengo un código». Si el código se corta en varias líneas no importa: la web ignora los saltos.',170);d.text(ins,20,48);
+    var ins=d.splitTextToSize('Escribe el código en Mi espacio: el de tu perfil en «Mi ingreso» y el del equipo en «Ingreso del equipo». Con él recuperas tu información en cualquier dispositivo.',170);d.text(ins,20,48);
     var y=48+ins.length*5.2+8;
     codes.forEach(function(cd){d.setFont('courier','normal');d.setFontSize(9.5);var ls=d.splitTextToSize(cd[1],162),h=ls.length*4.6+16;
       if(y+h>275){d.addPage();d.setFillColor(234,242,247);d.rect(0,0,210,297,'F');y=24}
@@ -2547,7 +2540,7 @@ async function profilePDF(){
   if(busy)return;busy=true;toast('Preparando tu perfil…');
   try{var r=await buildProfile();if(r){var s=await save(r.name,r.blob,true);if(s==='alt')showImgs(r)}}catch(e){console.error(e&&e.stack||e);toast('No se pudo crear el PDF.')}busy=false;
 }
-$('perfilPdf2').onclick=profilePDF;
+
 /* WhatsApp: se envía el PDF, no un texto */
 async function sendWA(){
   if(busy)return;busy=true;toast('Preparando tu PDF…');
