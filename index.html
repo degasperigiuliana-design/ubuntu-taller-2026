@@ -1361,6 +1361,9 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
 .mopt{text-align:left;font-weight:500;font-size:.95rem;line-height:1.4;border-radius:14px;padding:10px 14px;background:transparent;color:var(--fg);border:1px solid var(--tint);white-space:normal}
 .mopt[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
 .mopt[aria-pressed="true"]::before{content:"✓ "}
+.eqsum{display:grid;gap:4px;margin:6px 0 18px}
+.eqsum .sub-h{margin:18px 0 8px}
+#eqShare .tcard{box-shadow:none}
 </style>
 <div class="wrap">
 <div class="top">
@@ -1611,21 +1614,23 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
       <p class="legend" id="eqMsg" role="status"></p>
     </div>
     <div id="toolsE"></div>
-    <div hidden>
+    <div class="panel" id="eqShare" hidden>
+      <h3>Envíen el trabajo del equipo</h3>
+      <p class="muted">Este es el resumen de lo que registraron. <strong>Revísenlo con calma</strong> y, si algo no refleja lo que el equipo necesita, edítenlo. Luego descarguen el PDF del equipo y envíenlo a cada integrante.</p>
+      <div class="eqsum">
     <h3 class="sub-h">1 · Ritual de mi equipo</h3>
     <div id="teams" style="display:grid;gap:14px"></div>
-    <div class="row"><button type="button" id="addTeam">Registrar el ritual</button></div>
+    <div class="row" hidden><button type="button" id="addTeam">Registrar el ritual</button></div>
     <h3 class="sub-h">2 · Compromiso del círculo de dirección con los equipos</h3>
     <div id="comprBox"></div>
     <h3 class="sub-h">3 · Compromiso de los líderes por área</h3>
     <div id="lidBox"></div>
     </div>
-    <div class="panel" id="eqShare" hidden>
-      <h3>Envíen el trabajo del equipo</h3>
-      <p class="muted">Quedó guardado. <strong>Envíen a cada integrante el código del equipo por WhatsApp</strong>: con él, cualquiera ve las tres actividades escribiéndolo en «Ingreso del equipo». Si cambian algo, se genera un código nuevo y vuelven a enviarlo.</p>
-      <div class="code" id="eqCode">Generando…</div>
-      <div class="row"><button type="button" class="small" id="eqCopy">Copiar código</button><a class="btn ghost" target="_blank" rel="noopener" id="eqWaAny" href="#">Enviar a un contacto por WhatsApp</a></div>
+      <div class="row"><button type="button" id="eqPdf">Descargar y enviar el PDF del equipo</button></div>
+      <div class="note" id="eqStep" hidden><p id="eqStepMsg"></p></div>
+      <p class="legend">El PDF trae las tres actividades, los integrantes y el código del equipo. En el celular eliges WhatsApp y el PDF viaja adjunto. En el computador se descarga y lo adjuntas con los botones de abajo.</p>
       <div class="field"><label>Enviar a cada integrante por WhatsApp</label><div class="mbrbtns" id="eqWa"></div></div>
+      <div class="field"><label>Código del equipo</label><div class="code" id="eqCode">Generando…</div><div class="row"><button type="button" class="small" id="eqCopy">Copiar código</button><a class="btn ghost" target="_blank" rel="noopener" id="eqWaAny" href="#">Enviar a un contacto por WhatsApp</a></div></div>
       <div class="field" id="eqCal" hidden><label>Agendar el ritual</label><div class="row" id="eqCalBtns"></div></div>
     </div>
   </section>
@@ -1826,7 +1831,7 @@ function saveTeams(){store(LS_TEAMS,JSON.stringify(teams));saveProf()}
 function saveCompr(){if(compr)store(LS_COMPR,JSON.stringify(compr));else try{localStorage.removeItem(LS_COMPR)}catch(e){}saveProf()}
 function saveEq(){store(LS_EQ,JSON.stringify(eq));saveProf()}
 function saveLid(){if(lid)store(LS_LID,JSON.stringify(lid));else try{localStorage.removeItem(LS_LID)}catch(e){}saveProf()}
-var COBJ='Conectar los rituales de los equipos con el propósito de TMF y sostenerlos durante los 30 días del piloto.';
+var COBJ='Conectar los rituales de los equipos con el propósito de TMF y sostenerlos hasta el Taller 4.';
 var nm=$('nombre');nm.value=load(LS_NAME)||'';nm.addEventListener('input',function(){store(LS_NAME,nm.value);saveProf();setShare()});
 function hexDone(){return ans.every(Boolean)}
 function wheelDone(){return wheel.s.every(Boolean)}
@@ -2043,7 +2048,7 @@ var INTRO={
   need:"Una idea de los rituales que están diseñando sus equipos y la agenda de las próximas cuatro semanas, con el cierre de mes a la vista.",
   res:"Una ficha que aparece dentro de cada ritual de equipo y que se presenta en el Taller 4.",
   tips:["Comprometan conductas observables, no intenciones. «Estamos atentos» no se puede verificar; «participo como oyente en un ritual de cada equipo en la semana 2» sí.","Los tres verbos importan: proteger (tiempo y condiciones), acompañar (presencia sin control) y reconocer (lo que el equipo vive como reconocimiento).","Piensen en el peor momento del mes, el cierre. Si el compromiso resiste ese momento, resiste cualquier otro.","Si lo escriben, deben cumplirlo: elijan menos cosas y más seguras. Se revisa ante todos en el Taller 4."],
-  ej:[["Objetivo","Conectar los rituales de los equipos con el propósito de TMF y sostenerlos durante los 30 días del piloto."],["Protegemos","Los 10 minutos de cada ritual no se cancelan por cierre de mes: si hay cierre, se mueven de día, no se eliminan. Ninguna reunión del círculo de dirección se programa sobre el horario de los rituales."],["Acompañamos","Cada integrante del círculo de dirección participa como oyente, sin conducir ni evaluar, en un ritual de cada equipo de su área durante la semana 2, y le devuelve al equipo una pregunta, no una instrucción."],["Reconocemos","El día 30 cada equipo cuenta en tres minutos qué cambió y para quién, ante el círculo de dirección. Se destaca también el ritual que se ajustó o se dejó, por lo que enseñó."],["Revisamos","Día 30, en el Taller 4: qué funcionó, qué ajustamos y qué mantenemos."]]},
+  ej:[["Objetivo","Conectar los rituales de los equipos con el propósito de TMF y sostenerlos hasta el Taller 4."],["Protegemos","Los 10 minutos de cada ritual no se cancelan por cierre de mes: si hay cierre, se mueven de día, no se eliminan. Ninguna reunión del círculo de dirección se programa sobre el horario de los rituales."],["Acompañamos","Cada integrante del círculo de dirección participa como oyente, sin conducir ni evaluar, en un ritual de cada equipo de su área durante la semana 2, y le devuelve al equipo una pregunta, no una instrucción."],["Reconocemos","El día 30 cada equipo cuenta en tres minutos qué cambió y para quién, ante el círculo de dirección. Se destaca también el ritual que se ajustó o se dejó, por lo que enseñó."],["Revisamos","Día 30, en el Taller 4: qué funcionó, qué ajustamos y qué mantenemos."]]},
  lideres:{title:"Compromiso de los líderes por área",lead:"Es el ritual de la red de líderes: un espacio regular para que lo que funciona en un área viaje a las demás y para pedir ayuda entre áreas.",
   para:"Acordar cómo se encuentran los líderes de las distintas áreas para compartir buenas prácticas y oportunidades de mejora, y dejar los acuerdos escritos con responsable y fecha.",
   quien:"Los jefes y líderes de todas las áreas, en la Dinámica 2 del taller. Unos 20 minutos: una persona escribe y el resto valida. Se comparte con todos por código y WhatsApp.",
@@ -2237,16 +2242,16 @@ function accHTML(o){return '<div class="tcard compr"><header><div><p class="eyeb
 function wireAcc(k,packer,msgFn,getD,clear,mbr){
   $(k+'Del').onclick=function(){var d=$(k+'Del');if(d.dataset.sure){clear();refresh()}else{d.dataset.sure='1';d.textContent='Confirmar: quitar';setTimeout(function(){if(d.isConnected){delete d.dataset.sure;d.textContent='Quitar'}},4000)}}}
 function renderCompr(){var el=$('comprBox');if(!el)return;
-  if(!compr){el.innerHTML='<div class="empty"><p>Cuando el círculo de dirección registre su compromiso, aparecerá aquí y en la ficha de cada ritual. Si el equipo ya tiene su código, escríbanlo arriba, en «Ingreso del equipo».</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="compr">Registrar el compromiso</button></div></div>';return}
+  if(!compr){el.innerHTML='<p class="muted">Aún no registrado. Si les corresponde, complétenlo desde su tarjeta.</p>';return}
   el.innerHTML=accHTML({k:'compr',d:compr,eb:'Círculo de dirección',h:'Compromiso del círculo de dirección con los equipos',f:comprFields()});
   wireAcc('compr',packC,function(code){return 'Compromiso del círculo de dirección con los equipos · Ubuntu en acción\nObjetivo: '+compr.obj+'\n'+comprLine()+'\n\nPara verlo en tu celular, abre Mi espacio, ingresa con tu número y pega este código:\n'+code},function(){return compr},function(){compr=null;saveCompr()},compr.mbr)}
 function lidLine(){return lid?['Buenas prácticas: '+lid.practica,'Oportunidades: '+lid.oport,'Ritual: '+lid.ritual+(lid.cuando?' ('+lid.cuando+')':'')].filter(function(s){return !/: $/.test(s)}).join('\n'):''}
 function renderLid(){var el=$('lidBox');if(!el)return;
-  if(!lid){el.innerHTML='<div class="empty"><p>Cuando los líderes de las áreas registren su compromiso, aparecerá aquí. Si el equipo ya tiene su código, escríbanlo arriba, en «Ingreso del equipo».</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" data-flow="lideres">Registrar el compromiso de los líderes</button></div></div>';return}
+  if(!lid){el.innerHTML='<p class="muted">Aún no registrado. Si les corresponde, complétenlo desde su tarjeta.</p>';return}
   el.innerHTML=accHTML({k:'lid',d:lid,eb:'Líderes por área',h:'Compromiso de los líderes por área',f:lidFields()});
   wireAcc('lid',packL,function(code){return 'Compromiso de los líderes por área · Ubuntu en acción\n'+lidLine()+'\n\nPara verlo en tu celular, abre Mi espacio, ingresa con tu número y pega este código:\n'+code},function(){return lid},function(){lid=null;saveLid()},lid.mbr)}
 function renderTeams(){renderCompr();renderLid();renderEq();$('addTeam').hidden=teams.length>0;
-  if(!teams.length){tdiv.innerHTML='<div class="empty">Todavía no hay un ritual registrado. Regístrenlo aquí o escriban arriba el código del equipo.</div>';return}
+  if(!teams.length){tdiv.innerHTML='<p class="muted">Aún no registrado. Complétenlo desde su tarjeta.</p>';return}
   tdiv.innerHTML=teams.map(function(t,i){
     var F2=[['Lo que necesita el área',t.para],['Superpoder',t.poder],['Qué hacemos',t.gesto],['Cuándo',t.disp||t.freq],['Con quién y quién conduce',t.con],['Cómo sabremos que funciona',t.senal],['Inicio',niceD(addDays(t.inicio,0))],['Check-in · semana 2',niceD(pilotD(t,14))],['Cierre · Taller 4',niceD(pilotD(t,30))]];if(compr)F2.push(['Cómo nos respalda el círculo de dirección',comprLine()]);
     return '<div class="tcard" data-i="'+i+'"><header><div><p class="eyebrow">'+(t.shared?'Compartido conmigo':'Registrado aquí')+'</p><h3>'+esc(t.equipo||'Equipo '+(i+1))+'</h3></div><div class="row"><button type="button" class="small ghost" data-flow="piloto" data-ti="'+i+'">Editar</button><button type="button" class="small ghost" data-del="'+i+'">Quitar</button></div></header>'+
@@ -2284,7 +2289,7 @@ function eqText(code){var t=teams[0],o='Trabajo en equipo · '+(eq.n||'Mi equipo
   if(t)o+='\nRitual: '+(t.gesto||'')+(t.disp||t.freq?' ('+(t.disp||t.freq)+')':'')+'\n';
   if(compr)o+='\nCompromiso del círculo de dirección: '+comprLine()+'\n';
   if(lid)o+='\nCompromiso de los líderes por área:\n'+lidLine()+'\n';
-  return o+'\nPara ver las tres actividades, abre Mi espacio, ve a «Ingreso del equipo» y escribe este código: '+code+'\n'+SITE}
+  return o+'\nTe envío el PDF con el resumen. Para verlo también en la web, abre Mi espacio, ve a «Ingreso del equipo» y escribe este código: '+code+'\n'+SITE}
 var eqSeq=0;
 function rowHTML(n,c){return '<div class="eqrow"><input type="text" class="eqN" autocomplete="off" placeholder="Nombre y apellido" aria-label="Nombre y apellido" value="'+esc(n)+'"><input type="tel" class="eqC" inputmode="tel" autocomplete="off" placeholder="Celular · 987 654 321" aria-label="Celular" value="'+esc(c)+'"><button type="button" class="small ghost eqX" aria-label="Quitar integrante">×</button></div>'}
 function drawRows(t){var L=parseMbr(t),h=L.map(function(m){return rowHTML(m.n==='Sin nombre'?'':m.n,m.c?m.c.slice(2):'')}).join('');for(var i=L.length;i<3;i++)h+=rowHTML('','');$('eqRows').innerHTML=h}
@@ -2298,7 +2303,7 @@ function renderEq(){
   var L=parseMbr(eq.mbr),msg=$('eqMsg');
   msg.innerHTML=eq.n||L.length?'Equipo <b>'+esc(eq.n||'sin nombre')+'</b> · '+(L.length?L.length+(L.length===1?' integrante':' integrantes'):'sin integrantes todavía')+'.':'Aún no hay un equipo en tu espacio.';
   var box=$('eqShare');if(!eqHas()){box.hidden=true;return}box.hidden=false;
-  var t0=teams[0];$('eqCal').hidden=!t0;if(t0)$('eqCalBtns').innerHTML='<a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t0,14)+'">Check-in en Outlook</a><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t0,30)+'">Cierre en Outlook</a>';
+  var t0=teams[0];$('eqCal').hidden=true;if(t0)$('eqCalBtns').innerHTML='<a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t0,14)+'">Check-in en Outlook</a><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t0,30)+'">Cierre en Outlook</a>';
   var my=++eqSeq;$('eqCode').textContent='Generando…';
   packE().then(function(code){if(my!==eqSeq)return;$('eqCode').textContent=code;var m=eqText(code);$('eqWaAny').href='https://wa.me/?text='+encodeURIComponent(m);$('eqWa').innerHTML=mbrBtns(eq.mbr,m)})}
 $('eqCopy').onclick=function(){copyText($('eqCode').textContent,'Código copiado')};
@@ -2594,7 +2599,42 @@ async function sendWA(){
     else if(ok==='alt'){$('waMsg').innerHTML='<b>Guarda las imágenes de tu perfil</b> y adjúntalas en WhatsApp como fotos.';$('waStep').hidden=false;showImgs(r)}
   }catch(e){console.error(e&&e.stack||e);toast('No se pudo preparar el PDF.')}busy=false;
 }
-$('waSend').onclick=sendWA;$('imgClose').onclick=function(){$('imgDlg').close()};
+$('waSend').onclick=sendWA;
+async function buildTeam(){
+  var d=J({unit:'mm',format:'a4'});if(!d){toast('El PDF no está disponible aquí.');return null}
+  await fontsReady();var cv=mk(PW,PH),c=cv.getContext('2d'),name=eq.n||'Mi equipo',imgs=[],items=[];
+  var L=parseMbr(eq.mbr);if(L.length){var mf=[['Integrantes',L.map(function(m){return m.n}).join(', ')]];items.push({h:agreeBand(c,0,'EQUIPO',name,mf,'#1267E0',true),draw:function(c,y){return agreeBand(c,y,'EQUIPO',name,mf,'#1267E0')}})}
+  teams.forEach(function(t){items.push({h:teamBand(c,0,t,true),draw:function(c,y){return teamBand(c,y,t)}})});
+  if(compr)items.push({h:agreeBand(c,0,'CÍRCULO DE DIRECCIÓN','Compromiso del círculo de dirección con los equipos',comprFields(),'#5B5BD6',true),draw:function(c,y){return agreeBand(c,y,'CÍRCULO DE DIRECCIÓN','Compromiso del círculo de dirección con los equipos',comprFields(),'#5B5BD6')}});
+  if(lid)items.push({h:agreeBand(c,0,'LÍDERES POR ÁREA','Compromiso de los líderes por área',lidFields(),'#D9738F',true),draw:function(c,y){return agreeBand(c,y,'LÍDERES POR ÁREA','Compromiso de los líderes por área',lidFields(),'#D9738F')}});
+  var pn=0,cy=0;
+  function open(){if(pn)d.addPage();pn++;c.clearRect(0,0,PW,PH);cy=pageHead(c,pn===1?'TRABAJO EN EQUIPO · UBUNTU EN ACCIÓN':'TRABAJO EN EQUIPO · '+name.toUpperCase(),pn===1?name:'Trabajo del equipo',pn===1?'TMF Group Perú · '+niceD(new Date()):'')+28}
+  function close(){pageFoot(c,pn);var du=cv.toDataURL('image/jpeg',.9);imgs.push(du);d.addImage(du,'JPEG',0,0,210,297)}
+  open();items.forEach(function(it){if(cy+it.h>PH-120&&cy>420){close();open()}it.draw(c,cy);cy+=it.h+26});close();
+  var code=await packE();
+  d.addPage();d.setFillColor(234,242,247);d.rect(0,0,210,297,'F');
+  d.setTextColor(11,77,176);d.setFont('helvetica','bold');d.setFontSize(9);d.text('CÓDIGO DEL EQUIPO · UBUNTU EN ACCIÓN',20,24);
+  d.setTextColor(16,38,58);d.setFont('times','normal');d.setFontSize(30);d.text('Para verlo en la web',20,38);
+  d.setFont('helvetica','normal');d.setFontSize(11);d.setTextColor(81,104,122);
+  var ins=d.splitTextToSize('Abre Mi espacio, ve a «Ingreso del equipo» y escribe este código: verás las tres actividades y podrás revisarlas o editarlas. Si el equipo cambia algo, se genera un código nuevo.',170);d.text(ins,20,48);
+  var y=48+ins.length*5.2+8,ls=d.splitTextToSize(code,162),h=ls.length*5.2+18;
+  d.setFillColor(255,255,255);d.setDrawColor(210,224,233);d.roundedRect(20,y,170,h,4,4,'FD');
+  d.setFont('helvetica','bold');d.setFontSize(9);d.setTextColor(81,104,122);d.text('CÓDIGO DEL EQUIPO'+(eq.n?' · '+eq.n.toUpperCase():''),26,y+8);
+  d.setFont('courier','bold');d.setFontSize(code.length===6?16:9.5);d.setTextColor(16,38,58);d.text(ls,26,y+16);
+  d.setFont('helvetica','normal');d.setFontSize(8.5);d.setTextColor(81,104,122);d.text('Ubuntu en acción · '+CONF,20,286);
+  var nn=name.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\w ]/g,'').replace(/\s+/g,'-').toLowerCase();
+  return{imgs:imgs,codes:[['Código del equipo',code]],blob:new Blob([d.output('arraybuffer')],{type:'application/pdf'}),name:'trabajo-equipo-ubuntu'+(nn?'-'+nn:'')+'.pdf'}}
+$('eqPdf').onclick=async function(){
+  if(busy)return;busy=true;toast('Preparando el PDF del equipo…');
+  try{var r=await buildTeam();if(!r){busy=false;return}
+    var file=new File([r.blob],r.name,{type:'application/pdf'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      try{await navigator.share({files:[file],title:'Trabajo del equipo',text:'Trabajo del equipo · Ubuntu en acción'});busy=false;return}
+      catch(e){if(e&&e.name==='AbortError'){busy=false;return}console.error(e)}}
+    var ok=await save(r.name,r.blob,true);
+    if(ok==='saved'){$('eqStepMsg').innerHTML='<b>El PDF del equipo ya está guardado.</b> Toca el botón de cada integrante: en WhatsApp usa el clip, elige «Documento» y selecciona <b>'+esc(r.name)+'</b>.';$('eqStep').hidden=false}
+    else if(ok==='alt'){$('eqStepMsg').innerHTML='<b>Guarda las imágenes del resumen</b> y adjúntalas en WhatsApp como fotos.';$('eqStep').hidden=false;showImgs(r)}
+  }catch(e){console.error(e&&e.stack||e);toast('No se pudo preparar el PDF.')}busy=false};$('imgClose').onclick=function(){$('imgDlg').close()};
 /* Borrar mis datos de este dispositivo */
 $('wipeBtn').onclick=function(){var b=$('wipeBtn');
   if(!b.dataset.sure){b.dataset.sure='1';b.textContent='Confirmar: borrar todo';setTimeout(function(){if(b.isConnected){delete b.dataset.sure;b.textContent='Borrar mis datos de este dispositivo'}},4000);return}
