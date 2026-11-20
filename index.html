@@ -1363,6 +1363,7 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
 .mopt[aria-pressed="true"]::before{content:"✓ "}
 .eqsum{display:grid;gap:4px;margin:6px 0 18px}
 .eqsum .sub-h{margin:18px 0 8px}
+.eqlid{margin-top:26px;padding-top:6px;border-top:1px solid var(--line)}
 #eqShare .tcard{box-shadow:none}
 </style>
 <div class="wrap">
@@ -1616,19 +1617,22 @@ ol.vz,ul.vz{list-style:none;margin:0;padding:0}
     <div id="toolsE"></div>
     <div class="panel" id="eqShare" hidden>
       <h3>Envíen el trabajo del equipo</h3>
-      <p class="muted">Este es el resumen de lo que registraron. <strong>Revísenlo con calma</strong> y, si algo no refleja lo que el equipo necesita, edítenlo. Luego descarguen el PDF del equipo y envíenlo a cada integrante.</p>
+      <p class="muted">Este es el resumen de lo que registraron. <strong>Revísenlo con calma</strong> y, si algo no refleja lo que el equipo necesita, edítenlo. Luego descarguen la ficha del equipo en PDF y envíenla a cada integrante. El compromiso de los líderes por área va en un PDF aparte.</p>
       <div class="eqsum">
-    <h3 class="sub-h">1 · Ritual de mi equipo</h3>
+    <h3 class="sub-h">Ficha del equipo · Ritual de mi equipo</h3>
     <div id="teams" style="display:grid;gap:14px"></div>
     <div class="row" hidden><button type="button" id="addTeam">Registrar el ritual</button></div>
-    <h3 class="sub-h">2 · Compromiso del círculo de dirección con los equipos</h3>
+    <h3 class="sub-h">Ficha del equipo · Compromiso del círculo de dirección</h3>
     <div id="comprBox"></div>
-    <h3 class="sub-h">3 · Compromiso de los líderes por área</h3>
-    <div id="lidBox"></div>
     </div>
       <div class="row"><button type="button" id="eqPdf">Descargar y enviar el PDF del equipo</button></div>
+      <p class="legend">Una sola ficha con el ritual, el respaldo del círculo de dirección, los integrantes y el código del equipo. En el celular eliges WhatsApp y el PDF viaja adjunto. En el computador se descarga y lo adjuntas con los botones de abajo.</p>
+      <div class="eqsum eqlid">
+    <h3 class="sub-h">Aparte · Compromiso de los líderes por área</h3>
+    <div id="lidBox"></div>
+      </div>
+      <div class="row" id="lidPdfRow" hidden><button type="button" class="ghost" id="lidPdf">Descargar y enviar el PDF de los líderes</button></div>
       <div class="note" id="eqStep" hidden><p id="eqStepMsg"></p></div>
-      <p class="legend">El PDF trae las tres actividades, los integrantes y el código del equipo. En el celular eliges WhatsApp y el PDF viaja adjunto. En el computador se descarga y lo adjuntas con los botones de abajo.</p>
       <div class="field"><label>Enviar a cada integrante por WhatsApp</label><div class="mbrbtns" id="eqWa"></div></div>
       <div class="field"><label>Código del equipo</label><div class="code" id="eqCode">Generando…</div><div class="row"><button type="button" class="small" id="eqCopy">Copiar código</button><a class="btn ghost" target="_blank" rel="noopener" id="eqWaAny" href="#">Enviar a un contacto por WhatsApp</a></div></div>
       <div class="field" id="eqCal" hidden><label>Agendar el ritual</label><div class="row" id="eqCalBtns"></div></div>
@@ -2303,7 +2307,7 @@ function renderEq(){
   var L=parseMbr(eq.mbr),msg=$('eqMsg');
   msg.innerHTML=eq.n||L.length?'Equipo <b>'+esc(eq.n||'sin nombre')+'</b> · '+(L.length?L.length+(L.length===1?' integrante':' integrantes'):'sin integrantes todavía')+'.':'Aún no hay un equipo en tu espacio.';
   var box=$('eqShare');if(!eqHas()){box.hidden=true;return}box.hidden=false;
-  var t0=teams[0];$('eqCal').hidden=true;if(t0)$('eqCalBtns').innerHTML='<a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t0,14)+'">Check-in en Outlook</a><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t0,30)+'">Cierre en Outlook</a>';
+  $('lidPdfRow').hidden=!lid;$('eqPdf').parentNode.hidden=!(teams.length||compr);var t0=teams[0];$('eqCal').hidden=true;if(t0)$('eqCalBtns').innerHTML='<a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t0,14)+'">Check-in en Outlook</a><a class="btn ghost" target="_blank" rel="noopener" href="'+outlook(t0,30)+'">Cierre en Outlook</a>';
   var my=++eqSeq;$('eqCode').textContent='Generando…';
   packE().then(function(code){if(my!==eqSeq)return;$('eqCode').textContent=code;var m=eqText(code);$('eqWaAny').href='https://wa.me/?text='+encodeURIComponent(m);$('eqWa').innerHTML=mbrBtns(eq.mbr,m)})}
 $('eqCopy').onclick=function(){copyText($('eqCode').textContent,'Código copiado')};
@@ -2600,15 +2604,15 @@ async function sendWA(){
   }catch(e){console.error(e&&e.stack||e);toast('No se pudo preparar el PDF.')}busy=false;
 }
 $('waSend').onclick=sendWA;
-async function buildTeam(){
+async function buildTeam(kind){var isL=kind==='lid';
   var d=J({unit:'mm',format:'a4'});if(!d){toast('El PDF no está disponible aquí.');return null}
-  await fontsReady();var cv=mk(PW,PH),c=cv.getContext('2d'),name=eq.n||'Mi equipo',imgs=[],items=[];
-  var L=parseMbr(eq.mbr);if(L.length){var mf=[['Integrantes',L.map(function(m){return m.n}).join(', ')]];items.push({h:agreeBand(c,0,'EQUIPO',name,mf,'#1267E0',true),draw:function(c,y){return agreeBand(c,y,'EQUIPO',name,mf,'#1267E0')}})}
-  teams.forEach(function(t){items.push({h:teamBand(c,0,t,true),draw:function(c,y){return teamBand(c,y,t)}})});
-  if(compr)items.push({h:agreeBand(c,0,'CÍRCULO DE DIRECCIÓN','Compromiso del círculo de dirección con los equipos',comprFields(),'#5B5BD6',true),draw:function(c,y){return agreeBand(c,y,'CÍRCULO DE DIRECCIÓN','Compromiso del círculo de dirección con los equipos',comprFields(),'#5B5BD6')}});
-  if(lid)items.push({h:agreeBand(c,0,'LÍDERES POR ÁREA','Compromiso de los líderes por área',lidFields(),'#D9738F',true),draw:function(c,y){return agreeBand(c,y,'LÍDERES POR ÁREA','Compromiso de los líderes por área',lidFields(),'#D9738F')}});
+  await fontsReady();var cv=mk(PW,PH),c=cv.getContext('2d'),name=isL?'Compromiso de los líderes por área':(eq.n||'Mi equipo'),imgs=[],items=[];
+  var L=parseMbr(eq.mbr);if(!isL&&L.length){var mf=[['Integrantes',L.map(function(m){return m.n}).join(', ')]];items.push({h:agreeBand(c,0,'EQUIPO',name,mf,'#1267E0',true),draw:function(c,y){return agreeBand(c,y,'EQUIPO',name,mf,'#1267E0')}})}
+  if(!isL)teams.forEach(function(t){items.push({h:teamBand(c,0,t,true),draw:function(c,y){return teamBand(c,y,t)}})});
+  if(!isL&&compr)items.push({h:agreeBand(c,0,'CÍRCULO DE DIRECCIÓN','Compromiso del círculo de dirección con los equipos',comprFields(),'#5B5BD6',true),draw:function(c,y){return agreeBand(c,y,'CÍRCULO DE DIRECCIÓN','Compromiso del círculo de dirección con los equipos',comprFields(),'#5B5BD6')}});
+  if(isL&&lid)items.push({h:agreeBand(c,0,'LÍDERES POR ÁREA','Compromiso de los líderes por área',lidFields(),'#D9738F',true),draw:function(c,y){return agreeBand(c,y,'LÍDERES POR ÁREA','Compromiso de los líderes por área',lidFields(),'#D9738F')}});
   var pn=0,cy=0;
-  function open(){if(pn)d.addPage();pn++;c.clearRect(0,0,PW,PH);cy=pageHead(c,pn===1?'TRABAJO EN EQUIPO · UBUNTU EN ACCIÓN':'TRABAJO EN EQUIPO · '+name.toUpperCase(),pn===1?name:'Trabajo del equipo',pn===1?'TMF Group Perú · '+niceD(new Date()):'')+28}
+  function open(){if(pn)d.addPage();pn++;c.clearRect(0,0,PW,PH);cy=pageHead(c,pn===1?(isL?'RED DE LÍDERES · UBUNTU EN ACCIÓN':'FICHA DEL EQUIPO · UBUNTU EN ACCIÓN'):(isL?'RED DE LÍDERES':'FICHA DEL EQUIPO · '+name.toUpperCase()),pn===1?name:(isL?'Compromiso de los líderes':'Ficha del equipo'),pn===1?'TMF Group Perú · '+niceD(new Date()):'')+28}
   function close(){pageFoot(c,pn);var du=cv.toDataURL('image/jpeg',.9);imgs.push(du);d.addImage(du,'JPEG',0,0,210,297)}
   open();items.forEach(function(it){if(cy+it.h>PH-120&&cy>420){close();open()}it.draw(c,cy);cy+=it.h+26});close();
   var code=await packE();
@@ -2623,18 +2627,19 @@ async function buildTeam(){
   d.setFont('courier','bold');d.setFontSize(code.length===6?16:9.5);d.setTextColor(16,38,58);d.text(ls,26,y+16);
   d.setFont('helvetica','normal');d.setFontSize(8.5);d.setTextColor(81,104,122);d.text('Ubuntu en acción · '+CONF,20,286);
   var nn=name.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\w ]/g,'').replace(/\s+/g,'-').toLowerCase();
-  return{imgs:imgs,codes:[['Código del equipo',code]],blob:new Blob([d.output('arraybuffer')],{type:'application/pdf'}),name:'trabajo-equipo-ubuntu'+(nn?'-'+nn:'')+'.pdf'}}
-$('eqPdf').onclick=async function(){
-  if(busy)return;busy=true;toast('Preparando el PDF del equipo…');
-  try{var r=await buildTeam();if(!r){busy=false;return}
+  return{imgs:imgs,codes:[['Código del equipo',code]],blob:new Blob([d.output('arraybuffer')],{type:'application/pdf'}),name:isL?'compromiso-lideres-ubuntu.pdf':'ficha-equipo-ubuntu'+(nn?'-'+nn:'')+'.pdf'}}
+async function sendTeamPdf(kind){
+  if(busy)return;busy=true;toast(kind==='lid'?'Preparando el PDF de los líderes…':'Preparando el PDF del equipo…');
+  try{var r=await buildTeam(kind);if(!r){busy=false;return}
     var file=new File([r.blob],r.name,{type:'application/pdf'});
     if(navigator.canShare&&navigator.canShare({files:[file]})){
-      try{await navigator.share({files:[file],title:'Trabajo del equipo',text:'Trabajo del equipo · Ubuntu en acción'});busy=false;return}
+      try{await navigator.share({files:[file],title:kind==='lid'?'Compromiso de los líderes':'Ficha del equipo',text:(kind==='lid'?'Compromiso de los líderes por área':'Ficha del equipo')+' · Ubuntu en acción'});busy=false;return}
       catch(e){if(e&&e.name==='AbortError'){busy=false;return}console.error(e)}}
     var ok=await save(r.name,r.blob,true);
-    if(ok==='saved'){$('eqStepMsg').innerHTML='<b>El PDF del equipo ya está guardado.</b> Toca el botón de cada integrante: en WhatsApp usa el clip, elige «Documento» y selecciona <b>'+esc(r.name)+'</b>.';$('eqStep').hidden=false}
+    if(ok==='saved'){$('eqStepMsg').innerHTML='<b>El PDF ya está guardado.</b> Toca el botón de cada integrante: en WhatsApp usa el clip, elige «Documento» y selecciona <b>'+esc(r.name)+'</b>.';$('eqStep').hidden=false}
     else if(ok==='alt'){$('eqStepMsg').innerHTML='<b>Guarda las imágenes del resumen</b> y adjúntalas en WhatsApp como fotos.';$('eqStep').hidden=false;showImgs(r)}
-  }catch(e){console.error(e&&e.stack||e);toast('No se pudo preparar el PDF.')}busy=false};$('imgClose').onclick=function(){$('imgDlg').close()};
+  }catch(e){console.error(e&&e.stack||e);toast('No se pudo preparar el PDF.')}busy=false}
+$('eqPdf').onclick=function(){sendTeamPdf('eq')};$('lidPdf').onclick=function(){sendTeamPdf('lid')};$('imgClose').onclick=function(){$('imgDlg').close()};
 /* Borrar mis datos de este dispositivo */
 $('wipeBtn').onclick=function(){var b=$('wipeBtn');
   if(!b.dataset.sure){b.dataset.sure='1';b.textContent='Confirmar: borrar todo';setTimeout(function(){if(b.isConnected){delete b.dataset.sure;b.textContent='Borrar mis datos de este dispositivo'}},4000);return}
